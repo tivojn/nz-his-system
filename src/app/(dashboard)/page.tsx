@@ -7,6 +7,8 @@ import { Progress } from "@/components/ui/progress";
 import { KpiCard } from "@/components/charts/kpi-card";
 import { ActivityFeed } from "@/components/activity-feed";
 import { PageSkeleton } from "@/components/page-skeleton";
+import { useBilingual } from "@/components/bilingual-provider";
+import { BilingualLabel } from "@/components/bilingual-label";
 import {
   Users,
   Activity,
@@ -73,23 +75,17 @@ const PIE_COLORS = [
   "var(--color-chart-5)",
 ];
 
-function getGreeting(): string {
+function getGreetingKey(): string {
   const hour = new Date().getHours();
   if (hour < 12) return "Good Morning";
   if (hour < 18) return "Good Afternoon";
   return "Good Evening";
 }
 
-function getTeReoGreeting(): string {
-  const hour = new Date().getHours();
-  if (hour < 12) return "Ata marie";
-  if (hour < 18) return "Ahiahi marie";
-  return "Po marie";
-}
-
 export default function DashboardPage() {
   const [data, setData] = useState<DashboardData | null>(null);
   const [userName, setUserName] = useState<string>("");
+  const { t, language } = useBilingual();
 
   const censusData = useMemo(() => generateCensusData(), []);
   const demographicsData = useMemo(() => generateDemographicsData(), []);
@@ -134,9 +130,11 @@ export default function DashboardPage() {
       <div className="rounded-xl gradient-jade p-6 text-white relative overflow-hidden">
         <div className="koru-pattern absolute inset-0 opacity-20" />
         <div className="relative">
-          <p className="text-teal-100 text-sm">{getTeReoGreeting()}</p>
+          {language !== "en" && (
+            <p className="text-teal-100 text-sm">{t(getGreetingKey())}</p>
+          )}
           <h1 className="text-2xl font-bold mt-1">
-            {getGreeting()}, {userName || "Clinician"}
+            {getGreetingKey()}, {userName || "Clinician"}
           </h1>
           <p className="text-teal-100 mt-1 text-sm">{today}</p>
         </div>
@@ -145,28 +143,28 @@ export default function DashboardPage() {
       {/* KPI Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <KpiCard
-          title="Total Patients"
+          title={t("Total Patients")}
           value={data.stats.totalPatients}
           trend={data.stats.trends.patients}
           icon={Users}
           sparklineData={data.stats.sparklines.patients}
         />
         <KpiCard
-          title="Active Admissions"
+          title={t("Active Admissions")}
           value={data.stats.activeEncounters}
           trend={data.stats.trends.admissions}
           icon={BedDouble}
           sparklineData={data.stats.sparklines.admissions}
         />
         <KpiCard
-          title="Today's Appointments"
+          title={t("Today's Appointments")}
           value={data.stats.todayAppointments}
           trend={data.stats.trends.appointments}
           icon={Calendar}
           sparklineData={data.stats.sparklines.appointments}
         />
         <KpiCard
-          title="Waitlist Count"
+          title={t("Waitlist Count")}
           value={data.stats.waitlistCount}
           trend={data.stats.trends.waitlist}
           icon={Clock}
@@ -181,7 +179,7 @@ export default function DashboardPage() {
           <CardHeader>
             <CardTitle className="text-base flex items-center gap-2">
               <Activity className="h-4 w-4 text-teal-600" />
-              Patient Census Trend
+              <BilingualLabel>Patient Census</BilingualLabel>
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -233,56 +231,58 @@ export default function DashboardPage() {
           <CardHeader>
             <CardTitle className="text-base flex items-center gap-2">
               <Users className="h-4 w-4 text-teal-600" />
-              Patient Demographics
+              <BilingualLabel>Demographics</BilingualLabel>
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="h-64 flex items-center">
-              <div className="w-1/2">
-                <ResponsiveContainer width="100%" height={200}>
-                  <PieChart>
-                    <Pie
-                      data={demographicsData}
-                      dataKey="count"
-                      nameKey="ethnicity"
-                      cx="50%"
-                      cy="50%"
-                      innerRadius={50}
-                      outerRadius={80}
-                      paddingAngle={2}
-                    >
-                      {demographicsData.map((_, index) => (
-                        <Cell
-                          key={`cell-${index}`}
-                          fill={PIE_COLORS[index % PIE_COLORS.length]}
-                        />
-                      ))}
-                    </Pie>
-                    <Tooltip
-                      contentStyle={{
-                        borderRadius: "8px",
-                        border: "none",
-                        boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
-                      }}
-                    />
-                  </PieChart>
-                </ResponsiveContainer>
-              </div>
-              <div className="w-1/2 space-y-2">
-                {demographicsData.map((item, index) => (
-                  <div key={item.ethnicity} className="flex items-center gap-2">
-                    <div
-                      className="w-3 h-3 rounded-full shrink-0"
-                      style={{
-                        backgroundColor: PIE_COLORS[index % PIE_COLORS.length],
-                      }}
-                    />
-                    <span className="text-sm text-muted-foreground flex-1">
-                      {item.ethnicity}
-                    </span>
-                    <span className="text-sm font-medium">{item.count}%</span>
-                  </div>
-                ))}
+            <div className="h-auto md:h-64">
+              <div className="grid grid-cols-1 md:grid-cols-2 items-center">
+                <div>
+                  <ResponsiveContainer width="100%" height={200}>
+                    <PieChart>
+                      <Pie
+                        data={demographicsData}
+                        dataKey="count"
+                        nameKey="ethnicity"
+                        cx="50%"
+                        cy="50%"
+                        innerRadius={50}
+                        outerRadius={80}
+                        paddingAngle={2}
+                      >
+                        {demographicsData.map((_, index) => (
+                          <Cell
+                            key={`cell-${index}`}
+                            fill={PIE_COLORS[index % PIE_COLORS.length]}
+                          />
+                        ))}
+                      </Pie>
+                      <Tooltip
+                        contentStyle={{
+                          borderRadius: "8px",
+                          border: "none",
+                          boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
+                        }}
+                      />
+                    </PieChart>
+                  </ResponsiveContainer>
+                </div>
+                <div className="space-y-2">
+                  {demographicsData.map((item, index) => (
+                    <div key={item.ethnicity} className="flex items-center gap-2">
+                      <div
+                        className="w-3 h-3 rounded-full shrink-0"
+                        style={{
+                          backgroundColor: PIE_COLORS[index % PIE_COLORS.length],
+                        }}
+                      />
+                      <span className="text-sm text-muted-foreground flex-1">
+                        {item.ethnicity}
+                      </span>
+                      <span className="text-sm font-medium">{item.count}%</span>
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
           </CardContent>
@@ -331,11 +331,11 @@ export default function DashboardPage() {
           <CardHeader>
             <CardTitle className="text-base flex items-center gap-2">
               <Heart className="h-4 w-4 text-teal-600" />
-              Quality Metrics
+              <BilingualLabel>Quality Metrics</BilingualLabel>
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {Object.values(qualityMetrics).map((metric) => {
                 const isPositive = metric.trend <= 0 && metric.unit !== "%"
                   ? metric.trend <= 0
@@ -387,7 +387,7 @@ export default function DashboardPage() {
           <CardHeader>
             <CardTitle className="text-base flex items-center gap-2">
               <Target className="h-4 w-4 text-teal-600" />
-              NZ Health Targets
+              <BilingualLabel>Health Targets</BilingualLabel>
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -430,7 +430,7 @@ export default function DashboardPage() {
           <CardHeader>
             <CardTitle className="text-base flex items-center gap-2">
               <Activity className="h-4 w-4 text-teal-600" />
-              Real-time Activity Feed
+              <BilingualLabel>Activity Feed</BilingualLabel>
               <div className="w-2 h-2 rounded-full bg-emerald-500 pulse-dot ml-1" />
             </CardTitle>
           </CardHeader>

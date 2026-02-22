@@ -120,7 +120,7 @@ export default function AuditPage() {
             <Filter className="h-4 w-4 text-gray-500" />
             <span className="text-sm font-medium text-gray-700">Filters</span>
           </div>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3">
             <Select value={filters.dateRange || "all"} onValueChange={(v) => updateFilter("dateRange", v)}>
               <SelectTrigger>
                 <SelectValue placeholder="Date Range" />
@@ -187,8 +187,8 @@ export default function AuditPage() {
             <span className="text-sm font-normal text-gray-500">{data.total} entries</span>
           </CardTitle>
         </CardHeader>
-        <CardContent>
-          <Table>
+        <CardContent className="overflow-x-auto">
+          <Table className="min-w-[700px]">
             <TableHeader>
               <TableRow>
                 <TableHead className="w-8"></TableHead>

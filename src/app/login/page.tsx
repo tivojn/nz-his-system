@@ -13,7 +13,8 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Hospital, Shield, Activity, Users, Lock, Mail } from "lucide-react";
+import { Hospital, Shield, Activity, Users, Lock, Mail, Languages } from "lucide-react";
+import type { Language } from "@/components/bilingual-provider";
 
 const demoAccounts = [
   { email: "admin@nzhis.co.nz", role: "Admin", name: "Dr. Sarah Mitchell", icon: Shield },
@@ -36,19 +37,50 @@ const roleColors: Record<string, string> = {
   Receptionist: "bg-orange-100 text-orange-800 border-orange-200",
 };
 
-const features = [
-  { title: "FHIR R4 Compliant", desc: "Full HL7 FHIR integration for clinical data exchange" },
-  { title: "AI-Powered CDSS", desc: "Clinical decision support with intelligent alerts" },
-  { title: "Hauora Equity", desc: "Cultural health equity tracking and reporting" },
-  { title: "ACC Integration", desc: "Seamless ACC claims management workflow" },
-];
+const features: Record<Language, { title: string; desc: string }[]> = {
+  en: [
+    { title: "FHIR R4 Compliant", desc: "Full HL7 FHIR integration for clinical data exchange" },
+    { title: "AI-Powered CDSS", desc: "Clinical decision support with intelligent alerts" },
+    { title: "Hauora Equity", desc: "Cultural health equity tracking and reporting" },
+    { title: "ACC Integration", desc: "Seamless ACC claims management workflow" },
+  ],
+  cn: [
+    { title: "FHIR R4 标准", desc: "完整的 HL7 FHIR 临床数据交换集成" },
+    { title: "AI 临床决策支持", desc: "智能预警的临床决策支持系统" },
+    { title: "健康公平", desc: "文化健康公平追踪与报告" },
+    { title: "ACC 理赔集成", desc: "无缝的 ACC 理赔管理工作流" },
+  ],
+  mi: [
+    { title: "FHIR R4 Compliant", desc: "Full HL7 FHIR integration for clinical data exchange" },
+    { title: "AI-Powered CDSS", desc: "Clinical decision support with intelligent alerts" },
+    { title: "Hauora Equity", desc: "Cultural health equity tracking and reporting" },
+    { title: "ACC Integration", desc: "Seamless ACC claims management workflow" },
+  ],
+};
+
+const welcomeText: Record<Language, { primary: string; secondary: string }> = {
+  en: { primary: "Welcome", secondary: "Nau mai, haere mai" },
+  cn: { primary: "欢迎使用", secondary: "Welcome" },
+  mi: { primary: "Nau mai, haere mai", secondary: "Welcome" },
+};
+
+const greetingText: Record<Language, { title: string; subtitle: string }> = {
+  en: { title: "Kia ora", subtitle: "Sign in to access the clinical portal" },
+  cn: { title: "你好", subtitle: "登录以访问临床门户" },
+  mi: { title: "Kia ora", subtitle: "Sign in to access the clinical portal" },
+};
 
 export default function LoginPage() {
   const [email, setEmail] = useState("doctor@nzhis.co.nz");
   const [password, setPassword] = useState("demo123");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [lang, setLang] = useState<Language>("en");
   const router = useRouter();
+
+  const cycleLang = () => {
+    setLang((prev) => (prev === "en" ? "cn" : prev === "cn" ? "mi" : "en"));
+  };
 
   const doLogin = (loginEmail: string, loginPassword: string) => {
     if (loginPassword !== "demo123") {
@@ -92,12 +124,12 @@ export default function LoginPage() {
             </div>
 
             <div className="border-t border-white/10 pt-6">
-              <p className="text-2xl font-light text-white italic">Nau mai, haere mai</p>
-              <p className="text-teal-200/70 text-sm mt-1">Welcome</p>
+              <p className="text-2xl font-light text-white italic">{welcomeText[lang].primary}</p>
+              <p className="text-teal-200/70 text-sm mt-1">{welcomeText[lang].secondary}</p>
             </div>
 
             <div className="space-y-3 text-left">
-              {features.map((f) => (
+              {features[lang].map((f) => (
                 <div key={f.title} className="flex items-start gap-3">
                   <div className="w-1.5 h-1.5 rounded-full bg-emerald-400 mt-2 flex-shrink-0" />
                   <div>
@@ -120,8 +152,17 @@ export default function LoginPage() {
         <div className="w-full max-w-sm space-y-8">
           {/* Greeting */}
           <div>
-            <h2 className="text-2xl font-bold text-gray-900">Kia ora</h2>
-            <p className="text-gray-500 mt-1 text-sm">Sign in to access the clinical portal</p>
+            <div className="flex items-center justify-between">
+              <h2 className="text-2xl font-bold text-gray-900">{greetingText[lang].title}</h2>
+              <button
+                onClick={cycleLang}
+                className="flex items-center gap-1.5 text-xs font-medium text-gray-500 hover:text-teal-700 transition-colors px-2 py-1 rounded-md hover:bg-teal-50"
+              >
+                <Languages className="h-3.5 w-3.5" />
+                {lang === "en" ? "EN" : lang === "cn" ? "\u4E2D\u6587" : "Mi"}
+              </button>
+            </div>
+            <p className="text-gray-500 mt-1 text-sm">{greetingText[lang].subtitle}</p>
           </div>
 
           {/* Login form */}

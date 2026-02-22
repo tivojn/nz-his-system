@@ -585,12 +585,12 @@ export default function PatientDetailPage() {
                   <Plus className="h-4 w-4 mr-1" /> Record Vitals
                 </Button>
               </DialogTrigger>
-              <DialogContent className="max-w-lg">
+              <DialogContent className="max-w-lg max-h-[80vh] overflow-y-auto">
                 <DialogHeader>
                   <DialogTitle>Record Vital Signs</DialogTitle>
                 </DialogHeader>
                 <div className="space-y-4">
-                  <div className="grid grid-cols-2 gap-3">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                     <div>
                       <Label>Heart Rate (bpm)</Label>
                       <Input type="number" value={vitalForm.heartRate} onChange={(e) => setVitalForm({ ...vitalForm, heartRate: e.target.value })} />
@@ -620,7 +620,7 @@ export default function PatientDetailPage() {
                     <Switch checked={vitalForm.onSupplementalO2} onCheckedChange={(v) => setVitalForm({ ...vitalForm, onSupplementalO2: v })} />
                     <Label>Supplemental O2</Label>
                   </div>
-                  <div className="grid grid-cols-2 gap-3">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                     <div>
                       <Label>Consciousness (AVPU)</Label>
                       <Select value={vitalForm.consciousness} onValueChange={(v) => setVitalForm({ ...vitalForm, consciousness: v })}>
@@ -729,7 +729,7 @@ export default function PatientDetailPage() {
                   <Plus className="h-4 w-4 mr-1" /> Prescribe
                 </Button>
               </DialogTrigger>
-              <DialogContent className="max-w-lg">
+              <DialogContent className="max-w-lg max-h-[80vh] overflow-y-auto">
                 <DialogHeader>
                   <DialogTitle>Prescribe Medication</DialogTitle>
                 </DialogHeader>
@@ -759,7 +759,7 @@ export default function PatientDetailPage() {
                       </AlertDescription>
                     </Alert>
                   )}
-                  <div className="grid grid-cols-2 gap-3">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                     <div>
                       <Label>Dose</Label>
                       <Input value={medForm.dose} onChange={(e) => setMedForm({ ...medForm, dose: e.target.value })} />
@@ -862,7 +862,7 @@ export default function PatientDetailPage() {
                     Discharge Patient
                   </Button>
                 </DialogTrigger>
-                <DialogContent className="max-w-lg">
+                <DialogContent className="max-w-lg max-h-[80vh] overflow-y-auto">
                   <DialogHeader>
                     <DialogTitle>
                       Discharge Workflow {dischargeStep > 0 && `(Step ${dischargeStep + 1}/5)`}
@@ -1035,8 +1035,8 @@ export default function PatientDetailPage() {
         {/* Observations Tab */}
         <TabsContent value="observations">
           <Card className="border-0 shadow-sm">
-            <CardContent className="p-0">
-              <table className="w-full">
+            <CardContent className="p-0 overflow-x-auto">
+              <table className="w-full min-w-[600px]">
                 <thead>
                   <tr className="border-b bg-gray-50">
                     <th className="text-left p-3 text-xs font-medium text-gray-500">Type</th>

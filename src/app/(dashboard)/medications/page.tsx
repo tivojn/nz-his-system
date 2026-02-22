@@ -200,7 +200,7 @@ export default function MedicationsPage() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-wrap items-center justify-between gap-3">
         <div className="flex items-center gap-3">
           <Pill className="h-8 w-8 text-teal-700" />
           <div>
@@ -216,7 +216,7 @@ export default function MedicationsPage() {
               <Plus className="h-4 w-4 mr-1" /> Prescribe
             </Button>
           </DialogTrigger>
-          <DialogContent className="max-w-lg">
+          <DialogContent className="max-w-lg max-h-[80vh] overflow-y-auto">
             <DialogHeader>
               <DialogTitle>Prescribe Medication</DialogTitle>
             </DialogHeader>
@@ -269,7 +269,7 @@ export default function MedicationsPage() {
                 </Alert>
               )}
 
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                 <div>
                   <Label>Dose</Label>
                   <Input
@@ -363,7 +363,7 @@ export default function MedicationsPage() {
                         med.status === "discontinued" ? "bg-gray-50 opacity-60" : "bg-white"
                       }`}
                     >
-                      <div className="flex items-center justify-between mb-2">
+                      <div className="flex flex-wrap items-center justify-between gap-2 mb-2">
                         <div className="flex items-center gap-2">
                           <span className="font-medium">{med.name}</span>
                           <Badge className={statusColors[med.status]}>{med.status}</Badge>
@@ -393,13 +393,13 @@ export default function MedicationsPage() {
                           ))}
                         </div>
                       )}
-                      <div className="flex items-center justify-between">
+                      <div className="flex flex-wrap items-center justify-between gap-2">
                         <span className="text-xs text-gray-400">
                           Prescribed by {med.prescriber.name} on{" "}
                           {new Date(med.startDate).toLocaleDateString("en-NZ")}
                         </span>
                         {med.status !== "discontinued" && med.status !== "administered" && (
-                          <div className="flex gap-1">
+                          <div className="flex flex-wrap gap-1">
                             {currentStepIdx < statusSteps.length - 1 && (
                               <Button
                                 size="sm"

@@ -124,7 +124,7 @@ export default function HauoraPage() {
           <CardDescription>Average wait times across departments — Maori vs non-Maori</CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="h-80">
+          <div className="h-64 md:h-80">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={data.waitTimes} margin={{ top: 5, right: 20, bottom: 5, left: 0 }}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
@@ -148,7 +148,7 @@ export default function HauoraPage() {
           <CardDescription>Hospital admission rates by condition</CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="h-72">
+          <div className="h-56 md:h-72">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart
                 data={data.admissionRates}
@@ -221,7 +221,7 @@ export default function HauoraPage() {
           <CardTitle className="text-lg">Te Whatu Ora Equity Targets</CardTitle>
           <CardDescription>National equity targets and current progress</CardDescription>
         </CardHeader>
-        <CardContent>
+        <CardContent className="overflow-x-auto">
           <Table>
             <TableHeader>
               <TableRow>

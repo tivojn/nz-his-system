@@ -1,7 +1,7 @@
 "use client";
 
 import { useBilingual } from "./bilingual-provider";
-import { getTeReo } from "@/lib/te-reo";
+import { getTeReo, getZhCN } from "@/lib/te-reo";
 
 interface BilingualLabelProps {
   children: string;
@@ -10,15 +10,21 @@ interface BilingualLabelProps {
 }
 
 export function BilingualLabel({ children, className, subtitleClassName }: BilingualLabelProps) {
-  const { teReoEnabled } = useBilingual();
-  const maori = getTeReo(children);
+  const { language } = useBilingual();
+
+  const subtitle =
+    language === "cn"
+      ? getZhCN(children)
+      : language === "mi"
+        ? getTeReo(children)
+        : undefined;
 
   return (
     <span className={className}>
       {children}
-      {teReoEnabled && maori && (
+      {subtitle && (
         <span className={subtitleClassName || "block text-[10px] opacity-60 font-normal leading-tight"}>
-          {maori}
+          {subtitle}
         </span>
       )}
     </span>

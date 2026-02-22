@@ -25,7 +25,6 @@ import {
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Switch } from "@/components/ui/switch";
 import {
   Collapsible,
   CollapsibleContent,
@@ -115,7 +114,7 @@ export function Sidebar() {
     Analytics: true,
     "AI Tools": true,
   });
-  const { teReoEnabled, toggleTeReo } = useBilingual();
+  const { language, toggleTeReo } = useBilingual();
 
   useEffect(() => {
     setSession(getSession());
@@ -229,17 +228,18 @@ export function Sidebar() {
       {/* Footer */}
       <div className="px-3 py-3 border-t border-teal-700/30 space-y-3">
         {/* Language toggle */}
-        <div className="flex items-center justify-between px-3 py-1.5">
+        <button
+          onClick={toggleTeReo}
+          className="flex items-center justify-between w-full px-3 py-1.5 rounded-lg hover:bg-white/10 transition-colors"
+        >
           <div className="flex items-center gap-2 text-teal-200/70">
             <Languages className="h-4 w-4" />
-            <span className="text-xs font-medium">Te Reo</span>
+            <span className="text-xs font-medium">Language</span>
           </div>
-          <Switch
-            size="sm"
-            checked={teReoEnabled}
-            onCheckedChange={toggleTeReo}
-          />
-        </div>
+          <span className="text-xs font-semibold text-white bg-white/15 px-2 py-0.5 rounded-md">
+            {language === "en" ? "EN" : language === "cn" ? "\u4E2D\u6587" : "Mi"}
+          </span>
+        </button>
 
         {/* Sign out */}
         <button

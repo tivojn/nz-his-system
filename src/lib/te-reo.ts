@@ -108,6 +108,102 @@ export function getBilingualLabel(english: string): { en: string; mi: string | u
   };
 }
 
+// Chinese Simplified translations for NZ-HIS
+export const zhCN: Record<string, string> = {
+  // Navigation sections
+  "Clinical": "临床",
+  "Operations": "运营",
+  "Analytics": "数据分析",
+  "AI Tools": "AI 工具",
+
+  // Navigation items
+  "Dashboard": "仪表盘",
+  "Patients": "患者",
+  "Clinical EMR": "临床电子病历",
+  "Medications": "药物管理",
+  "CDSS": "临床决策支持",
+  "Appointments": "预约",
+  "Waitlist": "候诊名单",
+  "Bed Management": "床位管理",
+  "ACC Claims": "ACC 理赔",
+  "Hauora Equity": "健康公平",
+  "Audit Trail": "审计日志",
+  "AI Commander": "AI 指挥官",
+
+  // Common terms
+  "Patient": "患者",
+  "Doctor": "医生",
+  "Nurse": "护士",
+  "Hospital": "医院",
+  "Health": "健康",
+  "Wellbeing": "福祉",
+  "Family": "家庭",
+  "Welcome": "欢迎",
+  "Search": "搜索",
+  "Add New": "新增",
+  "Save": "保存",
+  "Cancel": "取消",
+  "Close": "关闭",
+  "Delete": "删除",
+  "Edit": "编辑",
+  "View": "查看",
+  "Status": "状态",
+  "Active": "活跃",
+  "Completed": "已完成",
+  "Pending": "待处理",
+
+  // Clinical terms
+  "Vital Signs": "生命体征",
+  "Blood Pressure": "血压",
+  "Heart Rate": "心率",
+  "Temperature": "体温",
+  "Diagnosis": "诊断",
+  "Treatment": "治疗",
+  "Prescription": "处方",
+  "Discharge": "出院",
+  "Admission": "入院",
+  "Emergency": "急诊",
+  "Surgery": "手术",
+  "Alert": "警报",
+  "Critical": "危急",
+  "Warning": "警告",
+
+  // NZ-specific (keep English/NZ terms where appropriate)
+  "NHI Number": "NHI 编号",
+  "ACC Claim": "ACC 理赔",
+  "Iwi": "部落 (Iwi)",
+  "Ethnicity": "民族",
+  "Region": "地区",
+  "Whanau": "家庭 (Whānau)",
+  "Hauora": "健康 (Hauora)",
+
+  // Dashboard
+  "Total Patients": "患者总数",
+  "Active Admissions": "在院患者",
+  "Today's Appointments": "今日预约",
+  "Waitlist Count": "候诊人数",
+  "Patient Census": "患者统计",
+  "Demographics": "人口统计",
+  "Quality Metrics": "质量指标",
+  "Activity Feed": "动态信息",
+
+  // Greetings
+  "Good Morning": "早上好",
+  "Good Afternoon": "下午好",
+  "Good Evening": "晚上好",
+
+  // Hauora/Equity
+  "Health Equity": "健康公平",
+  "Cultural Safety": "文化安全",
+  "Whanau Ora": "家庭健康",
+  "Te Whatu Ora": "新西兰卫生部",
+  "Health Targets": "健康目标",
+};
+
+export function getZhCN(key: string): string | undefined {
+  return zhCN[key];
+}
+
 export const teReoGlossary = [
   { term: "Hauora", meaning: "Health, wellbeing", context: "Holistic Māori concept of health encompassing physical, mental, spiritual, and family wellbeing" },
   { term: "Whānau", meaning: "Family, extended family", context: "Central to Māori health — health of an individual is tied to the health of their whānau" },

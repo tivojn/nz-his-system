@@ -53,7 +53,7 @@ interface ActivityFeedProps {
 
 export function ActivityFeed({ items }: ActivityFeedProps) {
   return (
-    <ScrollArea className="h-[400px] custom-scrollbar">
+    <ScrollArea className="h-[300px] md:h-[400px] custom-scrollbar">
       <div className="space-y-1 pr-3">
         {items.map((item) => {
           const config = typeConfig[item.type] || {

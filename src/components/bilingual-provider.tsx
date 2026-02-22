@@ -1,38 +1,54 @@
 "use client";
 
 import React, { createContext, useContext, useState, useCallback } from "react";
-import { getTeReo } from "@/lib/te-reo";
+import { getTeReo, getZhCN } from "@/lib/te-reo";
+
+export type Language = "en" | "cn" | "mi";
 
 interface BilingualContextType {
+  language: Language;
+  setLanguage: (lang: Language) => void;
   teReoEnabled: boolean;
   toggleTeReo: () => void;
   t: (english: string) => string;
 }
 
 const BilingualContext = createContext<BilingualContextType>({
+  language: "en",
+  setLanguage: () => {},
   teReoEnabled: false,
   toggleTeReo: () => {},
   t: (english: string) => english,
 });
 
 export function BilingualProvider({ children }: { children: React.ReactNode }) {
-  const [teReoEnabled, setTeReoEnabled] = useState(false);
+  const [language, setLanguage] = useState<Language>("en");
+
+  const teReoEnabled = language === "mi";
 
   const toggleTeReo = useCallback(() => {
-    setTeReoEnabled((prev) => !prev);
+    setLanguage((prev) => {
+      if (prev === "en") return "cn";
+      if (prev === "cn") return "mi";
+      return "en";
+    });
   }, []);
 
   const t = useCallback(
     (english: string) => {
-      if (!teReoEnabled) return english;
-      const maori = getTeReo(english);
-      return maori || english;
+      if (language === "cn") {
+        return getZhCN(english) || english;
+      }
+      if (language === "mi") {
+        return getTeReo(english) || english;
+      }
+      return english;
     },
-    [teReoEnabled]
+    [language]
   );
 
   return (
-    <BilingualContext.Provider value={{ teReoEnabled, toggleTeReo, t }}>
+    <BilingualContext.Provider value={{ language, setLanguage, teReoEnabled, toggleTeReo, t }}>
       {children}
     </BilingualContext.Provider>
   );
