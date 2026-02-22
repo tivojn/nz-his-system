@@ -215,18 +215,18 @@ export default function CDSSPage() {
       </div>
 
       <Tabs defaultValue="alerts" className="space-y-4">
-        <TabsList className="bg-white border shadow-sm">
-          <TabsTrigger value="alerts" className="gap-1">
-            <AlertTriangle className="h-4 w-4" /> {t("Active Alerts")}
+        <TabsList className="bg-white border shadow-sm flex-wrap h-auto gap-1 p-1">
+          <TabsTrigger value="alerts" className="gap-1 text-xs sm:text-sm">
+            <AlertTriangle className="h-4 w-4 flex-shrink-0" /> {t("Active Alerts")}
           </TabsTrigger>
-          <TabsTrigger value="pathways" className="gap-1">
-            <ChevronRight className="h-4 w-4" /> {t("Clinical Pathways")}
+          <TabsTrigger value="pathways" className="gap-1 text-xs sm:text-sm">
+            <ChevronRight className="h-4 w-4 flex-shrink-0" /> {t("Clinical Pathways")}
           </TabsTrigger>
-          <TabsTrigger value="news2" className="gap-1">
-            <Activity className="h-4 w-4" /> {t("NEWS2 Calculator")}
+          <TabsTrigger value="news2" className="gap-1 text-xs sm:text-sm">
+            <Activity className="h-4 w-4 flex-shrink-0" /> {t("NEWS2 Calculator")}
           </TabsTrigger>
-          <TabsTrigger value="falls" className="gap-1">
-            <Shield className="h-4 w-4" /> {t("Falls Risk")}
+          <TabsTrigger value="falls" className="gap-1 text-xs sm:text-sm">
+            <Shield className="h-4 w-4 flex-shrink-0" /> {t("Falls Risk")}
           </TabsTrigger>
         </TabsList>
 
@@ -255,9 +255,9 @@ export default function CDSSPage() {
                   } ${alert.status !== "active" ? "opacity-60" : ""}`}
                 >
                   <CardContent className="p-4">
-                    <div className="flex items-start justify-between">
-                      <div className="flex-1">
-                        <div className="flex items-center gap-2 mb-1">
+                    <div className="space-y-3">
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-2 mb-1 flex-wrap">
                           <Badge className={`${config.color} text-white text-xs`}>
                             {config.label}
                           </Badge>
@@ -269,7 +269,7 @@ export default function CDSSPage() {
                           )}
                         </div>
                         <p className="text-sm text-gray-700 mt-1">{alert.message}</p>
-                        <div className="flex items-center gap-3 mt-2 text-xs text-gray-400">
+                        <div className="flex flex-wrap items-center gap-x-3 gap-y-1 mt-2 text-xs text-gray-400">
                           {alert.patient && (
                             <span>
                               {t("Patient:")} {alert.patient.firstName} {alert.patient.lastName} ({alert.patient.nhiNumber})
@@ -280,7 +280,7 @@ export default function CDSSPage() {
                         </div>
                       </div>
                       {alert.status === "active" && (
-                        <div className="flex gap-2 ml-4">
+                        <div className="flex gap-2 flex-wrap">
                           <Button
                             size="sm"
                             variant="outline"

@@ -273,10 +273,10 @@ export default function ReferralsPage() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div className="min-w-0">
           <h1 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
-            <Send className="h-7 w-7 text-teal-600" />
+            <Send className="h-7 w-7 text-teal-600 flex-shrink-0" />
             {t("Referral Management")}
           </h1>
           <p className="text-gray-500 mt-1">
@@ -284,7 +284,7 @@ export default function ReferralsPage() {
           </p>
         </div>
         <Button
-          className="bg-teal-700 hover:bg-teal-800"
+          className="bg-teal-700 hover:bg-teal-800 flex-shrink-0"
           onClick={() => setDialogOpen(true)}
         >
           <Plus className="h-4 w-4" />

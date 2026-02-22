@@ -504,9 +504,9 @@ export default function IncidentsPage() {
       </div>
 
       {/* Filters */}
-      <div className="flex flex-wrap gap-3">
+      <div className="flex flex-col sm:flex-row flex-wrap gap-3">
         <Select value={typeFilter} onValueChange={setTypeFilter}>
-          <SelectTrigger className="w-[180px]">
+          <SelectTrigger className="w-full sm:w-[180px]">
             <SelectValue placeholder={t("Type")} />
           </SelectTrigger>
           <SelectContent>
@@ -519,7 +519,7 @@ export default function IncidentsPage() {
           </SelectContent>
         </Select>
         <Select value={severityFilter} onValueChange={setSeverityFilter}>
-          <SelectTrigger className="w-[180px]">
+          <SelectTrigger className="w-full sm:w-[180px]">
             <SelectValue placeholder={t("Severity")} />
           </SelectTrigger>
           <SelectContent>
@@ -532,7 +532,7 @@ export default function IncidentsPage() {
           </SelectContent>
         </Select>
         <Select value={statusFilter} onValueChange={setStatusFilter}>
-          <SelectTrigger className="w-[180px]">
+          <SelectTrigger className="w-full sm:w-[180px]">
             <SelectValue placeholder={t("Status")} />
           </SelectTrigger>
           <SelectContent>

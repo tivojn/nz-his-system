@@ -294,8 +294,8 @@ export default function StaffPage() {
       </div>
 
       {/* Filters */}
-      <div className="flex flex-wrap gap-3">
-        <div className="relative flex-1 min-w-[200px]">
+      <div className="flex flex-col sm:flex-row flex-wrap gap-3">
+        <div className="relative flex-1 min-w-0">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
           <Input
             className="pl-9"
@@ -305,7 +305,7 @@ export default function StaffPage() {
           />
         </div>
         <Select value={roleFilter} onValueChange={setRoleFilter}>
-          <SelectTrigger className="w-[180px]">
+          <SelectTrigger className="w-full sm:w-[180px]">
             <SelectValue placeholder={t("Role")} />
           </SelectTrigger>
           <SelectContent>
@@ -318,7 +318,7 @@ export default function StaffPage() {
           </SelectContent>
         </Select>
         <Select value={deptFilter} onValueChange={setDeptFilter}>
-          <SelectTrigger className="w-[200px]">
+          <SelectTrigger className="w-full sm:w-[200px]">
             <SelectValue placeholder={t("Department")} />
           </SelectTrigger>
           <SelectContent>

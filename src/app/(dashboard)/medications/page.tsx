@@ -414,8 +414,8 @@ export default function MedicationsPage() {
       </div>
 
       {/* Filter Bar */}
-      <div className="flex flex-wrap gap-3">
-        <div className="relative flex-1 min-w-[200px]">
+      <div className="flex flex-col sm:flex-row flex-wrap gap-3">
+        <div className="relative flex-1 min-w-0">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
           <Input
             placeholder={t("Search medications...")}
@@ -425,7 +425,7 @@ export default function MedicationsPage() {
           />
         </div>
         <Select value={statusFilter} onValueChange={setStatusFilter}>
-          <SelectTrigger className="w-[180px]">
+          <SelectTrigger className="w-full sm:w-[180px]">
             <SelectValue placeholder={t("All Statuses")} />
           </SelectTrigger>
           <SelectContent>
@@ -438,7 +438,7 @@ export default function MedicationsPage() {
           </SelectContent>
         </Select>
         <Select value={prescriberFilter} onValueChange={setPrescriberFilter}>
-          <SelectTrigger className="w-[200px]">
+          <SelectTrigger className="w-full sm:w-[200px]">
             <SelectValue placeholder={t("All Prescribers")} />
           </SelectTrigger>
           <SelectContent>

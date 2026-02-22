@@ -281,13 +281,13 @@ export default function AppointmentsPage() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div className="min-w-0">
           <h1 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
-            <Calendar className="h-7 w-7 text-teal-600" />
+            <Calendar className="h-7 w-7 text-teal-600 flex-shrink-0" />
             {t("Appointments")}
           </h1>
-          <p className="text-gray-500 mt-1">
+          <p className="text-gray-500 mt-1 truncate">
             {t("Appointment schedule and booking")}
           </p>
         </div>
@@ -513,8 +513,8 @@ export default function AppointmentsPage() {
         </TabsList>
 
         {/* Filter Bar */}
-        <div className="flex flex-wrap gap-3 mt-4">
-          <div className="relative flex-1 min-w-[200px]">
+        <div className="flex flex-col sm:flex-row flex-wrap gap-3 mt-4">
+          <div className="relative flex-1 min-w-0">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
             <Input
               className="pl-9"
@@ -524,7 +524,7 @@ export default function AppointmentsPage() {
             />
           </div>
           <Select value={statusFilter} onValueChange={setStatusFilter}>
-            <SelectTrigger className="w-[160px]">
+            <SelectTrigger className="w-full sm:w-[160px]">
               <SelectValue placeholder={t("Status")} />
             </SelectTrigger>
             <SelectContent>
@@ -537,7 +537,7 @@ export default function AppointmentsPage() {
             </SelectContent>
           </Select>
           <Select value={deptFilter} onValueChange={setDeptFilter}>
-            <SelectTrigger className="w-[200px]">
+            <SelectTrigger className="w-full sm:w-[200px]">
               <SelectValue placeholder={t("Department")} />
             </SelectTrigger>
             <SelectContent>
