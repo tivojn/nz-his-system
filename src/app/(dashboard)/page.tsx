@@ -126,10 +126,30 @@ export default function DashboardPage() {
 
   return (
     <div className="space-y-6 page-enter">
-      {/* Banner Header */}
-      <div className="rounded-xl gradient-jade p-6 text-white relative overflow-hidden">
+      {/* Premium Banner Header */}
+      <div className="rounded-xl gradient-jade p-6 text-white relative overflow-hidden min-h-[160px]">
         <div className="koru-pattern absolute inset-0 opacity-20" />
-        <div className="relative">
+        {/* Premium decorative elements */}
+        <svg className="absolute right-0 top-0 h-full w-1/2 opacity-10 pointer-events-none" viewBox="0 0 400 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+          {/* ECG heartbeat line */}
+          <path d="M0 100 L60 100 L80 60 L100 140 L120 40 L140 160 L160 80 L180 100 L400 100" stroke="white" strokeWidth="2" fill="none" className="animate-pulse" />
+          {/* Double helix / DNA strand */}
+          <ellipse cx="300" cy="60" rx="60" ry="30" stroke="white" strokeWidth="1.5" fill="none" opacity="0.5" />
+          <ellipse cx="300" cy="80" rx="60" ry="30" stroke="white" strokeWidth="1.5" fill="none" opacity="0.3" />
+          {/* Medical cross */}
+          <rect x="330" y="130" width="8" height="30" rx="2" fill="white" opacity="0.4" />
+          <rect x="322" y="138" width="24" height="8" rx="2" fill="white" opacity="0.4" />
+          {/* Koru spiral */}
+          <path d="M80 160 C80 130, 110 120, 110 150 C110 170, 90 175, 80 160Z" stroke="white" strokeWidth="1.5" fill="none" opacity="0.3" />
+          <path d="M85 155 C85 140, 105 135, 105 150 C105 165, 90 168, 85 155Z" stroke="white" strokeWidth="1" fill="none" opacity="0.2" />
+          {/* Scattered dots */}
+          <circle cx="200" cy="40" r="2" fill="white" opacity="0.3" />
+          <circle cx="250" cy="70" r="1.5" fill="white" opacity="0.2" />
+          <circle cx="180" cy="150" r="2" fill="white" opacity="0.25" />
+          <circle cx="350" cy="50" r="1.5" fill="white" opacity="0.2" />
+          <circle cx="370" cy="170" r="2" fill="white" opacity="0.15" />
+        </svg>
+        <div className="relative z-10">
           {language !== "en" && (
             <p className="text-teal-100 text-sm">{t(getGreetingKey())}</p>
           )}
@@ -137,6 +157,9 @@ export default function DashboardPage() {
             {getGreetingKey()}, {userName || "Clinician"}
           </h1>
           <p className="text-teal-100 mt-1 text-sm">{today}</p>
+          <p className="text-teal-200/70 mt-3 text-xs tracking-wide uppercase">
+            {language === "cn" ? "智慧医疗信息系统 · AI驱动临床决策" : "Intelligent HIS · AI-Powered Clinical Decision Support"}
+          </p>
         </div>
       </div>
 
@@ -441,9 +464,12 @@ export default function DashboardPage() {
       </div>
 
       {/* Footer */}
-      <div className="text-center py-4">
+      <div className="text-center py-4 space-y-1">
         <p className="text-xs text-muted-foreground">
           NZ-HIS v2.0 · FHIR R4 Compliant · Health Information Privacy Code (HIPC) · Te Whatu Ora
+        </p>
+        <p className="text-xs text-muted-foreground/60">
+          Designed by William YAO
         </p>
       </div>
     </div>

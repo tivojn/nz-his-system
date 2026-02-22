@@ -196,8 +196,25 @@ export default function DiagnosisPage() {
                 </CardContent>
               </Card>
 
+              {/* Chinese Report — show first when language is cn */}
+              {language === "cn" && (
+                <Card className="border-0 shadow-sm border-l-4 border-l-teal-600">
+                  <CardHeader className="pb-2">
+                    <CardTitle className="text-sm flex items-center gap-2">
+                      <Badge variant="outline" className="text-xs bg-red-50 text-red-700 border-red-200">中文</Badge>
+                      放射科报告
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <pre className="whitespace-pre-wrap text-sm text-gray-700 font-mono leading-relaxed bg-gray-50 p-4 rounded-lg overflow-x-auto">
+                      {report.reportCN}
+                    </pre>
+                  </CardContent>
+                </Card>
+              )}
+
               {/* English Report */}
-              <Card className="border-0 shadow-sm">
+              <Card className={`border-0 shadow-sm ${language === "cn" ? "opacity-80" : ""}`}>
                 <CardHeader className="pb-2">
                   <CardTitle className="text-sm flex items-center gap-2">
                     <Badge variant="outline" className="text-xs">EN</Badge>
@@ -210,23 +227,6 @@ export default function DiagnosisPage() {
                   </pre>
                 </CardContent>
               </Card>
-
-              {/* Chinese Report — show when language is cn */}
-              {language === "cn" && (
-                <Card className="border-0 shadow-sm border-l-4 border-l-red-400">
-                  <CardHeader className="pb-2">
-                    <CardTitle className="text-sm flex items-center gap-2">
-                      <Badge variant="outline" className="text-xs bg-red-50 text-red-700 border-red-200">CN</Badge>
-                      放射科报告
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <pre className="whitespace-pre-wrap text-sm text-gray-700 font-mono leading-relaxed bg-red-50/30 p-4 rounded-lg overflow-x-auto">
-                      {report.reportCN}
-                    </pre>
-                  </CardContent>
-                </Card>
-              )}
 
               {/* Disclaimer */}
               <Card className="border-0 shadow-none bg-amber-50/50 border border-amber-200">
