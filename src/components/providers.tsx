@@ -1,5 +1,11 @@
 "use client";
 
+import { BilingualProvider } from "./bilingual-provider";
+
 export function Providers({ children }: { children: React.ReactNode }) {
-  return <>{children}</>;
+  return (
+    <BilingualProvider>
+      {children}
+    </BilingualProvider>
+  );
 }

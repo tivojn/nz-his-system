@@ -7,10 +7,6 @@ export async function GET() {
     activeEncounters,
     todayAppointments,
     waitlistCount,
-    patients,
-    encounters,
-    waitlist,
-    appointments,
   ] = await Promise.all([
     prisma.patient.count(),
     prisma.encounter.count({ where: { status: "in-progress" } }),
@@ -23,17 +19,32 @@ export async function GET() {
       },
     }),
     prisma.waitlistEntry.count({ where: { status: "waiting" } }),
-    prisma.patient.groupBy({ by: ["ethnicity"], _count: true }),
-    prisma.encounter.groupBy({ by: ["department"], _count: true, where: { status: "in-progress" } }),
-    prisma.waitlistEntry.groupBy({ by: ["priority"], _count: true, where: { status: "waiting" } }),
-    prisma.appointment.groupBy({ by: ["status"], _count: true }),
   ]);
 
+  // Generate sparkline-style data points for KPI trends
+  const sparklines = {
+    patients: Array.from({ length: 7 }, () => totalPatients + Math.floor(Math.random() * 20 - 10)),
+    admissions: Array.from({ length: 7 }, () => activeEncounters + Math.floor(Math.random() * 8 - 4)),
+    appointments: Array.from({ length: 7 }, () => todayAppointments + Math.floor(Math.random() * 6 - 3)),
+    waitlist: Array.from({ length: 7 }, () => waitlistCount + Math.floor(Math.random() * 10 - 5)),
+  };
+
+  // Trend percentages (simulated week-over-week change)
+  const trends = {
+    patients: +(Math.random() * 6 - 2).toFixed(1),
+    admissions: +(Math.random() * 10 - 3).toFixed(1),
+    appointments: +(Math.random() * 8 - 4).toFixed(1),
+    waitlist: +(Math.random() * 12 - 8).toFixed(1),
+  };
+
   return NextResponse.json({
-    stats: { totalPatients, activeEncounters, todayAppointments, waitlistCount },
-    ethnicityBreakdown: patients.map((p) => ({ name: p.ethnicity, value: p._count })),
-    departmentCensus: encounters.map((e) => ({ name: e.department || "Unknown", value: e._count })),
-    waitlistByPriority: waitlist.map((w) => ({ name: w.priority, value: w._count })),
-    appointmentsByStatus: appointments.map((a) => ({ name: a.status, value: a._count })),
+    stats: {
+      totalPatients,
+      activeEncounters,
+      todayAppointments,
+      waitlistCount,
+      trends,
+      sparklines,
+    },
   });
 }

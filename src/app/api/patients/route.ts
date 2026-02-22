@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { createAuditLog } from "@/lib/audit";
 
 export async function GET(req: NextRequest) {
   const search = req.nextUrl.searchParams.get("search") || "";
@@ -32,5 +33,14 @@ export async function GET(req: NextRequest) {
 export async function POST(req: NextRequest) {
   const data = await req.json();
   const patient = await prisma.patient.create({ data });
+
+  await createAuditLog({
+    action: "CREATE",
+    entity: "Patient",
+    entityId: patient.id,
+    severity: "info",
+    details: { nhiNumber: patient.nhiNumber, name: `${patient.firstName} ${patient.lastName}` },
+  });
+
   return NextResponse.json(patient, { status: 201 });
 }

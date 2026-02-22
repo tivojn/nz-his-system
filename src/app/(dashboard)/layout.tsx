@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Sidebar } from "@/components/sidebar";
+import { Toaster } from "@/components/ui/sonner";
 
 function getSession() {
   // Read cookie client-side
@@ -41,11 +42,12 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   if (!session) return null;
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-teal-50/30">
       <Sidebar />
       <main className="lg:pl-64">
-        <div className="p-4 lg:p-8">{children}</div>
+        <div className="p-4 lg:p-8 page-enter">{children}</div>
       </main>
+      <Toaster />
     </div>
   );
 }

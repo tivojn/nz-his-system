@@ -19,6 +19,8 @@ model User {
   updatedAt     DateTime  @updatedAt
   notes         ClinicalNote[]
   appointments  Appointment[]
+  auditLogs     AuditLog[]
+  medications   Medication[]  @relation("PrescribedBy")
 }
 
 model Patient {
@@ -28,8 +30,8 @@ model Patient {
   lastName      String
   dateOfBirth   DateTime
   gender        String
-  ethnicity     String    // European, Māori, Pacific Islander, Asian, Other
-  iwi           String?   // Māori tribal affiliation
+  ethnicity     String    // European, Maori, Pacific Islander, Asian, Other
+  iwi           String?   // Maori tribal affiliation
   phone         String?
   email         String?
   address       String?
@@ -47,6 +49,11 @@ model Patient {
   appointments  Appointment[]
   waitlistEntries WaitlistEntry[]
   observations  Observation[]
+  medications   Medication[]
+  clinicalAlerts ClinicalAlert[]
+  vitalSignSets VitalSignSet[]
+  accClaims     ACCClaim[]
+  bed           Bed?      @relation("PatientBed")
 }
 
 model Encounter {
@@ -71,7 +78,7 @@ model ClinicalNote {
   patient       Patient   @relation(fields: [patientId], references: [id])
   authorId      String
   author        User      @relation(fields: [authorId], references: [id])
-  type          String    @default("soap") // soap, progress, discharge, ai-generated
+  type          String    @default("soap") // soap, progress, discharge, ai-generated, admission, surgical
   subjective    String?
   objective     String?
   assessment    String?
@@ -125,5 +132,137 @@ model Observation {
   unit          String?
   status        String    @default("final") // preliminary, final, amended
   effectiveDate DateTime  @default(now())
+  createdAt     DateTime  @default(now())
+}
+
+// ==================== NEW MODELS ====================
+
+model Medication {
+  id            String    @id @default(cuid())
+  patientId     String
+  patient       Patient   @relation(fields: [patientId], references: [id])
+  prescriberId  String
+  prescriber    User      @relation("PrescribedBy", fields: [prescriberId], references: [id])
+  name          String
+  genericName   String?
+  dose          String
+  unit          String
+  route         String    @default("oral") // oral, iv, im, sc, topical, inhaled
+  frequency     String    // e.g. "BD", "TDS", "PRN", "STAT"
+  status        String    @default("ordered") // ordered, verified, dispensed, administered, discontinued
+  startDate     DateTime  @default(now())
+  endDate       DateTime?
+  instructions  String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+}
+
+model DrugInteraction {
+  id            String    @id @default(cuid())
+  drugA         String
+  drugB         String
+  severity      String    // critical, major, moderate, minor
+  description   String
+  recommendation String
+  createdAt     DateTime  @default(now())
+}
+
+model ClinicalAlert {
+  id            String    @id @default(cuid())
+  patientId     String?
+  patient       Patient?  @relation(fields: [patientId], references: [id])
+  type          String    // drug-interaction, lab-critical, fall-risk, sepsis, allergy, pathway
+  severity      String    // critical, warning, info
+  title         String
+  message       String
+  source        String?   // CDSS, Lab, Nursing, Pharmacy
+  status        String    @default("active") // active, acknowledged, resolved
+  acknowledgedBy String?
+  acknowledgedAt DateTime?
+  resolvedAt    DateTime?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+}
+
+model ClinicalPathway {
+  id            String    @id @default(cuid())
+  name          String
+  code          String    @unique
+  description   String
+  category      String    // cardiac, sepsis, ortho, endocrine
+  steps         String    // JSON string of pathway steps
+  expectedDuration String? // e.g. "4 hours", "72 hours"
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+}
+
+model VitalSignSet {
+  id              String    @id @default(cuid())
+  patientId       String
+  patient         Patient   @relation(fields: [patientId], references: [id])
+  heartRate       Int?
+  systolicBP      Int?
+  diastolicBP     Int?
+  respiratoryRate Int?
+  temperature     Float?
+  oxygenSat       Int?
+  consciousness   String?   // A, V, P, U (AVPU scale)
+  painScore       Int?      // 0-10
+  news2Score      Int?      // National Early Warning Score 2
+  recordedBy      String?
+  recordedAt      DateTime  @default(now())
+  createdAt       DateTime  @default(now())
+}
+
+model ACCClaim {
+  id              String    @id @default(cuid())
+  patientId       String
+  patient         Patient   @relation(fields: [patientId], references: [id])
+  claimNumber     String    @unique
+  injuryDate      DateTime
+  injuryDescription String
+  injuryCode      String?   // Read code / ACC code
+  claimType       String    // work, motor-vehicle, sport, home, assault
+  status          String    @default("lodged") // lodged, accepted, declined, closed, review
+  totalCost       Float     @default(0)
+  events          ACCClaimEvent[]
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+}
+
+model ACCClaimEvent {
+  id            String    @id @default(cuid())
+  claimId       String
+  claim         ACCClaim  @relation(fields: [claimId], references: [id])
+  type          String    // lodged, assessment, treatment, review, payment, closed
+  description   String
+  cost          Float     @default(0)
+  eventDate     DateTime  @default(now())
+  createdAt     DateTime  @default(now())
+}
+
+model Bed {
+  id            String    @id @default(cuid())
+  ward          String    // e.g. "Medical Ward 1", "ICU", "Surgical Ward"
+  bedNumber     String
+  status        String    @default("available") // available, occupied, cleaning, maintenance
+  patientId     String?   @unique
+  patient       Patient?  @relation("PatientBed", fields: [patientId], references: [id])
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  @@unique([ward, bedNumber])
+}
+
+model AuditLog {
+  id            String    @id @default(cuid())
+  userId        String?
+  user          User?     @relation(fields: [userId], references: [id])
+  action        String    // CREATE, READ, UPDATE, DELETE, LOGIN, LOGOUT, PRESCRIBE, DISCHARGE
+  entity        String    // Patient, Encounter, Note, Medication, etc.
+  entityId      String?
+  severity      String    @default("info") // info, warning, critical
+  details       String?   // JSON string with additional context
+  ipAddress     String?
   createdAt     DateTime  @default(now())
 }

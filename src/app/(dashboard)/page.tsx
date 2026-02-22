@@ -1,195 +1,449 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Users, Bed, Calendar, Clock, TrendingUp, Activity } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { Progress } from "@/components/ui/progress";
+import { KpiCard } from "@/components/charts/kpi-card";
+import { ActivityFeed } from "@/components/activity-feed";
+import { PageSkeleton } from "@/components/page-skeleton";
+import {
+  Users,
+  Activity,
+  Calendar,
+  Clock,
+  TrendingUp,
+  TrendingDown,
+  Heart,
+  Target,
+  AlertTriangle,
+  BedDouble,
+} from "lucide-react";
+import {
+  AreaChart,
+  Area,
+  PieChart,
+  Pie,
+  Cell,
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  Tooltip,
+  ResponsiveContainer,
+  CartesianGrid,
+} from "recharts";
+import {
+  generateCensusData,
+  generateDemographicsData,
+  generateBedOccupancy,
+  generateQualityMetrics,
+  generateActivityFeed,
+  generateHealthTargets,
+} from "@/lib/mock-data";
 
-interface DashboardData {
-  stats: {
-    totalPatients: number;
-    activeEncounters: number;
-    todayAppointments: number;
-    waitlistCount: number;
+interface DashboardStats {
+  totalPatients: number;
+  activeEncounters: number;
+  todayAppointments: number;
+  waitlistCount: number;
+  trends: {
+    patients: number;
+    admissions: number;
+    appointments: number;
+    waitlist: number;
   };
-  ethnicityBreakdown: { name: string; value: number }[];
-  departmentCensus: { name: string; value: number }[];
-  waitlistByPriority: { name: string; value: number }[];
-  appointmentsByStatus: { name: string; value: number }[];
+  sparklines: {
+    patients: number[];
+    admissions: number[];
+    appointments: number[];
+    waitlist: number[];
+  };
 }
 
-const priorityColors: Record<string, string> = {
-  urgent: "bg-red-500",
-  "semi-urgent": "bg-yellow-500",
-  routine: "bg-green-500",
-};
+interface DashboardData {
+  stats: DashboardStats;
+}
 
-const statusColors: Record<string, string> = {
-  scheduled: "bg-blue-500",
-  completed: "bg-green-500",
-  cancelled: "bg-red-500",
-  "no-show": "bg-gray-500",
-};
+const PIE_COLORS = [
+  "var(--color-chart-1)",
+  "var(--color-chart-2)",
+  "var(--color-chart-3)",
+  "var(--color-chart-4)",
+  "var(--color-chart-5)",
+];
+
+function getGreeting(): string {
+  const hour = new Date().getHours();
+  if (hour < 12) return "Good Morning";
+  if (hour < 18) return "Good Afternoon";
+  return "Good Evening";
+}
+
+function getTeReoGreeting(): string {
+  const hour = new Date().getHours();
+  if (hour < 12) return "Ata marie";
+  if (hour < 18) return "Ahiahi marie";
+  return "Po marie";
+}
 
 export default function DashboardPage() {
   const [data, setData] = useState<DashboardData | null>(null);
+  const [userName, setUserName] = useState<string>("");
+
+  const censusData = useMemo(() => generateCensusData(), []);
+  const demographicsData = useMemo(() => generateDemographicsData(), []);
+  const bedOccupancy = useMemo(() => generateBedOccupancy(), []);
+  const qualityMetrics = useMemo(() => generateQualityMetrics(), []);
+  const activityFeed = useMemo(() => generateActivityFeed(), []);
+  const healthTargets = useMemo(() => generateHealthTargets(), []);
 
   useEffect(() => {
-    fetch("/api/dashboard").then((r) => r.json()).then(setData);
+    // Read session from cookie
+    const cookie = document.cookie
+      .split(";")
+      .find((c) => c.trim().startsWith("nzhis-session="));
+    if (cookie) {
+      try {
+        const session = JSON.parse(atob(cookie.split("=")[1]));
+        setUserName(session?.name || "");
+      } catch {
+        // ignore
+      }
+    }
+
+    fetch("/api/dashboard")
+      .then((r) => r.json())
+      .then(setData);
   }, []);
 
   if (!data) {
-    return <div className="animate-pulse text-gray-400 p-8">Loading dashboard...</div>;
+    return <PageSkeleton variant="dashboard" />;
   }
 
-  const statCards = [
-    { title: "Total Patients", value: data.stats.totalPatients, icon: Users, color: "text-blue-600", bg: "bg-blue-50" },
-    { title: "Active Admissions", value: data.stats.activeEncounters, icon: Bed, color: "text-teal-600", bg: "bg-teal-50" },
-    { title: "Today's Appointments", value: data.stats.todayAppointments, icon: Calendar, color: "text-purple-600", bg: "bg-purple-50" },
-    { title: "Waitlist", value: data.stats.waitlistCount, icon: Clock, color: "text-orange-600", bg: "bg-orange-50" },
-  ];
+  const today = new Date().toLocaleDateString("en-NZ", {
+    weekday: "long",
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
 
   return (
-    <div className="space-y-6">
-      {/* Header */}
-      <div>
-        <h1 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
-          <Activity className="h-7 w-7 text-teal-600" />
-          Dashboard
-        </h1>
-        <p className="text-gray-500 mt-1">Hospital operations overview — Te Whatu Ora</p>
+    <div className="space-y-6 page-enter">
+      {/* Banner Header */}
+      <div className="rounded-xl gradient-jade p-6 text-white relative overflow-hidden">
+        <div className="koru-pattern absolute inset-0 opacity-20" />
+        <div className="relative">
+          <p className="text-teal-100 text-sm">{getTeReoGreeting()}</p>
+          <h1 className="text-2xl font-bold mt-1">
+            {getGreeting()}, {userName || "Clinician"}
+          </h1>
+          <p className="text-teal-100 mt-1 text-sm">{today}</p>
+        </div>
       </div>
 
-      {/* Stat Cards */}
+      {/* KPI Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        {statCards.map((stat) => (
-          <Card key={stat.title} className="border-0 shadow-sm">
-            <CardContent className="p-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-gray-500">{stat.title}</p>
-                  <p className="text-3xl font-bold text-gray-900 mt-1">{stat.value}</p>
-                </div>
-                <div className={`p-3 rounded-xl ${stat.bg}`}>
-                  <stat.icon className={`h-6 w-6 ${stat.color}`} />
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        ))}
+        <KpiCard
+          title="Total Patients"
+          value={data.stats.totalPatients}
+          trend={data.stats.trends.patients}
+          icon={Users}
+          sparklineData={data.stats.sparklines.patients}
+        />
+        <KpiCard
+          title="Active Admissions"
+          value={data.stats.activeEncounters}
+          trend={data.stats.trends.admissions}
+          icon={BedDouble}
+          sparklineData={data.stats.sparklines.admissions}
+        />
+        <KpiCard
+          title="Today's Appointments"
+          value={data.stats.todayAppointments}
+          trend={data.stats.trends.appointments}
+          icon={Calendar}
+          sparklineData={data.stats.sparklines.appointments}
+        />
+        <KpiCard
+          title="Waitlist Count"
+          value={data.stats.waitlistCount}
+          trend={data.stats.trends.waitlist}
+          icon={Clock}
+          sparklineData={data.stats.sparklines.waitlist}
+        />
       </div>
 
-      {/* Charts Row */}
+      {/* Charts Section */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Department Census */}
+        {/* Patient Census Trend */}
         <Card className="border-0 shadow-sm">
           <CardHeader>
-            <CardTitle className="text-lg flex items-center gap-2">
-              <Bed className="h-5 w-5 text-teal-600" />
-              Department Census
+            <CardTitle className="text-base flex items-center gap-2">
+              <Activity className="h-4 w-4 text-teal-600" />
+              Patient Census Trend
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="space-y-3">
-              {data.departmentCensus.map((dept) => (
-                <div key={dept.name} className="flex items-center justify-between">
-                  <span className="text-sm text-gray-600">{dept.name}</span>
-                  <div className="flex items-center gap-2">
-                    <div className="w-32 bg-gray-100 rounded-full h-2">
-                      <div
-                        className="bg-teal-500 h-2 rounded-full"
-                        style={{ width: `${Math.min((dept.value / 5) * 100, 100)}%` }}
-                      />
-                    </div>
-                    <span className="text-sm font-medium w-8 text-right">{dept.value}</span>
-                  </div>
-                </div>
-              ))}
-              {data.departmentCensus.length === 0 && (
-                <p className="text-gray-400 text-sm">No active admissions</p>
-              )}
+            <div className="h-64">
+              <ResponsiveContainer width="100%" height="100%">
+                <AreaChart data={censusData}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
+                  <XAxis dataKey="day" fontSize={12} tickLine={false} axisLine={false} />
+                  <YAxis fontSize={12} tickLine={false} axisLine={false} />
+                  <Tooltip
+                    contentStyle={{
+                      borderRadius: "8px",
+                      border: "none",
+                      boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
+                    }}
+                  />
+                  <Area
+                    type="monotone"
+                    dataKey="inpatient"
+                    stroke="#0d9488"
+                    fill="#0d948820"
+                    strokeWidth={2}
+                    name="Inpatient"
+                  />
+                  <Area
+                    type="monotone"
+                    dataKey="admissions"
+                    stroke="#00a86b"
+                    fill="#00a86b15"
+                    strokeWidth={2}
+                    name="Admissions"
+                  />
+                  <Area
+                    type="monotone"
+                    dataKey="discharges"
+                    stroke="#2980b9"
+                    fill="#2980b910"
+                    strokeWidth={2}
+                    name="Discharges"
+                  />
+                </AreaChart>
+              </ResponsiveContainer>
             </div>
           </CardContent>
         </Card>
 
-        {/* Ethnicity Breakdown */}
+        {/* Patient Demographics */}
         <Card className="border-0 shadow-sm">
           <CardHeader>
-            <CardTitle className="text-lg flex items-center gap-2">
-              <Users className="h-5 w-5 text-blue-600" />
+            <CardTitle className="text-base flex items-center gap-2">
+              <Users className="h-4 w-4 text-teal-600" />
               Patient Demographics
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="space-y-3">
-              {data.ethnicityBreakdown.map((eth) => (
-                <div key={eth.name} className="flex items-center justify-between">
-                  <span className="text-sm text-gray-600">{eth.name}</span>
-                  <div className="flex items-center gap-2">
-                    <div className="w-32 bg-gray-100 rounded-full h-2">
-                      <div
-                        className="bg-blue-500 h-2 rounded-full"
-                        style={{ width: `${Math.min((eth.value / data.stats.totalPatients) * 100, 100)}%` }}
-                      />
+            <div className="h-64 flex items-center">
+              <div className="w-1/2">
+                <ResponsiveContainer width="100%" height={200}>
+                  <PieChart>
+                    <Pie
+                      data={demographicsData}
+                      dataKey="count"
+                      nameKey="ethnicity"
+                      cx="50%"
+                      cy="50%"
+                      innerRadius={50}
+                      outerRadius={80}
+                      paddingAngle={2}
+                    >
+                      {demographicsData.map((_, index) => (
+                        <Cell
+                          key={`cell-${index}`}
+                          fill={PIE_COLORS[index % PIE_COLORS.length]}
+                        />
+                      ))}
+                    </Pie>
+                    <Tooltip
+                      contentStyle={{
+                        borderRadius: "8px",
+                        border: "none",
+                        boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
+                      }}
+                    />
+                  </PieChart>
+                </ResponsiveContainer>
+              </div>
+              <div className="w-1/2 space-y-2">
+                {demographicsData.map((item, index) => (
+                  <div key={item.ethnicity} className="flex items-center gap-2">
+                    <div
+                      className="w-3 h-3 rounded-full shrink-0"
+                      style={{
+                        backgroundColor: PIE_COLORS[index % PIE_COLORS.length],
+                      }}
+                    />
+                    <span className="text-sm text-muted-foreground flex-1">
+                      {item.ethnicity}
+                    </span>
+                    <span className="text-sm font-medium">{item.count}%</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Department Bed Management */}
+        <Card className="border-0 shadow-sm">
+          <CardHeader>
+            <CardTitle className="text-base flex items-center gap-2">
+              <BedDouble className="h-4 w-4 text-teal-600" />
+              Department Bed Management
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="h-64">
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={bedOccupancy} layout="vertical" barGap={2}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" horizontal={false} />
+                  <XAxis type="number" fontSize={12} tickLine={false} axisLine={false} />
+                  <YAxis
+                    dataKey="ward"
+                    type="category"
+                    fontSize={11}
+                    tickLine={false}
+                    axisLine={false}
+                    width={80}
+                  />
+                  <Tooltip
+                    contentStyle={{
+                      borderRadius: "8px",
+                      border: "none",
+                      boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
+                    }}
+                  />
+                  <Bar dataKey="occupied" fill="#0d9488" name="Occupied" radius={[0, 4, 4, 0]} />
+                  <Bar dataKey="available" fill="#00a86b" name="Available" radius={[0, 4, 4, 0]} />
+                  <Bar dataKey="cleaning" fill="#d4a843" name="Cleaning" radius={[0, 4, 4, 0]} />
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Quality Metrics */}
+        <Card className="border-0 shadow-sm">
+          <CardHeader>
+            <CardTitle className="text-base flex items-center gap-2">
+              <Heart className="h-4 w-4 text-teal-600" />
+              Quality Metrics
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-2 gap-4">
+              {Object.values(qualityMetrics).map((metric) => {
+                const isPositive = metric.trend <= 0 && metric.unit !== "%"
+                  ? metric.trend <= 0
+                  : metric.label === "Patient Satisfaction"
+                    ? metric.trend >= 0
+                    : metric.trend <= 0;
+                return (
+                  <div
+                    key={metric.label}
+                    className="p-4 rounded-xl bg-muted/30 border border-border/50"
+                  >
+                    <p className="text-xs text-muted-foreground font-medium">
+                      {metric.label}
+                    </p>
+                    <p className="text-2xl font-bold mt-1">
+                      {metric.value}
+                      <span className="text-sm font-normal text-muted-foreground ml-0.5">
+                        {metric.unit}
+                      </span>
+                    </p>
+                    <div className="flex items-center gap-1 mt-1">
+                      {isPositive ? (
+                        <TrendingDown className="h-3 w-3 text-emerald-600" />
+                      ) : (
+                        <TrendingUp className="h-3 w-3 text-red-500" />
+                      )}
+                      <span
+                        className={`text-xs font-medium ${
+                          isPositive ? "text-emerald-600" : "text-red-500"
+                        }`}
+                      >
+                        {metric.trend > 0 ? "+" : ""}
+                        {metric.trend}
+                        {metric.unit}
+                      </span>
                     </div>
-                    <span className="text-sm font-medium w-8 text-right">{eth.value}</span>
                   </div>
-                </div>
-              ))}
+                );
+              })}
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Bottom Section */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* NZ Health Targets */}
+        <Card className="border-0 shadow-sm">
+          <CardHeader>
+            <CardTitle className="text-base flex items-center gap-2">
+              <Target className="h-4 w-4 text-teal-600" />
+              NZ Health Targets
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              {healthTargets.map((ht) => {
+                const onTrack = ht.actual >= ht.target;
+                return (
+                  <div key={ht.name}>
+                    <div className="flex items-center justify-between mb-1">
+                      <span className="text-sm font-medium">{ht.name}</span>
+                      <div className="flex items-center gap-2">
+                        <Badge
+                          variant={onTrack ? "default" : "secondary"}
+                          className={
+                            onTrack
+                              ? "bg-emerald-100 text-emerald-700 hover:bg-emerald-100"
+                              : "bg-amber-100 text-amber-700 hover:bg-amber-100"
+                          }
+                        >
+                          {ht.actual}%
+                        </Badge>
+                        <span className="text-xs text-muted-foreground">
+                          / {ht.target}%
+                        </span>
+                      </div>
+                    </div>
+                    <Progress value={ht.actual} className="h-2" />
+                    <p className="text-xs text-muted-foreground mt-1">
+                      {ht.description}
+                    </p>
+                  </div>
+                );
+              })}
             </div>
           </CardContent>
         </Card>
 
-        {/* Waitlist by Priority */}
+        {/* Activity Feed */}
         <Card className="border-0 shadow-sm">
           <CardHeader>
-            <CardTitle className="text-lg flex items-center gap-2">
-              <Clock className="h-5 w-5 text-orange-600" />
-              Waitlist by Priority
+            <CardTitle className="text-base flex items-center gap-2">
+              <Activity className="h-4 w-4 text-teal-600" />
+              Real-time Activity Feed
+              <div className="w-2 h-2 rounded-full bg-emerald-500 pulse-dot ml-1" />
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="space-y-3">
-              {data.waitlistByPriority.map((w) => (
-                <div key={w.name} className="flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <div className={`w-3 h-3 rounded-full ${priorityColors[w.name] || "bg-gray-400"}`} />
-                    <span className="text-sm text-gray-600 capitalize">{w.name}</span>
-                  </div>
-                  <span className="text-lg font-bold text-gray-900">{w.value}</span>
-                </div>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Appointments by Status */}
-        <Card className="border-0 shadow-sm">
-          <CardHeader>
-            <CardTitle className="text-lg flex items-center gap-2">
-              <Calendar className="h-5 w-5 text-purple-600" />
-              Appointments Overview
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-3">
-              {data.appointmentsByStatus.map((a) => (
-                <div key={a.name} className="flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <div className={`w-3 h-3 rounded-full ${statusColors[a.name] || "bg-gray-400"}`} />
-                    <span className="text-sm text-gray-600 capitalize">{a.name}</span>
-                  </div>
-                  <span className="text-lg font-bold text-gray-900">{a.value}</span>
-                </div>
-              ))}
-            </div>
+            <ActivityFeed items={activityFeed} />
           </CardContent>
         </Card>
       </div>
 
       {/* Footer */}
       <div className="text-center py-4">
-        <p className="text-xs text-gray-400">
-          NZ-HIS v1.0 · FHIR R4 Compliant · Health Information Privacy Code (HIPC) · Te Whatu Ora
+        <p className="text-xs text-muted-foreground">
+          NZ-HIS v2.0 · FHIR R4 Compliant · Health Information Privacy Code (HIPC) · Te Whatu Ora
         </p>
       </div>
     </div>

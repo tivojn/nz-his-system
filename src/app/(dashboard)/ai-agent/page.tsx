@@ -1,159 +1,171 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Bot, Send, User, Sparkles } from "lucide-react";
-import { ScrollArea } from "@/components/ui/scroll-area";
+import { useState } from "react";
+import { Card } from "@/components/ui/card";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import { Switch } from "@/components/ui/switch";
+import { Label } from "@/components/ui/label";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import { BrainCircuit, Shield, BookOpen, Network, Command } from "lucide-react";
+import { AgentTab } from "@/components/ai/agent-tab";
+import { CommanderPanel } from "@/components/ai/commander-panel";
 
-interface Message {
-  role: "user" | "assistant";
-  content: string;
-  timestamp: Date;
-}
+const agents = [
+  {
+    id: "clinical" as const,
+    name: "Hauora Clinical AI",
+    icon: BrainCircuit,
+    color: "teal" as const,
+    description: "Clinical decision support, patient summaries, diagnosis assistance",
+    welcome:
+      "Kia ora! I'm Hauora Clinical AI -- your clinical decision support assistant.\n\nI can help with patient summaries, drug interactions, clinical notes, early warning scores, discharge planning, and evidence-based clinical guidance.\n\nTry one of the suggested prompts below, or ask me anything clinical.",
+    prompts: [
+      "Summarise patient AAA1234",
+      "What are the drug interactions for Warfarin?",
+      "Generate SOAP note for chest pain presentation",
+      "Calculate NEWS2 for HR 95, BP 100/60, RR 22, Temp 38.5, SpO2 94%, Alert",
+    ],
+  },
+  {
+    id: "quality" as const,
+    name: "Kounga Quality AI",
+    icon: Shield,
+    color: "amber" as const,
+    description: "Audit compliance, quality metrics, policy adherence",
+    welcome:
+      "Kia ora! I'm Kounga Quality AI -- your quality improvement and compliance assistant.\n\nI can help with documentation audits, quality reports, readmission analysis, prescribing audits, wait time analysis, and KPI monitoring.\n\nTry one of the suggested prompts below.",
+    prompts: [
+      "Check documentation compliance for ward 3",
+      "Generate monthly quality report",
+      "Identify readmission patterns",
+      "Review antibiotic prescribing audit",
+    ],
+  },
+  {
+    id: "research" as const,
+    name: "Rangahau Research AI",
+    icon: BookOpen,
+    color: "purple" as const,
+    description: "Evidence-based medicine, clinical guidelines, literature review",
+    welcome:
+      "Kia ora! I'm Rangahau Research AI -- your evidence-based medicine assistant.\n\nI can help with clinical guideline summaries, surgical evidence reviews, disease management protocols, and NZ-specific clinical guidance.\n\nTry one of the suggested prompts below.",
+    prompts: [
+      "Latest guidelines for sepsis management",
+      "Evidence for ACL reconstruction timing",
+      "Compare diabetes management protocols",
+      "NZ-specific cardiovascular risk guidelines",
+    ],
+  },
+] as const;
 
-const suggestions = [
-  "Show me latest labs for EEE7890",
-  "Summarize today's admissions",
-  "Draft discharge summary for NHI AAA1234",
-  "Show waitlist status",
-  "What can you help me with?",
-];
+const tabColors: Record<string, { active: string; indicator: string }> = {
+  clinical: {
+    active: "data-[state=active]:text-teal-700",
+    indicator: "data-[state=active]:after:bg-teal-600",
+  },
+  quality: {
+    active: "data-[state=active]:text-amber-700",
+    indicator: "data-[state=active]:after:bg-amber-600",
+  },
+  research: {
+    active: "data-[state=active]:text-purple-700",
+    indicator: "data-[state=active]:after:bg-purple-600",
+  },
+};
 
 export default function AIAgentPage() {
-  const [messages, setMessages] = useState<Message[]>([
-    {
-      role: "assistant",
-      content: "🏥 **Kia ora!** I'm the NZ-HIS AI Clinical Assistant.\n\nI can help you with patient lookups, lab results, admission summaries, and discharge drafting.\n\nTry asking me something, or use one of the quick actions below.",
-      timestamp: new Date(),
-    },
-  ]);
-  const [input, setInput] = useState("");
-  const [loading, setLoading] = useState(false);
-  const scrollRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    scrollRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages]);
-
-  const sendMessage = async (text?: string) => {
-    const message = text || input;
-    if (!message.trim()) return;
-
-    setMessages((prev) => [...prev, { role: "user", content: message, timestamp: new Date() }]);
-    setInput("");
-    setLoading(true);
-
-    const res = await fetch("/api/ai", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ message }),
-    });
-    const data = await res.json();
-
-    setMessages((prev) => [...prev, { role: "assistant", content: data.response, timestamp: new Date() }]);
-    setLoading(false);
-  };
+  const [commanderMode, setCommanderMode] = useState(false);
 
   return (
-    <div className="h-[calc(100vh-6rem)] flex flex-col">
-      <div className="mb-4">
-        <h1 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
-          <Bot className="h-7 w-7 text-teal-600" />
-          AI Clinical Assistant
-        </h1>
-        <p className="text-gray-500 mt-1">Natural language queries for clinical data</p>
+    <div className="h-[calc(100vh-6rem)] flex flex-col page-enter">
+      {/* Header */}
+      <div className="mb-4 flex items-center justify-between">
+        <div>
+          <h1 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
+            <Network className="h-7 w-7 text-teal-600" />
+            AI Clinical Commander
+          </h1>
+          <p className="text-gray-500 mt-1">
+            Multi-agent AI assistant for clinical, quality, and research support
+          </p>
+        </div>
+
+        {/* Commander Mode Toggle */}
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <div className="flex items-center gap-2">
+                <Label
+                  htmlFor="commander-mode"
+                  className="text-sm font-medium text-gray-700 cursor-pointer flex items-center gap-1.5"
+                >
+                  <Command className="h-4 w-4" />
+                  Commander Mode
+                </Label>
+                <Switch
+                  id="commander-mode"
+                  checked={commanderMode}
+                  onCheckedChange={setCommanderMode}
+                />
+              </div>
+            </TooltipTrigger>
+            <TooltipContent side="bottom" className="max-w-xs">
+              <p>
+                Commander Mode lets you issue natural language commands that
+                generate multi-system action plans spanning pharmacy, bed
+                management, ACC claims, and more.
+              </p>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
       </div>
 
+      {/* Main content */}
       <Card className="flex-1 border-0 shadow-sm flex flex-col overflow-hidden">
-        {/* Messages */}
-        <ScrollArea className="flex-1 p-4">
-          <div className="space-y-4 max-w-3xl mx-auto">
-            {messages.map((msg, i) => (
-              <div key={i} className={`flex gap-3 ${msg.role === "user" ? "justify-end" : ""}`}>
-                {msg.role === "assistant" && (
-                  <div className="w-8 h-8 bg-teal-100 rounded-full flex items-center justify-center flex-shrink-0">
-                    <Bot className="h-4 w-4 text-teal-700" />
-                  </div>
-                )}
-                <div
-                  className={`rounded-2xl px-4 py-3 max-w-[80%] ${
-                    msg.role === "user"
-                      ? "bg-teal-700 text-white"
-                      : "bg-gray-100 text-gray-900"
-                  }`}
-                >
-                  <div className="text-sm whitespace-pre-wrap">{msg.content}</div>
-                  <div className={`text-xs mt-1 ${msg.role === "user" ? "text-teal-200" : "text-gray-400"}`}>
-                    {msg.timestamp.toLocaleTimeString("en-NZ", { hour: "2-digit", minute: "2-digit" })}
-                  </div>
-                </div>
-                {msg.role === "user" && (
-                  <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0">
-                    <User className="h-4 w-4 text-blue-700" />
-                  </div>
-                )}
-              </div>
+        {commanderMode ? (
+          <CommanderPanel />
+        ) : (
+          <Tabs defaultValue="clinical" className="flex flex-col h-full">
+            <TabsList variant="line" className="px-4 border-b w-full justify-start gap-0">
+              {agents.map((agent) => {
+                const colors = tabColors[agent.id];
+                return (
+                  <TabsTrigger
+                    key={agent.id}
+                    value={agent.id}
+                    className={`gap-2 ${colors.active} ${colors.indicator}`}
+                  >
+                    <agent.icon className="h-4 w-4" />
+                    <span className="hidden sm:inline">{agent.name}</span>
+                    <span className="sm:hidden">{agent.name.split(" ")[0]}</span>
+                  </TabsTrigger>
+                );
+              })}
+            </TabsList>
+
+            {agents.map((agent) => (
+              <TabsContent
+                key={agent.id}
+                value={agent.id}
+                className="flex-1 overflow-hidden mt-0"
+              >
+                <AgentTab
+                  agentName={agent.name}
+                  agentType={agent.id}
+                  agentColor={agent.color}
+                  agentIcon={agent.icon}
+                  examplePrompts={[...agent.prompts]}
+                  welcomeMessage={agent.welcome}
+                />
+              </TabsContent>
             ))}
-            {loading && (
-              <div className="flex gap-3">
-                <div className="w-8 h-8 bg-teal-100 rounded-full flex items-center justify-center">
-                  <Bot className="h-4 w-4 text-teal-700 animate-pulse" />
-                </div>
-                <div className="bg-gray-100 rounded-2xl px-4 py-3">
-                  <div className="flex gap-1">
-                    <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: "0ms" }} />
-                    <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: "150ms" }} />
-                    <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: "300ms" }} />
-                  </div>
-                </div>
-              </div>
-            )}
-            <div ref={scrollRef} />
-          </div>
-        </ScrollArea>
-
-        {/* Suggestions */}
-        {messages.length <= 1 && (
-          <div className="px-4 pb-2">
-            <div className="flex items-center gap-1 text-xs text-gray-400 mb-2">
-              <Sparkles className="h-3 w-3" /> Quick Actions
-            </div>
-            <div className="flex flex-wrap gap-2">
-              {suggestions.map((s) => (
-                <Button
-                  key={s}
-                  variant="outline"
-                  size="sm"
-                  className="text-xs"
-                  onClick={() => sendMessage(s)}
-                >
-                  {s}
-                </Button>
-              ))}
-            </div>
-          </div>
+          </Tabs>
         )}
-
-        {/* Input */}
-        <div className="p-4 border-t">
-          <form
-            onSubmit={(e) => { e.preventDefault(); sendMessage(); }}
-            className="flex gap-2 max-w-3xl mx-auto"
-          >
-            <Input
-              placeholder="Ask about patients, labs, admissions..."
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              disabled={loading}
-              className="flex-1"
-            />
-            <Button type="submit" disabled={loading || !input.trim()} className="bg-teal-700 hover:bg-teal-800">
-              <Send className="h-4 w-4" />
-            </Button>
-          </form>
-        </div>
       </Card>
     </div>
   );
