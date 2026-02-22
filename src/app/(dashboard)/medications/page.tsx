@@ -24,6 +24,7 @@ import {
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Pill, Plus, AlertTriangle } from "lucide-react";
 import { NZ_MEDICATIONS, FREQUENCIES, MEDICATION_STATUSES } from "@/lib/constants";
+import { useBilingual } from "@/components/bilingual-provider";
 
 interface MedicationData {
   id: string;
@@ -65,6 +66,7 @@ const statusColors: Record<string, string> = {
 };
 
 export default function MedicationsPage() {
+  const { t } = useBilingual();
   const [medications, setMedications] = useState<MedicationData[]>([]);
   const [patients, setPatients] = useState<PatientOption[]>([]);
   const [loading, setLoading] = useState(true);
@@ -204,7 +206,7 @@ export default function MedicationsPage() {
         <div className="flex items-center gap-3">
           <Pill className="h-8 w-8 text-teal-700" />
           <div>
-            <h1 className="text-2xl font-bold text-gray-900">Medications</h1>
+            <h1 className="text-2xl font-bold text-gray-900">{t("Medications")}</h1>
             <p className="text-sm text-gray-500">
               {medications.length} active prescription{medications.length !== 1 ? "s" : ""}
             </p>
@@ -213,16 +215,16 @@ export default function MedicationsPage() {
         <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
           <DialogTrigger asChild>
             <Button className="bg-teal-700 hover:bg-teal-800">
-              <Plus className="h-4 w-4 mr-1" /> Prescribe
+              <Plus className="h-4 w-4 mr-1" /> {t("Prescribe")}
             </Button>
           </DialogTrigger>
           <DialogContent className="max-w-lg max-h-[80vh] overflow-y-auto">
             <DialogHeader>
-              <DialogTitle>Prescribe Medication</DialogTitle>
+              <DialogTitle>{t("Prescribe Medication")}</DialogTitle>
             </DialogHeader>
             <div className="space-y-4">
               <div>
-                <Label>Patient</Label>
+                <Label>{t("Patient")}</Label>
                 <Select value={form.patientId} onValueChange={handlePatientSelect}>
                   <SelectTrigger>
                     <SelectValue placeholder="Select patient" />
@@ -237,7 +239,7 @@ export default function MedicationsPage() {
                 </Select>
               </div>
               <div>
-                <Label>Medication</Label>
+                <Label>{t("Medication")}</Label>
                 <Select value={form.medicationIdx} onValueChange={handleMedicationSelect}>
                   <SelectTrigger>
                     <SelectValue placeholder="Select medication" />
@@ -255,7 +257,7 @@ export default function MedicationsPage() {
               {interactions.length > 0 && (
                 <Alert variant="destructive">
                   <AlertTriangle className="h-4 w-4" />
-                  <AlertTitle>Drug Interaction Warning</AlertTitle>
+                  <AlertTitle>{t("Drug Interaction Warning")}</AlertTitle>
                   <AlertDescription>
                     {interactions.map((i, idx) => (
                       <div key={idx} className="mt-1">
@@ -271,14 +273,14 @@ export default function MedicationsPage() {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                 <div>
-                  <Label>Dose</Label>
+                  <Label>{t("Dose")}</Label>
                   <Input
                     value={form.dose}
                     onChange={(e) => setForm({ ...form, dose: e.target.value })}
                   />
                 </div>
                 <div>
-                  <Label>Route</Label>
+                  <Label>{t("Route")}</Label>
                   <Select value={form.route} onValueChange={(v) => setForm({ ...form, route: v })}>
                     <SelectTrigger>
                       <SelectValue />
@@ -295,7 +297,7 @@ export default function MedicationsPage() {
                 </div>
               </div>
               <div>
-                <Label>Frequency</Label>
+                <Label>{t("Frequency")}</Label>
                 <Select value={form.frequency} onValueChange={(v) => setForm({ ...form, frequency: v })}>
                   <SelectTrigger>
                     <SelectValue placeholder="Select frequency" />
@@ -310,7 +312,7 @@ export default function MedicationsPage() {
                 </Select>
               </div>
               <div>
-                <Label>Instructions</Label>
+                <Label>{t("Instructions")}</Label>
                 <Textarea
                   placeholder="Additional instructions..."
                   value={form.instructions}
@@ -322,7 +324,7 @@ export default function MedicationsPage() {
                 disabled={!form.patientId || !form.medicationIdx || !form.frequency || prescribing}
                 className="w-full bg-teal-700 hover:bg-teal-800"
               >
-                {prescribing ? "Prescribing..." : "Prescribe Medication"}
+                {prescribing ? t("Loading...") : t("Prescribe Medication")}
               </Button>
             </div>
           </DialogContent>
@@ -330,11 +332,11 @@ export default function MedicationsPage() {
       </div>
 
       {loading ? (
-        <div className="animate-pulse text-gray-400 p-4">Loading medications...</div>
+        <div className="animate-pulse text-gray-400 p-4">{t("Loading...")}</div>
       ) : Object.keys(grouped).length === 0 ? (
         <Card className="border-0 shadow-sm">
           <CardContent className="p-8 text-center text-gray-500">
-            No medications prescribed yet.
+            {t("No medications prescribed yet.")}
           </CardContent>
         </Card>
       ) : (
@@ -409,7 +411,7 @@ export default function MedicationsPage() {
                                   updateStatus(med.id, statusSteps[currentStepIdx + 1])
                                 }
                               >
-                                Advance to {statusSteps[currentStepIdx + 1]}
+                                {t("Advance to")} {statusSteps[currentStepIdx + 1]}
                               </Button>
                             )}
                             <Button
@@ -418,7 +420,7 @@ export default function MedicationsPage() {
                               className="text-xs h-7 text-red-600 border-red-200 hover:bg-red-50"
                               onClick={() => updateStatus(med.id, "discontinued")}
                             >
-                              Discontinue
+                              {t("Discontinue")}
                             </Button>
                           </div>
                         )}

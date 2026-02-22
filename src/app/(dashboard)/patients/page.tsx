@@ -22,6 +22,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useBilingual } from "@/components/bilingual-provider";
 
 interface Patient {
   id: string;
@@ -48,6 +49,7 @@ const ethnicityColors: Record<string, string> = {
 };
 
 export default function PatientsPage() {
+  const { t } = useBilingual();
   const [patients, setPatients] = useState<Patient[]>([]);
   const [search, setSearch] = useState("");
   const [filterEthnicity, setFilterEthnicity] = useState("");
@@ -89,55 +91,55 @@ export default function PatientsPage() {
         <div>
           <h1 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
             <Users className="h-7 w-7 text-teal-600" />
-            Patient Management
+            {t("Patient Management")}
           </h1>
-          <p className="text-gray-500 mt-1">NHI-based patient registry</p>
+          <p className="text-gray-500 mt-1">{t("NHI-based patient registry")}</p>
         </div>
         <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
           <DialogTrigger asChild>
             <Button className="bg-teal-700 hover:bg-teal-800">
-              <Plus className="h-4 w-4 mr-2" /> Register Patient
+              <Plus className="h-4 w-4 mr-2" /> {t("Register Patient")}
             </Button>
           </DialogTrigger>
           <DialogContent>
             <DialogHeader>
-              <DialogTitle>Register New Patient</DialogTitle>
+              <DialogTitle>{t("Register New Patient")}</DialogTitle>
             </DialogHeader>
             <div className="space-y-4 mt-4">
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <Label>NHI Number</Label>
+                  <Label>{t("NHI Number")}</Label>
                   <Input placeholder="ABC1234" value={newPatient.nhiNumber} onChange={(e) => setNewPatient({ ...newPatient, nhiNumber: e.target.value })} />
                 </div>
                 <div>
-                  <Label>Date of Birth</Label>
+                  <Label>{t("Date of Birth")}</Label>
                   <Input type="date" value={newPatient.dateOfBirth} onChange={(e) => setNewPatient({ ...newPatient, dateOfBirth: e.target.value })} />
                 </div>
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <Label>First Name</Label>
+                  <Label>{t("First Name")}</Label>
                   <Input value={newPatient.firstName} onChange={(e) => setNewPatient({ ...newPatient, firstName: e.target.value })} />
                 </div>
                 <div>
-                  <Label>Last Name</Label>
+                  <Label>{t("Last Name")}</Label>
                   <Input value={newPatient.lastName} onChange={(e) => setNewPatient({ ...newPatient, lastName: e.target.value })} />
                 </div>
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <Label>Gender</Label>
+                  <Label>{t("Gender")}</Label>
                   <Select value={newPatient.gender} onValueChange={(v) => setNewPatient({ ...newPatient, gender: v })}>
                     <SelectTrigger><SelectValue /></SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="male">Male</SelectItem>
-                      <SelectItem value="female">Female</SelectItem>
-                      <SelectItem value="other">Other</SelectItem>
+                      <SelectItem value="male">{t("Male")}</SelectItem>
+                      <SelectItem value="female">{t("Female")}</SelectItem>
+                      <SelectItem value="other">{t("Other")}</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
                 <div>
-                  <Label>Ethnicity</Label>
+                  <Label>{t("Ethnicity")}</Label>
                   <Select value={newPatient.ethnicity} onValueChange={(v) => setNewPatient({ ...newPatient, ethnicity: v })}>
                     <SelectTrigger><SelectValue /></SelectTrigger>
                     <SelectContent>
@@ -150,7 +152,7 @@ export default function PatientsPage() {
                   </Select>
                 </div>
               </div>
-              <Button onClick={handleCreate} className="w-full bg-teal-700 hover:bg-teal-800">Register Patient</Button>
+              <Button onClick={handleCreate} className="w-full bg-teal-700 hover:bg-teal-800">{t("Register Patient")}</Button>
             </div>
           </DialogContent>
         </Dialog>
@@ -161,7 +163,7 @@ export default function PatientsPage() {
         <div className="relative flex-1">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
           <Input
-            placeholder="Search by NHI, name..."
+            placeholder={t("Search patients...")}
             className="pl-10"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
@@ -169,7 +171,7 @@ export default function PatientsPage() {
         </div>
         <Select value={filterEthnicity} onValueChange={setFilterEthnicity}>
           <SelectTrigger className="w-48">
-            <SelectValue placeholder="All Ethnicities" />
+            <SelectValue placeholder={t("All Ethnicities")} />
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="all">All Ethnicities</SelectItem>
@@ -219,12 +221,12 @@ export default function PatientsPage() {
                   </div>
                   <div className="flex items-center gap-4">
                     <div className="text-right text-xs text-gray-400">
-                      <div>{patient._count.notes} notes</div>
-                      <div>{patient._count.appointments} appts</div>
+                      <div>{patient._count.notes} {t("notes")}</div>
+                      <div>{patient._count.appointments} {t("appts")}</div>
                     </div>
                     {patient.encounters[0] && (
                       <Badge className={patient.encounters[0].status === "in-progress" ? "bg-green-100 text-green-800" : "bg-gray-100 text-gray-600"}>
-                        {patient.encounters[0].status === "in-progress" ? "Admitted" : "Discharged"}
+                        {patient.encounters[0].status === "in-progress" ? t("Admitted") : t("Discharged")}
                       </Badge>
                     )}
                     <ChevronRight className="h-5 w-5 text-gray-300" />
@@ -237,7 +239,7 @@ export default function PatientsPage() {
         {patients.length === 0 && (
           <Card className="border-0 shadow-sm">
             <CardContent className="p-8 text-center text-gray-400">
-              No patients found
+              {t("No patients found")}
             </CardContent>
           </Card>
         )}

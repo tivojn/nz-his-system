@@ -293,7 +293,7 @@ export default function DashboardPage() {
           <CardHeader>
             <CardTitle className="text-base flex items-center gap-2">
               <BedDouble className="h-4 w-4 text-teal-600" />
-              Department Bed Management
+              {t("Department Bed Management")}
             </CardTitle>
           </CardHeader>
           <CardContent>

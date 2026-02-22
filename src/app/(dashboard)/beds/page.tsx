@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/hover-card";
 import { BedDouble } from "lucide-react";
 import { BED_STATUSES } from "@/lib/constants";
+import { useBilingual } from "@/components/bilingual-provider";
 
 interface BedData {
   id: string;
@@ -30,6 +31,7 @@ const bedCellColors: Record<string, string> = {
 };
 
 export default function BedsPage() {
+  const { t } = useBilingual();
   const [wards, setWards] = useState<WardMap>({});
 
   useEffect(() => {
@@ -50,34 +52,34 @@ export default function BedsPage() {
       <div>
         <h1 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
           <BedDouble className="h-7 w-7 text-teal-600" />
-          Bed Management — Whakahaere Moenga
+          {t("Bed Management")}
         </h1>
-        <p className="text-gray-500 mt-1">Real-time bed occupancy across all wards</p>
+        <p className="text-gray-500 mt-1">{t("Real-time bed occupancy across all wards")}</p>
       </div>
 
       {/* Occupancy Stats */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         <Card className="border-0 shadow-sm">
           <CardContent className="p-4">
-            <p className="text-sm text-gray-500">Total Beds</p>
+            <p className="text-sm text-gray-500">{t("Total Beds")}</p>
             <p className="text-2xl font-bold text-gray-900">{totalBeds}</p>
           </CardContent>
         </Card>
         <Card className="border-0 shadow-sm">
           <CardContent className="p-4">
-            <p className="text-sm text-gray-500">Occupied</p>
+            <p className="text-sm text-gray-500">{t("Occupied")}</p>
             <p className="text-2xl font-bold text-teal-600">{occupied}</p>
           </CardContent>
         </Card>
         <Card className="border-0 shadow-sm">
           <CardContent className="p-4">
-            <p className="text-sm text-gray-500">Available</p>
+            <p className="text-sm text-gray-500">{t("Available")}</p>
             <p className="text-2xl font-bold text-emerald-600">{available}</p>
           </CardContent>
         </Card>
         <Card className="border-0 shadow-sm">
           <CardContent className="p-4">
-            <p className="text-sm text-gray-500">Cleaning / Maintenance</p>
+            <p className="text-sm text-gray-500">{t("Cleaning / Maintenance")}</p>
             <p className="text-2xl font-bold text-amber-600">{other}</p>
           </CardContent>
         </Card>
@@ -87,7 +89,7 @@ export default function BedsPage() {
       <Card className="border-0 shadow-sm">
         <CardContent className="p-4">
           <div className="flex items-center justify-between mb-2">
-            <p className="text-sm font-medium text-gray-700">Overall Occupancy</p>
+            <p className="text-sm font-medium text-gray-700">{t("Overall Occupancy")}</p>
             <p className="text-sm font-bold text-gray-900">{occupancyPct}%</p>
           </div>
           <Progress value={occupancyPct} className="h-3" />
@@ -170,7 +172,7 @@ export default function BedsPage() {
       {Object.keys(wards).length === 0 && (
         <Card className="border-0 shadow-sm">
           <CardContent className="p-8 text-center">
-            <p className="text-gray-400">No bed data available</p>
+            <p className="text-gray-400">{t("No bed data available")}</p>
           </CardContent>
         </Card>
       )}

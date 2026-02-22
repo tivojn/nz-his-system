@@ -14,6 +14,7 @@ import {
 import { BrainCircuit, Shield, BookOpen, Network, Command } from "lucide-react";
 import { AgentTab } from "@/components/ai/agent-tab";
 import { CommanderPanel } from "@/components/ai/commander-panel";
+import { useBilingual } from "@/components/bilingual-provider";
 
 const agents = [
   {
@@ -79,6 +80,7 @@ const tabColors: Record<string, { active: string; indicator: string }> = {
 };
 
 export default function AIAgentPage() {
+  const { t } = useBilingual();
   const [commanderMode, setCommanderMode] = useState(false);
 
   return (
@@ -88,10 +90,10 @@ export default function AIAgentPage() {
         <div>
           <h1 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
             <Network className="h-7 w-7 text-teal-600" />
-            AI Clinical Commander
+            {t("AI Clinical Commander")}
           </h1>
           <p className="text-gray-500 mt-1">
-            Multi-agent AI assistant for clinical, quality, and research support
+            {t("Multi-agent AI assistant for clinical, quality, and research support")}
           </p>
         </div>
 
@@ -105,7 +107,7 @@ export default function AIAgentPage() {
                   className="text-sm font-medium text-gray-700 cursor-pointer flex items-center gap-1.5"
                 >
                   <Command className="h-4 w-4" />
-                  Commander Mode
+                  {t("Commander Mode")}
                 </Label>
                 <Switch
                   id="commander-mode"

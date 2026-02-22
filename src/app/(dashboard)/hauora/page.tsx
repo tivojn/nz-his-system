@@ -8,6 +8,7 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/component
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { HeartPulse, ChevronDown, Shield } from "lucide-react";
 import { teReoGlossary } from "@/lib/te-reo";
+import { useBilingual } from "@/components/bilingual-provider";
 import {
   BarChart,
   Bar,
@@ -53,6 +54,7 @@ const statusColor: Record<string, string> = {
 };
 
 export default function HauoraPage() {
+  const { t } = useBilingual();
   const [data, setData] = useState<HauoraData | null>(null);
   const [glossaryOpen, setGlossaryOpen] = useState(false);
 
@@ -68,27 +70,27 @@ export default function HauoraPage() {
         <div>
           <h1 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
             <HeartPulse className="h-7 w-7 text-teal-600" />
-            Hauora Equity — Oritenga Hauora
+            {t("Hauora Equity")}
           </h1>
-          <p className="text-gray-500 mt-1">Loading equity data...</p>
+          <p className="text-gray-500 mt-1">{t("Loading equity data...")}</p>
         </div>
       </div>
     );
   }
 
   const safetyMetrics = [
-    { label: "Staff Trained", value: data.culturalSafety.staffTrained },
-    { label: "Interpreter Access", value: data.culturalSafety.interpreterAccess },
-    { label: "Tikanga Compliance", value: data.culturalSafety.tikangaCompliance },
-    { label: "Patient Satisfaction", value: data.culturalSafety.patientSatisfaction },
+    { label: t("Staff Trained"), value: data.culturalSafety.staffTrained },
+    { label: t("Interpreter Access"), value: data.culturalSafety.interpreterAccess },
+    { label: t("Tikanga Compliance"), value: data.culturalSafety.tikangaCompliance },
+    { label: t("Patient Satisfaction"), value: data.culturalSafety.patientSatisfaction },
   ];
 
   const whanauMetrics = [
-    { label: "Family Wellbeing", value: data.whanauOra.familyWellbeing },
-    { label: "Economic Wellbeing", value: data.whanauOra.economicWellbeing },
-    { label: "Healthy Lifestyles", value: data.whanauOra.healthyLifestyles },
-    { label: "Participation", value: data.whanauOra.participation },
-    { label: "Cultural Identity", value: data.whanauOra.culturalIdentity },
+    { label: t("Family Wellbeing"), value: data.whanauOra.familyWellbeing },
+    { label: t("Economic Wellbeing"), value: data.whanauOra.economicWellbeing },
+    { label: t("Healthy Lifestyles"), value: data.whanauOra.healthyLifestyles },
+    { label: t("Participation"), value: data.whanauOra.participation },
+    { label: t("Cultural Identity"), value: data.whanauOra.culturalIdentity },
   ];
 
   return (
@@ -96,10 +98,10 @@ export default function HauoraPage() {
       <div>
         <h1 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
           <HeartPulse className="h-7 w-7 text-teal-600" />
-          Hauora Equity — Oritenga Hauora
+          {t("Hauora Equity")}
         </h1>
         <p className="text-gray-500 mt-1">
-          Health equity monitoring aligned with Te Whatu Ora targets
+          {t("National equity targets and current progress")}
         </p>
       </div>
 
@@ -120,8 +122,8 @@ export default function HauoraPage() {
       {/* Wait Time by Ethnicity */}
       <Card className="border-0 shadow-sm">
         <CardHeader>
-          <CardTitle className="text-lg">Wait Time by Ethnicity (minutes)</CardTitle>
-          <CardDescription>Average wait times across departments — Maori vs non-Maori</CardDescription>
+          <CardTitle className="text-lg">{t("Wait Time by Ethnicity (minutes)")}</CardTitle>
+          <CardDescription>{t("Average wait times across departments — Maori vs non-Maori")}</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="h-64 md:h-80">
@@ -144,8 +146,8 @@ export default function HauoraPage() {
       {/* Admission Rate by Ethnicity */}
       <Card className="border-0 shadow-sm">
         <CardHeader>
-          <CardTitle className="text-lg">Admission Rate by Ethnicity (per 1,000)</CardTitle>
-          <CardDescription>Hospital admission rates by condition</CardDescription>
+          <CardTitle className="text-lg">{t("Admission Rate by Ethnicity (per 1,000)")}</CardTitle>
+          <CardDescription>{t("Hospital admission rates by condition")}</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="h-56 md:h-72">
@@ -174,7 +176,7 @@ export default function HauoraPage() {
           <CardHeader>
             <CardTitle className="text-lg flex items-center gap-2">
               <Shield className="h-5 w-5 text-teal-600" />
-              Cultural Safety Score
+              {t("Cultural Safety Score")}
             </CardTitle>
             <CardDescription>Haumaru Ahurea — Overall: {data.culturalSafety.score}/100</CardDescription>
           </CardHeader>
@@ -198,8 +200,8 @@ export default function HauoraPage() {
         {/* Whanau Ora Indicators */}
         <Card className="border-0 shadow-sm">
           <CardHeader>
-            <CardTitle className="text-lg">Whanau Ora Indicators</CardTitle>
-            <CardDescription>Holistic family wellbeing metrics</CardDescription>
+            <CardTitle className="text-lg">{t("Whanau Ora Indicators")}</CardTitle>
+            <CardDescription>{t("Holistic family wellbeing metrics")}</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             {whanauMetrics.map((m) => (
@@ -218,17 +220,17 @@ export default function HauoraPage() {
       {/* Te Whatu Ora Equity Targets */}
       <Card className="border-0 shadow-sm">
         <CardHeader>
-          <CardTitle className="text-lg">Te Whatu Ora Equity Targets</CardTitle>
-          <CardDescription>National equity targets and current progress</CardDescription>
+          <CardTitle className="text-lg">{t("Te Whatu Ora Equity Targets")}</CardTitle>
+          <CardDescription>{t("National equity targets and current progress")}</CardDescription>
         </CardHeader>
         <CardContent className="overflow-x-auto">
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Metric</TableHead>
-                <TableHead>Target</TableHead>
-                <TableHead>Actual</TableHead>
-                <TableHead>Status</TableHead>
+                <TableHead>{t("Metric")}</TableHead>
+                <TableHead>{t("Target")}</TableHead>
+                <TableHead>{t("Actual")}</TableHead>
+                <TableHead>{t("Status")}</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -255,12 +257,12 @@ export default function HauoraPage() {
           <CollapsibleTrigger asChild>
             <CardHeader className="cursor-pointer hover:bg-gray-50 rounded-t-lg">
               <CardTitle className="text-lg flex items-center gap-2">
-                Te Reo Maori Glossary
+                {t("Te Reo Maori Glossary")}
                 <ChevronDown
                   className={`h-4 w-4 transition-transform ${glossaryOpen ? "rotate-180" : ""}`}
                 />
               </CardTitle>
-              <CardDescription>Health terminology in Te Reo Maori</CardDescription>
+              <CardDescription>{t("Health terminology in Te Reo Maori")}</CardDescription>
             </CardHeader>
           </CollapsibleTrigger>
           <CollapsibleContent>

@@ -6,6 +6,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { FileText, Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
+import { useBilingual } from "@/components/bilingual-provider";
 
 interface Patient {
   id: string;
@@ -18,6 +19,7 @@ interface Patient {
 }
 
 export default function ClinicalPage() {
+  const { t } = useBilingual();
   const [patients, setPatients] = useState<Patient[]>([]);
   const [search, setSearch] = useState("");
 
@@ -37,14 +39,14 @@ export default function ClinicalPage() {
       <div>
         <h1 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
           <FileText className="h-7 w-7 text-teal-600" />
-          Clinical EMR
+          {t("Clinical EMR")}
         </h1>
-        <p className="text-gray-500 mt-1">Electronic Medical Records — Select a patient to view or create notes</p>
+        <p className="text-gray-500 mt-1">{t("Electronic Medical Records")} — {t("Select a patient to view or create notes")}</p>
       </div>
 
       <div className="relative max-w-md">
         <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
-        <Input placeholder="Search patients..." className="pl-10" value={search} onChange={(e) => setSearch(e.target.value)} />
+        <Input placeholder={t("Search patients...")} className="pl-10" value={search} onChange={(e) => setSearch(e.target.value)} />
       </div>
 
       <div className="grid gap-3">
@@ -69,8 +71,8 @@ export default function ClinicalPage() {
                     </div>
                   </div>
                   <div className="flex items-center gap-2">
-                    {activeEnc && <Badge className="bg-green-100 text-green-800">Admitted</Badge>}
-                    <span className="text-sm text-gray-400">{patient._count.notes} notes</span>
+                    {activeEnc && <Badge className="bg-green-100 text-green-800">{t("Admitted")}</Badge>}
+                    <span className="text-sm text-gray-400">{patient._count.notes} {t("notes")}</span>
                   </div>
                 </CardContent>
               </Card>

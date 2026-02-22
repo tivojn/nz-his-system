@@ -20,6 +20,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { History, ChevronDown, ChevronRight, Filter } from "lucide-react";
+import { useBilingual } from "@/components/bilingual-provider";
 
 interface AuditLog {
   id: string;
@@ -59,6 +60,7 @@ const severityColors: Record<string, string> = {
 };
 
 export default function AuditPage() {
+  const { t } = useBilingual();
   const [data, setData] = useState<AuditResponse>({ logs: [], total: 0, page: 1, limit: 20 });
   const [filters, setFilters] = useState({
     action: "",
@@ -108,9 +110,9 @@ export default function AuditPage() {
       <div>
         <h1 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
           <History className="h-7 w-7 text-teal-600" />
-          Audit Trail — Ara Arotake
+          {t("Audit Trail")}
         </h1>
-        <p className="text-gray-500 mt-1">System activity and compliance logging</p>
+        <p className="text-gray-500 mt-1">{t("System activity and compliance logging")}</p>
       </div>
 
       {/* Filters */}
@@ -118,12 +120,12 @@ export default function AuditPage() {
         <CardContent className="p-4">
           <div className="flex items-center gap-2 mb-3">
             <Filter className="h-4 w-4 text-gray-500" />
-            <span className="text-sm font-medium text-gray-700">Filters</span>
+            <span className="text-sm font-medium text-gray-700">{t("Filters")}</span>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3">
             <Select value={filters.dateRange || "all"} onValueChange={(v) => updateFilter("dateRange", v)}>
               <SelectTrigger>
-                <SelectValue placeholder="Date Range" />
+                <SelectValue placeholder={t("Date Range")} />
               </SelectTrigger>
               <SelectContent>
                 {DATE_RANGES.map((d) => (
@@ -136,10 +138,10 @@ export default function AuditPage() {
 
             <Select value={filters.action || "all"} onValueChange={(v) => updateFilter("action", v)}>
               <SelectTrigger>
-                <SelectValue placeholder="Action" />
+                <SelectValue placeholder={t("Action")} />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">All Actions</SelectItem>
+                <SelectItem value="all">{t("All Actions")}</SelectItem>
                 {ACTIONS.map((a) => (
                   <SelectItem key={a} value={a}>
                     {a}
@@ -150,10 +152,10 @@ export default function AuditPage() {
 
             <Select value={filters.severity || "all"} onValueChange={(v) => updateFilter("severity", v)}>
               <SelectTrigger>
-                <SelectValue placeholder="Severity" />
+                <SelectValue placeholder={t("Severity")} />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">All Severities</SelectItem>
+                <SelectItem value="all">{t("All Severities")}</SelectItem>
                 {SEVERITIES.map((s) => (
                   <SelectItem key={s} value={s}>
                     <span className="capitalize">{s}</span>
@@ -164,10 +166,10 @@ export default function AuditPage() {
 
             <Select value={filters.entity || "all"} onValueChange={(v) => updateFilter("entity", v)}>
               <SelectTrigger>
-                <SelectValue placeholder="Entity" />
+                <SelectValue placeholder={t("Entity")} />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">All Entities</SelectItem>
+                <SelectItem value="all">{t("All Entities")}</SelectItem>
                 {ENTITIES.map((e) => (
                   <SelectItem key={e} value={e}>
                     {e}
@@ -183,8 +185,8 @@ export default function AuditPage() {
       <Card className="border-0 shadow-sm">
         <CardHeader className="pb-3">
           <CardTitle className="text-lg flex items-center justify-between">
-            <span>Audit Logs</span>
-            <span className="text-sm font-normal text-gray-500">{data.total} entries</span>
+            <span>{t("Audit Logs")}</span>
+            <span className="text-sm font-normal text-gray-500">{data.total} {t("entries")}</span>
           </CardTitle>
         </CardHeader>
         <CardContent className="overflow-x-auto">
@@ -192,19 +194,19 @@ export default function AuditPage() {
             <TableHeader>
               <TableRow>
                 <TableHead className="w-8"></TableHead>
-                <TableHead>Timestamp</TableHead>
-                <TableHead>User</TableHead>
-                <TableHead>Action</TableHead>
-                <TableHead>Entity</TableHead>
-                <TableHead>Severity</TableHead>
-                <TableHead>Details</TableHead>
+                <TableHead>{t("Timestamp")}</TableHead>
+                <TableHead>{t("User")}</TableHead>
+                <TableHead>{t("Action")}</TableHead>
+                <TableHead>{t("Entity")}</TableHead>
+                <TableHead>{t("Severity")}</TableHead>
+                <TableHead>{t("Details")}</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {data.logs.length === 0 && (
                 <TableRow>
                   <TableCell colSpan={7} className="text-center py-8 text-gray-400">
-                    No audit logs found
+                    {t("No audit logs found")}
                   </TableCell>
                 </TableRow>
               )}
@@ -267,7 +269,7 @@ export default function AuditPage() {
           {totalPages > 1 && (
             <div className="flex items-center justify-between mt-4 pt-4 border-t">
               <p className="text-sm text-gray-500">
-                Page {data.page} of {totalPages}
+                {t("Page")} {data.page} {t("of")} {totalPages}
               </p>
               <div className="flex gap-2">
                 <Button
@@ -276,7 +278,7 @@ export default function AuditPage() {
                   onClick={() => setPage((p) => Math.max(1, p - 1))}
                   disabled={page <= 1}
                 >
-                  Previous
+                  {t("Previous")}
                 </Button>
                 <Button
                   variant="outline"
@@ -284,7 +286,7 @@ export default function AuditPage() {
                   onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
                   disabled={page >= totalPages}
                 >
-                  Next
+                  {t("Next")}
                 </Button>
               </div>
             </div>

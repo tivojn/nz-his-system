@@ -24,6 +24,7 @@ import {
 } from "@/components/ui/select";
 import { FileText, Plus, DollarSign, ChevronDown, ChevronRight, Calendar } from "lucide-react";
 import { ACC_CLAIM_TYPES } from "@/lib/constants";
+import { useBilingual } from "@/components/bilingual-provider";
 
 interface ACCClaimEvent {
   id: string;
@@ -79,6 +80,7 @@ const eventTypeColors: Record<string, string> = {
 };
 
 export default function ACCPage() {
+  const { t } = useBilingual();
   const [claims, setClaims] = useState<ACCClaim[]>([]);
   const [tab, setTab] = useState("all");
   const [expandedId, setExpandedId] = useState<string | null>(null);
@@ -137,26 +139,26 @@ export default function ACCPage() {
         <div>
           <h1 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
             <FileText className="h-7 w-7 text-teal-600" />
-            ACC Claims — Kereme ACC
+            {t("ACC Claims")}
           </h1>
           <p className="text-gray-500 mt-1">
-            Accident Compensation Corporation claim management — {claims.length} claims
+            {t("Accident Compensation Corporation claim management")} — {claims.length} {t("claims")}
           </p>
         </div>
         <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
           <DialogTrigger asChild>
             <Button className="bg-teal-600 hover:bg-teal-700">
               <Plus className="h-4 w-4 mr-2" />
-              New Claim
+              {t("New Claim")}
             </Button>
           </DialogTrigger>
           <DialogContent className="max-w-lg">
             <DialogHeader>
-              <DialogTitle>Lodge New ACC Claim</DialogTitle>
+              <DialogTitle>{t("Lodge New ACC Claim")}</DialogTitle>
             </DialogHeader>
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="space-y-2">
-                <Label>Patient</Label>
+                <Label>{t("Patient")}</Label>
                 <Select value={form.patientId} onValueChange={(v) => setForm({ ...form, patientId: v })}>
                   <SelectTrigger>
                     <SelectValue placeholder="Select patient" />
@@ -171,7 +173,7 @@ export default function ACCPage() {
                 </Select>
               </div>
               <div className="space-y-2">
-                <Label>Injury Date</Label>
+                <Label>{t("Injury Date")}</Label>
                 <Input
                   type="date"
                   value={form.injuryDate}
@@ -180,7 +182,7 @@ export default function ACCPage() {
                 />
               </div>
               <div className="space-y-2">
-                <Label>Injury Description</Label>
+                <Label>{t("Injury Description")}</Label>
                 <Textarea
                   value={form.injuryDescription}
                   onChange={(e) => setForm({ ...form, injuryDescription: e.target.value })}
@@ -189,7 +191,7 @@ export default function ACCPage() {
                 />
               </div>
               <div className="space-y-2">
-                <Label>Injury Code (optional)</Label>
+                <Label>{t("Injury Code (optional)")}</Label>
                 <Input
                   value={form.injuryCode}
                   onChange={(e) => setForm({ ...form, injuryCode: e.target.value })}
@@ -197,7 +199,7 @@ export default function ACCPage() {
                 />
               </div>
               <div className="space-y-2">
-                <Label>Claim Type</Label>
+                <Label>{t("Claim Type")}</Label>
                 <Select value={form.claimType} onValueChange={(v) => setForm({ ...form, claimType: v })}>
                   <SelectTrigger>
                     <SelectValue placeholder="Select claim type" />
@@ -212,7 +214,7 @@ export default function ACCPage() {
                 </Select>
               </div>
               <Button type="submit" className="w-full bg-teal-600 hover:bg-teal-700">
-                Lodge Claim
+                {t("Lodge Claim")}
               </Button>
             </form>
           </DialogContent>
@@ -225,7 +227,7 @@ export default function ACCPage() {
           <CardContent className="p-4">
             <div className="flex items-center gap-2">
               <DollarSign className="h-5 w-5 text-teal-600" />
-              <p className="text-sm text-gray-500">Total Claim Costs</p>
+              <p className="text-sm text-gray-500">{t("Total Claim Costs")}</p>
             </div>
             <p className="text-2xl font-bold text-gray-900 mt-1">
               ${totalCosts.toLocaleString("en-NZ", { minimumFractionDigits: 2 })}
@@ -234,7 +236,7 @@ export default function ACCPage() {
         </Card>
         <Card className="border-0 shadow-sm">
           <CardContent className="p-4">
-            <p className="text-sm text-gray-500">Active Claims</p>
+            <p className="text-sm text-gray-500">{t("Active Claims")}</p>
             <p className="text-2xl font-bold text-gray-900 mt-1">
               {claims.filter((c) => c.status === "lodged" || c.status === "accepted").length}
             </p>
@@ -242,7 +244,7 @@ export default function ACCPage() {
         </Card>
         <Card className="border-0 shadow-sm">
           <CardContent className="p-4">
-            <p className="text-sm text-gray-500">Cost by Type</p>
+            <p className="text-sm text-gray-500">{t("Cost by Type")}</p>
             <div className="flex flex-wrap gap-2 mt-2">
               {Object.entries(costByType).map(([type, cost]) => (
                 <Badge key={type} variant="outline" className="text-xs">
@@ -257,20 +259,20 @@ export default function ACCPage() {
       {/* Claims List */}
       <Card className="border-0 shadow-sm">
         <CardHeader>
-          <CardTitle className="text-lg">Claims</CardTitle>
+          <CardTitle className="text-lg">{t("Claims")}</CardTitle>
         </CardHeader>
         <CardContent>
           <Tabs value={tab} onValueChange={setTab}>
             <TabsList>
-              <TabsTrigger value="all">All</TabsTrigger>
-              <TabsTrigger value="lodged">Lodged</TabsTrigger>
-              <TabsTrigger value="accepted">Accepted</TabsTrigger>
-              <TabsTrigger value="declined">Declined</TabsTrigger>
-              <TabsTrigger value="closed">Closed</TabsTrigger>
+              <TabsTrigger value="all">{t("All")}</TabsTrigger>
+              <TabsTrigger value="lodged">{t("Lodged")}</TabsTrigger>
+              <TabsTrigger value="accepted">{t("Accepted")}</TabsTrigger>
+              <TabsTrigger value="declined">{t("Declined")}</TabsTrigger>
+              <TabsTrigger value="closed">{t("Closed")}</TabsTrigger>
             </TabsList>
             <TabsContent value={tab} className="mt-4 space-y-3">
               {claims.length === 0 && (
-                <p className="text-sm text-gray-400 text-center py-8">No claims found</p>
+                <p className="text-sm text-gray-400 text-center py-8">{t("No claims found")}</p>
               )}
               {claims.map((claim) => {
                 const isExpanded = expandedId === claim.id;
@@ -319,7 +321,7 @@ export default function ACCPage() {
                       <div className="border-t bg-gray-50 p-4">
                         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4 text-sm">
                           <div>
-                            <p className="text-gray-400">NHI</p>
+                            <p className="text-gray-400">{t("NHI Number")}</p>
                             <p className="font-mono">{claim.patient.nhiNumber}</p>
                           </div>
                           <div>
@@ -327,7 +329,7 @@ export default function ACCPage() {
                             <p>{claim.injuryCode || "—"}</p>
                           </div>
                           <div>
-                            <p className="text-gray-400">Claim Type</p>
+                            <p className="text-gray-400">{t("Claim Type")}</p>
                             <p className="capitalize">{claim.claimType}</p>
                           </div>
                           <div>
@@ -339,7 +341,7 @@ export default function ACCPage() {
                         </div>
 
                         {/* Event Timeline */}
-                        <h4 className="text-sm font-semibold text-gray-700 mb-3">Claim Events</h4>
+                        <h4 className="text-sm font-semibold text-gray-700 mb-3">{t("Claim Events")}</h4>
                         <div className="relative pl-6">
                           <div className="absolute left-2 top-2 bottom-2 w-0.5 bg-gray-200" />
                           {claim.events.map((event, idx) => {

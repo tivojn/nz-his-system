@@ -17,6 +17,7 @@ import {
 } from "@/components/ui/accordion";
 import { AlertTriangle, BrainCircuit, Activity, Shield, Check, ChevronRight } from "lucide-react";
 import { ALERT_SEVERITIES } from "@/lib/constants";
+import { useBilingual } from "@/components/bilingual-provider";
 
 interface ClinicalAlertData {
   id: string;
@@ -51,6 +52,7 @@ interface ClinicalPathwayData {
 }
 
 export default function CDSSPage() {
+  const { t } = useBilingual();
   const [alerts, setAlerts] = useState<ClinicalAlertData[]>([]);
   const [pathways, setPathways] = useState<ClinicalPathwayData[]>([]);
   const [loadingAlerts, setLoadingAlerts] = useState(true);
@@ -202,8 +204,8 @@ export default function CDSSPage() {
       <div className="flex items-center gap-3">
         <BrainCircuit className="h-8 w-8 text-teal-700" />
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Clinical Decision Support</h1>
-          <p className="text-sm text-gray-500">Alerts, pathways, and clinical scoring tools</p>
+          <h1 className="text-2xl font-bold text-gray-900">{t("Clinical Decision Support")}</h1>
+          <p className="text-sm text-gray-500">{t("Alerts, pathways, and clinical scoring tools")}</p>
         </div>
         {activeAlerts.length > 0 && (
           <Badge className="bg-red-100 text-red-800 ml-auto text-sm">
@@ -215,27 +217,27 @@ export default function CDSSPage() {
       <Tabs defaultValue="alerts" className="space-y-4">
         <TabsList className="bg-white border shadow-sm">
           <TabsTrigger value="alerts" className="gap-1">
-            <AlertTriangle className="h-4 w-4" /> Active Alerts
+            <AlertTriangle className="h-4 w-4" /> {t("Active Alerts")}
           </TabsTrigger>
           <TabsTrigger value="pathways" className="gap-1">
-            <ChevronRight className="h-4 w-4" /> Clinical Pathways
+            <ChevronRight className="h-4 w-4" /> {t("Clinical Pathways")}
           </TabsTrigger>
           <TabsTrigger value="news2" className="gap-1">
-            <Activity className="h-4 w-4" /> NEWS2 Calculator
+            <Activity className="h-4 w-4" /> {t("NEWS2 Calculator")}
           </TabsTrigger>
           <TabsTrigger value="falls" className="gap-1">
-            <Shield className="h-4 w-4" /> Falls Risk
+            <Shield className="h-4 w-4" /> {t("Falls Risk")}
           </TabsTrigger>
         </TabsList>
 
         {/* Active Alerts Tab */}
         <TabsContent value="alerts" className="space-y-3">
           {loadingAlerts ? (
-            <div className="animate-pulse text-gray-400 p-4">Loading alerts...</div>
+            <div className="animate-pulse text-gray-400 p-4">{t("Loading...")}</div>
           ) : alerts.length === 0 ? (
             <Card className="border-0 shadow-sm">
               <CardContent className="p-8 text-center text-gray-500">
-                No clinical alerts at this time.
+                {t("No clinical alerts at this time.")}
               </CardContent>
             </Card>
           ) : (
@@ -284,7 +286,7 @@ export default function CDSSPage() {
                             variant="outline"
                             onClick={() => updateAlertStatus(alert.id, "acknowledged")}
                           >
-                            Acknowledge
+                            {t("Acknowledge")}
                           </Button>
                           <Button
                             size="sm"
@@ -292,7 +294,7 @@ export default function CDSSPage() {
                             className="text-green-700 border-green-300 hover:bg-green-50"
                             onClick={() => updateAlertStatus(alert.id, "resolved")}
                           >
-                            <Check className="h-3 w-3 mr-1" /> Resolve
+                            <Check className="h-3 w-3 mr-1" /> {t("Resolve")}
                           </Button>
                         </div>
                       )}
@@ -309,7 +311,7 @@ export default function CDSSPage() {
           {pathways.length === 0 ? (
             <Card className="border-0 shadow-sm">
               <CardContent className="p-8 text-center text-gray-500">
-                No clinical pathways configured.
+                {t("No clinical pathways configured.")}
               </CardContent>
             </Card>
           ) : (
@@ -366,7 +368,7 @@ export default function CDSSPage() {
             <CardHeader>
               <CardTitle className="text-lg flex items-center gap-2">
                 <Activity className="h-5 w-5 text-teal-700" />
-                NEWS2 Score Calculator
+                {t("NEWS2 Score Calculator")}
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
@@ -453,7 +455,7 @@ export default function CDSSPage() {
                   !news2.temperature
                 }
               >
-                Calculate NEWS2 Score
+                {t("Calculate NEWS2 Score")}
               </Button>
             </CardContent>
           </Card>
@@ -504,7 +506,7 @@ export default function CDSSPage() {
             <CardHeader>
               <CardTitle className="text-lg flex items-center gap-2">
                 <Shield className="h-5 w-5 text-teal-700" />
-                Falls Risk Assessment
+                {t("Falls Risk Assessment")}
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
@@ -541,7 +543,7 @@ export default function CDSSPage() {
                 className="bg-teal-700 hover:bg-teal-800"
                 disabled={!falls.age}
               >
-                Calculate Falls Risk
+                {t("Calculate Falls Risk")}
               </Button>
             </CardContent>
           </Card>
@@ -568,7 +570,7 @@ export default function CDSSPage() {
                 </div>
                 {fallsResult.interventions.length > 0 && (
                   <div>
-                    <h4 className="font-semibold mb-2">Recommended Interventions</h4>
+                    <h4 className="font-semibold mb-2">{t("Recommended Interventions")}</h4>
                     <ul className="space-y-1">
                       {fallsResult.interventions.map((intervention, idx) => (
                         <li key={idx} className="flex items-center gap-2 text-sm text-gray-700">

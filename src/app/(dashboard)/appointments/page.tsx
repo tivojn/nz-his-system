@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Calendar } from "lucide-react";
+import { useBilingual } from "@/components/bilingual-provider";
 
 interface Appointment {
   id: string;
@@ -25,6 +26,7 @@ const statusStyles: Record<string, string> = {
 };
 
 export default function AppointmentsPage() {
+  const { t } = useBilingual();
   const [appointments, setAppointments] = useState<Appointment[]>([]);
 
   useEffect(() => {
@@ -42,9 +44,9 @@ export default function AppointmentsPage() {
       <div>
         <h1 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
           <Calendar className="h-7 w-7 text-teal-600" />
-          Appointments
+          {t("Appointments")}
         </h1>
-        <p className="text-gray-500 mt-1">Appointment schedule and booking</p>
+        <p className="text-gray-500 mt-1">{t("Appointment schedule and booking")}</p>
       </div>
 
       {Object.entries(grouped).map(([date, appts]) => (
@@ -76,7 +78,7 @@ export default function AppointmentsPage() {
                       </div>
                     </div>
                     <Badge className={statusStyles[appt.status] || "bg-gray-100"}>
-                      {appt.status}
+                      {t(appt.status)}
                     </Badge>
                   </div>
                 </CardContent>
