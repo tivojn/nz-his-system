@@ -1,0 +1,129 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String    @id @default(cuid())
+  email         String    @unique
+  name          String
+  password      String
+  role          String    @default("doctor") // admin, doctor, nurse, receptionist
+  department    String?
+  hpiNumber     String?   // Health Practitioner Index
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  notes         ClinicalNote[]
+  appointments  Appointment[]
+}
+
+model Patient {
+  id            String    @id @default(cuid())
+  nhiNumber     String    @unique // National Health Index
+  firstName     String
+  lastName      String
+  dateOfBirth   DateTime
+  gender        String
+  ethnicity     String    // European, Māori, Pacific Islander, Asian, Other
+  iwi           String?   // Māori tribal affiliation
+  phone         String?
+  email         String?
+  address       String?
+  city          String?
+  region        String?
+  emergencyContact String?
+  emergencyPhone   String?
+  accClaimNumber   String? // ACC claim
+  accClaimStatus   String? // active, closed, pending
+  status        String    @default("active") // active, discharged, deceased
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  notes         ClinicalNote[]
+  encounters    Encounter[]
+  appointments  Appointment[]
+  waitlistEntries WaitlistEntry[]
+  observations  Observation[]
+}
+
+model Encounter {
+  id            String    @id @default(cuid())
+  patientId     String
+  patient       Patient   @relation(fields: [patientId], references: [id])
+  type          String    // admission, discharge, transfer, outpatient
+  status        String    @default("in-progress") // planned, in-progress, finished, cancelled
+  department    String?
+  admitDate     DateTime  @default(now())
+  dischargeDate DateTime?
+  diagnosis     String?
+  diagnosisCode String?   // SNOMED CT code
+  notes         String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+}
+
+model ClinicalNote {
+  id            String    @id @default(cuid())
+  patientId     String
+  patient       Patient   @relation(fields: [patientId], references: [id])
+  authorId      String
+  author        User      @relation(fields: [authorId], references: [id])
+  type          String    @default("soap") // soap, progress, discharge, ai-generated
+  subjective    String?
+  objective     String?
+  assessment    String?
+  plan          String?
+  content       String?   // For non-SOAP notes
+  diagnosisCode String?
+  aiGenerated   Boolean   @default(false)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+}
+
+model Appointment {
+  id            String    @id @default(cuid())
+  patientId     String
+  patient       Patient   @relation(fields: [patientId], references: [id])
+  providerId    String?
+  provider      User?     @relation(fields: [providerId], references: [id])
+  dateTime      DateTime
+  duration      Int       @default(30) // minutes
+  type          String    // consultation, follow-up, procedure, surgery
+  department    String?
+  status        String    @default("scheduled") // scheduled, completed, cancelled, no-show
+  notes         String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+}
+
+model WaitlistEntry {
+  id            String    @id @default(cuid())
+  patientId     String
+  patient       Patient   @relation(fields: [patientId], references: [id])
+  department    String
+  priority      String    @default("routine") // urgent, semi-urgent, routine
+  procedure     String?
+  referralDate  DateTime  @default(now())
+  targetDate    DateTime?
+  status        String    @default("waiting") // waiting, scheduled, completed, cancelled
+  notes         String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+}
+
+model Observation {
+  id            String    @id @default(cuid())
+  patientId     String
+  patient       Patient   @relation(fields: [patientId], references: [id])
+  type          String    // vital-signs, lab-result, imaging
+  code          String    // LOINC or local code
+  codeName      String    // Human readable name
+  value         String
+  unit          String?
+  status        String    @default("final") // preliminary, final, amended
+  effectiveDate DateTime  @default(now())
+  createdAt     DateTime  @default(now())
+}
