@@ -15,6 +15,13 @@ const demoAccounts = [
   { email: "reception@nzhis.co.nz", role: "Receptionist", name: "Mele Taufa" },
 ];
 
+const demoUsers: Record<string, any> = {
+  "admin@nzhis.co.nz": { id: "1", email: "admin@nzhis.co.nz", name: "Dr. Sarah Mitchell", role: "Admin", department: "Administration" },
+  "doctor@nzhis.co.nz": { id: "2", email: "doctor@nzhis.co.nz", name: "Dr. James Henare", role: "Doctor", department: "General Medicine" },
+  "nurse@nzhis.co.nz": { id: "3", email: "nurse@nzhis.co.nz", name: "Aroha Williams", role: "Nurse", department: "Emergency" },
+  "reception@nzhis.co.nz": { id: "4", email: "reception@nzhis.co.nz", name: "Mele Taufa", role: "Receptionist", department: "Front Desk" },
+};
+
 export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -22,33 +29,29 @@ export default function LoginPage() {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
-  const handleLogin = async (e: React.FormEvent, loginEmail?: string) => {
+  const doLogin = (loginEmail: string, loginPassword: string) => {
+    if (loginPassword !== "demo123") {
+      setError("Invalid password. Use demo123");
+      setLoading(false);
+      return;
+    }
+    const user = demoUsers[loginEmail];
+    if (!user) {
+      setError("User not found");
+      setLoading(false);
+      return;
+    }
+    // Set cookie client-side
+    const encoded = btoa(JSON.stringify(user));
+    document.cookie = `nzhis-session=${encoded}; path=/; max-age=86400; SameSite=Lax`;
+    router.push("/patients");
+  };
+
+  const handleLogin = (e: React.FormEvent, loginEmail?: string) => {
     e.preventDefault();
     setLoading(true);
     setError("");
-
-    try {
-      const res = await fetch("/api/auth/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          email: loginEmail || email,
-          password: loginEmail ? "demo123" : password,
-        }),
-      });
-
-      if (res.ok) {
-        router.push("/");
-        router.refresh();
-      } else {
-        const data = await res.json();
-        setError(data.error || "Invalid credentials. Use demo123 as password.");
-        setLoading(false);
-      }
-    } catch {
-      setError("Login failed. Please try again.");
-      setLoading(false);
-    }
+    doLogin(loginEmail || email, loginEmail ? "demo123" : password);
   };
 
   return (
