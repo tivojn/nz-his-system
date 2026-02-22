@@ -12,15 +12,20 @@ model User {
   email         String    @unique
   name          String
   password      String
-  role          String    @default("doctor") // admin, doctor, nurse, receptionist
+  role          String    @default("doctor") // admin, doctor, nurse, receptionist, pharmacist, lab-tech, radiologist
   department    String?
   hpiNumber     String?   // Health Practitioner Index
+  speciality    String?
+  phone         String?
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
   notes         ClinicalNote[]
   appointments  Appointment[]
   auditLogs     AuditLog[]
   medications   Medication[]  @relation("PrescribedBy")
+  labOrders     LabOrder[]    @relation("OrderedBy")
+  referrals     Referral[]    @relation("ReferredBy")
+  incidentReports IncidentReport[] @relation("ReportedBy")
 }
 
 model Patient {
@@ -41,6 +46,7 @@ model Patient {
   emergencyPhone   String?
   accClaimNumber   String? // ACC claim
   accClaimStatus   String? // active, closed, pending
+  bloodType     String?   // A+, A-, B+, B-, AB+, AB-, O+, O-
   status        String    @default("active") // active, discharged, deceased
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
@@ -54,6 +60,10 @@ model Patient {
   vitalSignSets VitalSignSet[]
   accClaims     ACCClaim[]
   bed           Bed?      @relation("PatientBed")
+  allergies     Allergy[]
+  labOrders     LabOrder[]
+  referralsFrom Referral[] @relation("ReferralPatient")
+  incidentReports IncidentReport[] @relation("IncidentPatient")
 }
 
 model Encounter {
@@ -130,12 +140,14 @@ model Observation {
   codeName      String    // Human readable name
   value         String
   unit          String?
+  referenceRange String?  // e.g., "4.0-11.0"
+  interpretation String?  // normal, abnormal, critical
   status        String    @default("final") // preliminary, final, amended
   effectiveDate DateTime  @default(now())
   createdAt     DateTime  @default(now())
 }
 
-// ==================== NEW MODELS ====================
+// ==================== MEDICATIONS ====================
 
 model Medication {
   id            String    @id @default(cuid())
@@ -166,6 +178,8 @@ model DrugInteraction {
   recommendation String
   createdAt     DateTime  @default(now())
 }
+
+// ==================== CLINICAL SUPPORT ====================
 
 model ClinicalAlert {
   id            String    @id @default(cuid())
@@ -214,6 +228,8 @@ model VitalSignSet {
   createdAt       DateTime  @default(now())
 }
 
+// ==================== ACC CLAIMS ====================
+
 model ACCClaim {
   id              String    @id @default(cuid())
   patientId       String
@@ -241,6 +257,8 @@ model ACCClaimEvent {
   createdAt     DateTime  @default(now())
 }
 
+// ==================== BED MANAGEMENT ====================
+
 model Bed {
   id            String    @id @default(cuid())
   ward          String    // e.g. "Medical Ward 1", "ICU", "Surgical Ward"
@@ -254,6 +272,8 @@ model Bed {
   @@unique([ward, bedNumber])
 }
 
+// ==================== AUDIT ====================
+
 model AuditLog {
   id            String    @id @default(cuid())
   userId        String?
@@ -265,4 +285,95 @@ model AuditLog {
   details       String?   // JSON string with additional context
   ipAddress     String?
   createdAt     DateTime  @default(now())
+}
+
+// ==================== NEW MODELS — ALLERGIES ====================
+
+model Allergy {
+  id            String    @id @default(cuid())
+  patientId     String
+  patient       Patient   @relation(fields: [patientId], references: [id])
+  allergen      String    // e.g., "Penicillin", "Latex", "Peanuts"
+  type          String    // drug, food, environmental, other
+  severity      String    // mild, moderate, severe, life-threatening
+  reaction      String    // e.g., "Anaphylaxis", "Rash", "Nausea"
+  status        String    @default("active") // active, inactive, resolved
+  onsetDate     DateTime?
+  verifiedBy    String?
+  notes         String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+}
+
+// ==================== NEW MODELS — LAB ORDERS ====================
+
+model LabOrder {
+  id            String    @id @default(cuid())
+  patientId     String
+  patient       Patient   @relation(fields: [patientId], references: [id])
+  orderedById   String
+  orderedBy     User      @relation("OrderedBy", fields: [orderedById], references: [id])
+  orderNumber   String    @unique
+  testName      String    // e.g., "Full Blood Count", "Liver Function Tests"
+  testCode      String    // LOINC code
+  priority      String    @default("routine") // stat, urgent, routine
+  status        String    @default("ordered") // ordered, collected, in-progress, completed, cancelled
+  specimen      String?   // blood, urine, csf, swab, tissue
+  clinicalNotes String?
+  resultValue   String?
+  resultUnit    String?
+  referenceRange String?
+  interpretation String?  // normal, abnormal, critical
+  resultNotes   String?
+  orderedAt     DateTime  @default(now())
+  collectedAt   DateTime?
+  completedAt   DateTime?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+}
+
+// ==================== NEW MODELS — REFERRALS ====================
+
+model Referral {
+  id               String    @id @default(cuid())
+  patientId        String
+  patient          Patient   @relation("ReferralPatient", fields: [patientId], references: [id])
+  referredById     String
+  referredBy       User      @relation("ReferredBy", fields: [referredById], references: [id])
+  referralNumber   String    @unique
+  fromDepartment   String
+  toDepartment     String
+  priority         String    @default("routine") // stat, urgent, routine
+  status           String    @default("pending") // pending, accepted, declined, completed, cancelled
+  reason           String
+  clinicalSummary  String?
+  responseNotes    String?
+  requestedDate    DateTime  @default(now())
+  acceptedDate     DateTime?
+  completedDate    DateTime?
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+}
+
+// ==================== NEW MODELS — INCIDENT REPORTS ====================
+
+model IncidentReport {
+  id              String    @id @default(cuid())
+  patientId       String?
+  patient         Patient?  @relation("IncidentPatient", fields: [patientId], references: [id])
+  reportedById    String
+  reportedBy      User      @relation("ReportedBy", fields: [reportedById], references: [id])
+  incidentNumber  String    @unique
+  type            String    // fall, medication-error, adverse-reaction, equipment-failure, near-miss, other
+  severity        String    // none, minor, moderate, major, catastrophic
+  location        String
+  dateTime        DateTime
+  description     String
+  immediateAction String?
+  rootCause       String?
+  status          String    @default("reported") // reported, investigating, resolved, closed
+  outcome         String?
+  preventiveMeasures String?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
 }
