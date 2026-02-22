@@ -147,28 +147,28 @@ export function Sidebar() {
     pathname === href || (href !== "/" && pathname.startsWith(href));
 
   const sidebarContent = (
-    <div className="flex h-full flex-col koru-pattern">
-      {/* Header */}
-      <div className="flex items-center gap-3 px-6 py-5 border-b border-teal-700/30">
-        <div className="flex items-center justify-center w-10 h-10 bg-white/10 rounded-xl">
-          <HeartPulse className="h-6 w-6 text-white" />
+    <div className="flex h-full flex-col">
+      {/* Header — fixed, darkest */}
+      <div className="flex items-center gap-3 px-6 py-5 bg-[#0a2725] border-b border-teal-600/20">
+        <div className="flex items-center justify-center w-10 h-10 bg-teal-500/20 rounded-xl ring-1 ring-teal-400/20">
+          <HeartPulse className="h-6 w-6 text-teal-300" />
         </div>
         <div>
           <h1 className="text-lg font-bold text-white tracking-tight">NZ-HIS</h1>
-          <p className="text-xs text-teal-200/70">Te Whatu Ora</p>
+          <p className="text-xs text-teal-300/60">Te Whatu Ora</p>
         </div>
       </div>
 
-      {/* User info */}
+      {/* User info — fixed, dark */}
       {session && (
-        <div className="px-4 py-4 border-b border-teal-700/30">
+        <div className="px-4 py-4 bg-[#0a2725] border-b border-teal-600/20">
           <div className="flex items-center gap-3">
-            <div className="flex items-center justify-center w-9 h-9 rounded-full bg-white/15 text-white text-sm font-semibold">
+            <div className="flex items-center justify-center w-9 h-9 rounded-full bg-teal-500/20 text-teal-200 text-sm font-semibold ring-1 ring-teal-400/20">
               {session.name?.split(" ").map((n: string) => n[0]).join("").slice(0, 2)}
             </div>
             <div className="flex-1 min-w-0">
               <p className="text-sm font-medium text-white truncate">{session.name}</p>
-              <p className="text-xs text-teal-200/60 truncate">{session.email}</p>
+              <p className="text-xs text-teal-300/50 truncate">{session.email}</p>
             </div>
           </div>
           <Badge className={cn("mt-2 text-xs", roleColors[role])}>
@@ -177,8 +177,8 @@ export function Sidebar() {
         </div>
       )}
 
-      {/* Navigation */}
-      <nav className="flex-1 px-3 py-3 space-y-1 overflow-y-auto custom-scrollbar">
+      {/* Navigation — scrollable, lighter teal with koru pattern */}
+      <nav className="flex-1 px-3 py-3 space-y-1 overflow-y-auto custom-scrollbar bg-[#11403d] koru-pattern">
         {navGroups.map((group) => {
           const filteredItems = group.items.filter((item) => item.roles.includes(role));
           if (filteredItems.length === 0) return null;
@@ -237,18 +237,18 @@ export function Sidebar() {
         })}
       </nav>
 
-      {/* Footer */}
-      <div className="px-3 py-3 border-t border-teal-700/30 space-y-3">
+      {/* Footer — fixed, darkest to match header */}
+      <div className="px-3 py-3 bg-[#0a2725] border-t border-teal-600/20 space-y-2">
         {/* Language toggle */}
         <button
           onClick={toggleTeReo}
           className="flex items-center justify-between w-full px-3 py-1.5 rounded-lg hover:bg-white/10 transition-colors"
         >
-          <div className="flex items-center gap-2 text-teal-200/70">
+          <div className="flex items-center gap-2 text-teal-300/70">
             <Languages className="h-4 w-4" />
             <span className="text-xs font-medium">{t("Language")}</span>
           </div>
-          <span className="text-xs font-semibold text-white bg-white/15 px-2 py-0.5 rounded-md">
+          <span className="text-xs font-semibold text-teal-200 bg-teal-500/20 px-2 py-0.5 rounded-md ring-1 ring-teal-400/20">
             {language === "en" ? "EN" : language === "cn" ? "\u4E2D\u6587" : "Mi"}
           </span>
         </button>
@@ -256,12 +256,12 @@ export function Sidebar() {
         {/* Sign out */}
         <button
           onClick={handleSignOut}
-          className="flex items-center gap-3 px-3 py-2 w-full rounded-lg text-sm font-medium text-teal-100/70 hover:bg-white/10 hover:text-white transition-all"
+          className="flex items-center gap-3 px-3 py-2 w-full rounded-lg text-sm font-medium text-teal-200/60 hover:bg-white/10 hover:text-white transition-all"
         >
           <LogOut className="h-4.5 w-4.5" />
           {t("Sign Out")}
         </button>
-        <p className="px-3 text-xs text-teal-200/40">
+        <p className="px-3 text-[10px] text-teal-300/30">
           Te Whatu Ora · FHIR R4
         </p>
       </div>
