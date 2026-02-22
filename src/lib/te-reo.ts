@@ -522,6 +522,11 @@ export const teReo: Record<string, string> = {
   "Pre-loaded Demo Image": "Whakaahua Whakaatu Kua Utaina",
   "AI-Assisted Radiological Analysis": "Tātaritanga Iraia AI-Āwhina",
   "New Analysis": "Tātaritanga Hou",
+  "Upload Medical Image": "Tukuna Whakaahua Rongoā",
+  "Uploaded Image": "Whakaahua Kua Tukuna",
+  "Analyze Uploaded Image": "Tātari Whakaahua Kua Tukuna",
+  "Patient Name": "Ingoa Tūroro",
+  "Clinical Context": "Horopaki Haumanu",
 
   // Referral Management
   "Referral Management": "Whakahaere Tuku Atu",
@@ -1229,6 +1234,11 @@ export const zhCN: Record<string, string> = {
   "Pre-loaded Demo Image": "预加载演示图像",
   "AI-Assisted Radiological Analysis": "AI 辅助放射学分析",
   "New Analysis": "新建分析",
+  "Upload Medical Image": "上传医学影像",
+  "Uploaded Image": "已上传影像",
+  "Analyze Uploaded Image": "分析已上传影像",
+  "Patient Name": "患者姓名",
+  "Clinical Context": "临床背景",
 
   // Referral Management
   "Referral Management": "转诊管理",
