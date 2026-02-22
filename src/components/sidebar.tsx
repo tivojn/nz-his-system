@@ -270,15 +270,27 @@ export function Sidebar() {
 
   return (
     <>
-      {/* Mobile hamburger */}
-      <Button
-        variant="ghost"
-        size="icon"
-        className="fixed top-4 left-4 z-50 lg:hidden bg-teal-700 text-white hover:bg-teal-600"
-        onClick={() => setMobileOpen(!mobileOpen)}
-      >
-        {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
-      </Button>
+      {/* Mobile top bar — in document flow, not floating */}
+      <div className="sticky top-0 z-30 lg:hidden gradient-sidebar flex items-center gap-3 px-4 py-3">
+        <Button
+          variant="ghost"
+          size="icon"
+          className="text-white hover:bg-white/15 h-9 w-9"
+          onClick={() => setMobileOpen(!mobileOpen)}
+        >
+          {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+        </Button>
+        <div className="flex items-center gap-2 flex-1 min-w-0">
+          <HeartPulse className="h-5 w-5 text-white flex-shrink-0" />
+          <span className="text-sm font-bold text-white truncate">NZ-HIS</span>
+          <span className="text-xs text-teal-200/60 truncate">Te Whatu Ora</span>
+        </div>
+        {session && (
+          <Badge className={cn("text-[10px] flex-shrink-0", roleColors[role])}>
+            {role}
+          </Badge>
+        )}
+      </div>
 
       {/* Mobile overlay */}
       {mobileOpen && (
