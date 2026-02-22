@@ -209,7 +209,7 @@ export default function CDSSPage() {
         </div>
         {activeAlerts.length > 0 && (
           <Badge className="bg-red-100 text-red-800 ml-auto text-sm">
-            {activeAlerts.length} Active Alert{activeAlerts.length !== 1 ? "s" : ""}
+            {activeAlerts.length} {activeAlerts.length !== 1 ? t("Active Alerts") : t("Active Alert")}
           </Badge>
         )}
       </div>
@@ -272,10 +272,10 @@ export default function CDSSPage() {
                         <div className="flex items-center gap-3 mt-2 text-xs text-gray-400">
                           {alert.patient && (
                             <span>
-                              Patient: {alert.patient.firstName} {alert.patient.lastName} ({alert.patient.nhiNumber})
+                              {t("Patient:")} {alert.patient.firstName} {alert.patient.lastName} ({alert.patient.nhiNumber})
                             </span>
                           )}
-                          {alert.source && <span>Source: {alert.source}</span>}
+                          {alert.source && <span>{t("Source:")} {alert.source}</span>}
                           <span>{new Date(alert.createdAt).toLocaleString("en-NZ")}</span>
                         </div>
                       </div>
@@ -349,7 +349,7 @@ export default function CDSSPage() {
                             <p className="font-medium text-sm">{step.title}</p>
                             <p className="text-sm text-gray-500">{step.description}</p>
                             {step.timeframe && (
-                              <span className="text-xs text-gray-400">Timeframe: {step.timeframe}</span>
+                              <span className="text-xs text-gray-400">{t("Timeframe:")} {step.timeframe}</span>
                             )}
                           </div>
                         </div>
@@ -374,7 +374,7 @@ export default function CDSSPage() {
             <CardContent className="space-y-4">
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 <div>
-                  <Label>Respiratory Rate (breaths/min)</Label>
+                  <Label>{t("Respiratory Rate (breaths/min)")}</Label>
                   <Input
                     type="number"
                     placeholder="12-20"
@@ -383,7 +383,7 @@ export default function CDSSPage() {
                   />
                 </div>
                 <div>
-                  <Label>Oxygen Saturation (%)</Label>
+                  <Label>{t("Oxygen Saturation (%)")}</Label>
                   <Input
                     type="number"
                     placeholder="94-100"
@@ -396,10 +396,10 @@ export default function CDSSPage() {
                     checked={news2.onSupplementalO2}
                     onCheckedChange={(v) => setNews2({ ...news2, onSupplementalO2: v })}
                   />
-                  <Label>Supplemental O2</Label>
+                  <Label>{t("Supplemental O2")}</Label>
                 </div>
                 <div>
-                  <Label>Systolic BP (mmHg)</Label>
+                  <Label>{t("Systolic BP (mmHg)")}</Label>
                   <Input
                     type="number"
                     placeholder="111-219"
@@ -408,7 +408,7 @@ export default function CDSSPage() {
                   />
                 </div>
                 <div>
-                  <Label>Heart Rate (bpm)</Label>
+                  <Label>{t("Heart Rate (bpm)")}</Label>
                   <Input
                     type="number"
                     placeholder="51-90"
@@ -417,7 +417,7 @@ export default function CDSSPage() {
                   />
                 </div>
                 <div>
-                  <Label>Consciousness (AVPU)</Label>
+                  <Label>{t("Consciousness (AVPU)")}</Label>
                   <Select
                     value={news2.consciousness}
                     onValueChange={(v) => setNews2({ ...news2, consciousness: v as "A" | "V" | "P" | "U" })}
@@ -426,15 +426,15 @@ export default function CDSSPage() {
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="A">A - Alert</SelectItem>
-                      <SelectItem value="V">V - Voice</SelectItem>
-                      <SelectItem value="P">P - Pain</SelectItem>
-                      <SelectItem value="U">U - Unresponsive</SelectItem>
+                      <SelectItem value="A">{t("A - Alert")}</SelectItem>
+                      <SelectItem value="V">{t("V - Voice")}</SelectItem>
+                      <SelectItem value="P">{t("P - Pain")}</SelectItem>
+                      <SelectItem value="U">{t("U - Unresponsive")}</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
                 <div>
-                  <Label>Temperature (C)</Label>
+                  <Label>{t("Temperature (C)")}</Label>
                   <Input
                     type="number"
                     step="0.1"
@@ -472,7 +472,7 @@ export default function CDSSPage() {
                     {news2Result.total}
                   </div>
                   <div>
-                    <h3 className="text-xl font-bold">{news2Result.risk} Risk</h3>
+                    <h3 className="text-xl font-bold">{news2Result.risk} {t("Risk")}</h3>
                     <p className="text-sm text-gray-600 mt-1">{news2Result.action}</p>
                   </div>
                 </div>
@@ -511,10 +511,10 @@ export default function CDSSPage() {
             </CardHeader>
             <CardContent className="space-y-4">
               <div>
-                <Label>Age</Label>
+                <Label>{t("Age")}</Label>
                 <Input
                   type="number"
-                  placeholder="Enter patient age"
+                  placeholder={t("Enter patient age")}
                   value={falls.age}
                   onChange={(e) => setFalls({ ...falls, age: e.target.value })}
                   className="max-w-xs"
@@ -534,7 +534,7 @@ export default function CDSSPage() {
                       checked={falls[key as keyof typeof falls] as boolean}
                       onCheckedChange={(v) => setFalls({ ...falls, [key]: v })}
                     />
-                    <Label className="cursor-pointer">{label}</Label>
+                    <Label className="cursor-pointer">{t(label)}</Label>
                   </div>
                 ))}
               </div>
@@ -564,8 +564,8 @@ export default function CDSSPage() {
                     {fallsResult.score}
                   </div>
                   <div>
-                    <h3 className="text-xl font-bold">{fallsResult.risk} Risk</h3>
-                    <p className="text-sm text-gray-500">Falls Risk Score: {fallsResult.score}</p>
+                    <h3 className="text-xl font-bold">{fallsResult.risk} {t("Risk")}</h3>
+                    <p className="text-sm text-gray-500">{t("Falls Risk Score:")} {fallsResult.score}</p>
                   </div>
                 </div>
                 {fallsResult.interventions.length > 0 && (

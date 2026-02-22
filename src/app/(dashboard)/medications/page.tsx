@@ -208,7 +208,7 @@ export default function MedicationsPage() {
           <div>
             <h1 className="text-2xl font-bold text-gray-900">{t("Medications")}</h1>
             <p className="text-sm text-gray-500">
-              {medications.length} active prescription{medications.length !== 1 ? "s" : ""}
+              {medications.length} {t("active prescriptions")}
             </p>
           </div>
         </div>
@@ -227,7 +227,7 @@ export default function MedicationsPage() {
                 <Label>{t("Patient")}</Label>
                 <Select value={form.patientId} onValueChange={handlePatientSelect}>
                   <SelectTrigger>
-                    <SelectValue placeholder="Select patient" />
+                    <SelectValue placeholder={t("Select patient")} />
                   </SelectTrigger>
                   <SelectContent>
                     {patients.map((p) => (
@@ -242,7 +242,7 @@ export default function MedicationsPage() {
                 <Label>{t("Medication")}</Label>
                 <Select value={form.medicationIdx} onValueChange={handleMedicationSelect}>
                   <SelectTrigger>
-                    <SelectValue placeholder="Select medication" />
+                    <SelectValue placeholder={t("Select medication")} />
                   </SelectTrigger>
                   <SelectContent>
                     {NZ_MEDICATIONS.map((med, idx) => (
@@ -286,12 +286,12 @@ export default function MedicationsPage() {
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="oral">Oral</SelectItem>
-                      <SelectItem value="iv">IV</SelectItem>
-                      <SelectItem value="im">IM</SelectItem>
-                      <SelectItem value="sc">SC</SelectItem>
-                      <SelectItem value="topical">Topical</SelectItem>
-                      <SelectItem value="inhaled">Inhaled</SelectItem>
+                      <SelectItem value="oral">{t("Oral")}</SelectItem>
+                      <SelectItem value="iv">{t("IV")}</SelectItem>
+                      <SelectItem value="im">{t("IM")}</SelectItem>
+                      <SelectItem value="sc">{t("SC")}</SelectItem>
+                      <SelectItem value="topical">{t("Topical")}</SelectItem>
+                      <SelectItem value="inhaled">{t("Inhaled")}</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
@@ -300,7 +300,7 @@ export default function MedicationsPage() {
                 <Label>{t("Frequency")}</Label>
                 <Select value={form.frequency} onValueChange={(v) => setForm({ ...form, frequency: v })}>
                   <SelectTrigger>
-                    <SelectValue placeholder="Select frequency" />
+                    <SelectValue placeholder={t("Select frequency")} />
                   </SelectTrigger>
                   <SelectContent>
                     {FREQUENCIES.map((f) => (
@@ -314,7 +314,7 @@ export default function MedicationsPage() {
               <div>
                 <Label>{t("Instructions")}</Label>
                 <Textarea
-                  placeholder="Additional instructions..."
+                  placeholder={t("Additional instructions...")}
                   value={form.instructions}
                   onChange={(e) => setForm({ ...form, instructions: e.target.value })}
                 />
@@ -397,7 +397,7 @@ export default function MedicationsPage() {
                       )}
                       <div className="flex flex-wrap items-center justify-between gap-2">
                         <span className="text-xs text-gray-400">
-                          Prescribed by {med.prescriber.name} on{" "}
+                          {t("Prescribed by")} {med.prescriber.name} {t("on")}{" "}
                           {new Date(med.startDate).toLocaleDateString("en-NZ")}
                         </span>
                         {med.status !== "discontinued" && med.status !== "administered" && (

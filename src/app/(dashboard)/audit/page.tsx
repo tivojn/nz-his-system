@@ -130,7 +130,7 @@ export default function AuditPage() {
               <SelectContent>
                 {DATE_RANGES.map((d) => (
                   <SelectItem key={d.value} value={d.value}>
-                    {d.label}
+                    {t(d.label)}
                   </SelectItem>
                 ))}
               </SelectContent>

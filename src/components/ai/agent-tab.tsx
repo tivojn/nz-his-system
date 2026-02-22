@@ -7,6 +7,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { AgentStatus } from "./agent-status";
 import { Send, User, Sparkles } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useBilingual } from "@/components/bilingual-provider";
 
 interface Message {
   role: "user" | "assistant";
@@ -71,6 +72,7 @@ export function AgentTab({
   examplePrompts,
   welcomeMessage,
 }: AgentTabProps) {
+  const { t } = useBilingual();
   const colors = colorMap[agentColor];
   const [messages, setMessages] = useState<Message[]>([
     { role: "assistant", content: welcomeMessage, timestamp: new Date() },
@@ -182,7 +184,7 @@ export function AgentTab({
       {messages.length <= 1 && (
         <div className="px-4 pb-2">
           <div className="flex items-center gap-1 text-xs text-gray-400 mb-2">
-            <Sparkles className="h-3 w-3" /> Suggested prompts
+            <Sparkles className="h-3 w-3" /> {t("Suggested prompts")}
           </div>
           <div className="flex flex-wrap gap-2">
             {examplePrompts.map((prompt) => (

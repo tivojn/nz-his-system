@@ -183,7 +183,7 @@ export default function HauoraPage() {
           <CardContent className="space-y-4">
             <div className="flex items-center gap-4">
               <div className="text-4xl font-bold text-teal-600">{data.culturalSafety.score}</div>
-              <div className="text-sm text-gray-500">out of 100</div>
+              <div className="text-sm text-gray-500">{t("out of 100")}</div>
             </div>
             {safetyMetrics.map((m) => (
               <div key={m.label} className="space-y-1">
@@ -234,14 +234,14 @@ export default function HauoraPage() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {data.equityTargets.map((t) => (
-                <TableRow key={t.metric}>
-                  <TableCell className="font-medium">{t.metric}</TableCell>
-                  <TableCell>{t.target}</TableCell>
-                  <TableCell>{t.actual}</TableCell>
+              {data.equityTargets.map((et) => (
+                <TableRow key={et.metric}>
+                  <TableCell className="font-medium">{et.metric}</TableCell>
+                  <TableCell>{et.target}</TableCell>
+                  <TableCell>{et.actual}</TableCell>
                   <TableCell>
-                    <Badge className={`capitalize ${statusColor[t.status] || "bg-gray-100 text-gray-800"}`}>
-                      {t.status}
+                    <Badge className={`capitalize ${statusColor[et.status] || "bg-gray-100 text-gray-800"}`}>
+                      {et.status}
                     </Badge>
                   </TableCell>
                 </TableRow>

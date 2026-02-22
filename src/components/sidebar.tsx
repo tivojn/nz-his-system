@@ -16,6 +16,7 @@ import {
   HeartPulse,
   History,
   Network,
+  ScanEye,
   ChevronDown,
   Menu,
   X,
@@ -92,6 +93,7 @@ const navGroups: NavGroup[] = [
     teReo: "Taputapu AI",
     items: [
       { name: "AI Commander", href: "/ai-agent", icon: Network, roles: ["Admin", "Doctor", "Nurse"] },
+      { name: "AI Diagnosis", href: "/diagnosis", icon: ScanEye, roles: ["Admin", "Doctor", "Nurse"] },
     ],
   },
 ];
@@ -114,7 +116,7 @@ export function Sidebar() {
     Analytics: true,
     "AI Tools": true,
   });
-  const { language, toggleTeReo } = useBilingual();
+  const { language, toggleTeReo, t } = useBilingual();
 
   useEffect(() => {
     setSession(getSession());
@@ -234,7 +236,7 @@ export function Sidebar() {
         >
           <div className="flex items-center gap-2 text-teal-200/70">
             <Languages className="h-4 w-4" />
-            <span className="text-xs font-medium">Language</span>
+            <span className="text-xs font-medium">{t("Language")}</span>
           </div>
           <span className="text-xs font-semibold text-white bg-white/15 px-2 py-0.5 rounded-md">
             {language === "en" ? "EN" : language === "cn" ? "\u4E2D\u6587" : "Mi"}
@@ -247,7 +249,7 @@ export function Sidebar() {
           className="flex items-center gap-3 px-3 py-2 w-full rounded-lg text-sm font-medium text-teal-100/70 hover:bg-white/10 hover:text-white transition-all"
         >
           <LogOut className="h-4.5 w-4.5" />
-          Sign Out
+          {t("Sign Out")}
         </button>
         <p className="px-3 text-xs text-teal-200/40">
           Te Whatu Ora · FHIR R4

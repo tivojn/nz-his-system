@@ -257,6 +257,203 @@ export const teReo: Record<string, string> = {
   "Real-time bed occupancy across all wards": "Noho moenga wā-tūturu puta noa i ngā wāhanga",
   "System activity and compliance logging": "Tuhinga mahi pūnaha me te whai ture",
   "Multi-agent AI assistant for clinical, quality, and research support": "Kaiawhina AI maha-māngai mō te haumanu, kounga, me te rangahau",
+
+  // Patient detail page - tabs
+  "Notes": "Tuhinga",
+  "Vitals": "Tohu Koiora",
+  "Meds": "Rongoā",
+  "Encounters": "Tūtakinga",
+  "Labs": "Whakamātautau",
+  "Appts": "Wā Kite",
+
+  // Patient detail page - notes
+  "New Clinical Note": "Tuhinga Haumanu Hou",
+  "Save Note": "Tiaki Tuhinga",
+  "Saving...": "E tiaki ana...",
+  "SUBJECTIVE": "WHAKAARO",
+  "OBJECTIVE": "TIROHANGA",
+  "ASSESSMENT": "AROMATAWAI",
+  "PLAN": "MAHERE",
+  "SUBJECTIVE / HISTORY": "WHAKAARO / HĪTORI",
+  "OBJECTIVE / FINDINGS": "TIROHANGA / KITENGA",
+
+  // Vital signs
+  "Record Vital Signs": "Tuhi Tohu Koiora",
+  "Heart Rate (bpm)": "Pao Manawa (pao/min)",
+  "Respiratory Rate": "Pūkahukahu",
+  "Respiratory Rate (breaths/min)": "Pūkahukahu (hā/min)",
+  "Oxygen Saturation (%)": "Haukō (%)",
+  "Supplemental O2": "Haukō Tāpiri",
+  "Systolic BP (mmHg)": "Pēhanga Toto Runga (mmHg)",
+  "Diastolic BP (mmHg)": "Pēhanga Toto Raro (mmHg)",
+  "Temperature (C)": "Mahana (°C)",
+  "SpO2 (%)": "Haukō (%)",
+  "Pain Score (0-10)": "Kaute Mamae (0-10)",
+  "Consciousness (AVPU)": "Mauri (AVPU)",
+  "A - Alert": "A - Mauri Ora",
+  "V - Voice": "V - Reo",
+  "P - Pain": "P - Mamae",
+  "U - Unresponsive": "U - Kāore e whakautu",
+  "Vitals Trend": "Ia Tohu Koiora",
+  "No vital signs recorded yet.": "Kāore anō kia tuhia he tohu koiora.",
+  "Current NEWS2:": "NEWS2 o nāianei:",
+
+  // Demographics
+  "DOB": "Rā Whānau",
+  "Phone": "Waea",
+  "Email": "Īmēra",
+  "Address": "Wāhitau",
+  "Iwi:": "Iwi:",
+  "yrs": "tau",
+
+  // Medications
+  "Select medication": "Kōwhiria rongoā",
+  "Select patient": "Kōwhiria tūroro",
+  "Select frequency": "Kōwhiria auautanga",
+  "Additional instructions...": "Tohutohu tāpiri...",
+  "Oral": "Ā-waha",
+  "IV": "Ā-ia",
+  "IM": "Ā-uaua",
+  "SC": "Ā-kiri raro",
+  "Topical": "Ā-kiri",
+  "Inhaled": "Ā-hā",
+  "Prescribing...": "E tono ana...",
+  "No medications prescribed for this patient.": "Kāore he rongoā i tohua mō tēnei tūroro.",
+
+  // Discharge workflow
+  "Discharge Workflow": "Tukanga Tuku Atu",
+  "Step 1: Confirm Diagnosis": "Hipanga 1: Whakaū Tautuhi Mate",
+  "Discharge Diagnosis": "Tautuhi Mate Tuku Atu",
+  "Final diagnosis": "Tautuhi mate whakamutunga",
+  "Next: Medications": "Panuku: Rongoā",
+  "Step 2: Medications on Discharge": "Hipanga 2: Rongoā i te Tuku Atu",
+  "Select medications to continue after discharge:": "Kōwhiria ngā rongoā hei whai i muri i te tuku atu:",
+  "No active medications.": "Kāore he rongoā hohe.",
+  "Back": "Hoki",
+  "Next: Follow-up": "Panuku: Whai Muri",
+  "Step 3: Follow-up Appointment": "Hipanga 3: Wā Kite Whai Muri",
+  "Follow-up Date": "Rā Whai Muri",
+  "Next: ACC": "Panuku: ACC",
+  "Step 4: ACC Claim Status": "Hipanga 4: Āhua Kerēme ACC",
+  "Update Status": "Whakahōu Āhua",
+  "No change": "Kāore he huringa",
+  "Close claim": "Kati kerēme",
+  "Mark for review": "Tohu hei arotake",
+  "No ACC claim associated with this patient.": "Kāore he kerēme ACC e hono ana ki tēnei tūroro.",
+  "Next: Summary": "Panuku: Whakarāpopoto",
+  "Step 5: Discharge Summary": "Hipanga 5: Whakarāpopoto Tuku Atu",
+  "Patient:": "Tūroro:",
+  "Diagnosis:": "Tautuhi Mate:",
+  "Not specified": "Kāore i tohua",
+  "Continuing Medications:": "Rongoā e haere tonu ana:",
+  "None": "Kore",
+  "Discontinued:": "Kua whakamutua:",
+  "Follow-up:": "Whai Muri:",
+  "ACC Update:": "Whakahōu ACC:",
+  "Additional Notes": "Tuhinga Tāpiri",
+  "Discharge notes...": "Tuhinga tuku atu...",
+  "Confirm Discharge": "Whakaū Tuku Atu",
+  "Processing...": "E mahi ana...",
+
+  // Patient detail misc
+  "Loading patient...": "E uta ana i te tūroro...",
+  "AI Generated": "AI i hanga",
+  "Admitted:": "Kua whakaurua:",
+  "Discharged:": "Kua tukua:",
+  "Provider:": "Kaiwhakarato:",
+  "Referred:": "Kua tukua atu:",
+  "Target:": "Whāinga:",
+
+  // Table headers
+  "Type": "Momo",
+  "Test": "Whakamātautau",
+  "Value": "Uara",
+  "Code": "Waehere",
+  "Date": "Rā",
+  "Time": "Wā",
+  "HR": "PM",
+  "BP": "PT",
+  "RR": "Hā",
+  "Temp": "Mah",
+  "AVPU": "AVPU",
+  "By": "Nā",
+
+  // Falls risk
+  "Age": "Pakeke",
+  "Enter patient age": "Tāurua te pakeke o te tūroro",
+  "Previous falls in last 12 months": "Hinganga i ngā marama 12 whakamutunga",
+  "Mobility impaired / unsteady gait": "Nekeneke kua pāmamae / hīkoi tūwhena",
+  "Cognitive impairment / confusion": "Hinengaro kua pāmamae / pōhēhē",
+  "Continence issues": "Raruraru pupuri",
+  "High-risk medications (sedatives, antihypertensives)": "Rongoā tūraru nui",
+  "Visual impairment": "Kanohi kua pāmamae",
+  "Risk": "Tūraru",
+  "Falls Risk Score:": "Kaute Tūraru Hinga:",
+
+  // CDSS alerts/pathways
+  "Timeframe:": "Wā:",
+  "Active Alert": "Matohi Hohe",
+  "Source:": "Pūtake:",
+
+  // Hauora
+  "out of 100": "i te 100",
+
+  // Beds
+  "occupied": "kua nohoia",
+  "Bed": "Moenga",
+
+  // ACC
+  "Injury Code": "Waehere Whara",
+  "Total Cost": "Utu Katoa",
+  "Describe the injury...": "Whakaahua te whara...",
+  "ACC injury code": "Waehere whara ACC",
+  "Select claim type": "Kōwhiria momo kerēme",
+  "Running:": "E haere ana:",
+
+  // Sidebar
+  "Language": "Reo",
+
+  // AI Agent
+  "Suggested prompts": "Ngā pātai tūtohua",
+
+  // Commander panel
+  "Issue natural language commands across hospital systems": "Tuku tohutohu reo māori puta noa i ngā pūnaha hōhipera",
+  "Multi-System Commander": "Kaiārahi Pūnaha Maha",
+  "Example commands": "Tohutohu tauira",
+  "Generating action plan...": "E hanga ana i te mahere mahi...",
+  "Action Plan": "Mahere Mahi",
+  "Low Risk": "Tūraru Iti",
+  "Medium Risk": "Tūraru Waenga",
+  "High Risk": "Tūraru Nui",
+  "All actions completed successfully": "Kua oti pai ngā mahi katoa",
+  "Executing...": "E mahi ana...",
+  "Execute Plan": "Whakahaere Mahere",
+  "New Command": "Tohutohu Hou",
+  "Describe what you need done across systems...": "Whakaahua ngā mahi e hiahiatia ana puta noa i ngā pūnaha...",
+
+  // Audit date ranges
+  "Last 24 Hours": "24 hāora whakamutunga",
+  "Last 7 Days": "7 rā whakamutunga",
+  "Last 30 Days": "30 rā whakamutunga",
+
+  // Patient list ethnicity items
+  "NZ European": "NZ European",
+  "Pacific Islander": "Pacific Islander",
+  "Asian": "Asian",
+  "Māori": "Māori",
+
+  // AI Diagnosis
+  "AI Diagnosis": "Tautuhi AI",
+  "AI Medical Image Diagnosis": "Tautuhi Whakaahua Rongoā AI",
+  "Upload or select a medical image for AI-assisted diagnosis": "Tukuna, kōwhiria rānei he whakaahua rongoā hei tautuhi AI",
+  "Submit for AI Analysis": "Tuku mō te Tātaritanga AI",
+  "AI Analyzing...": "E tātari ana te AI...",
+  "Analyzing medical image with deep learning model...": "E tātari ana i te whakaahua rongoā mā te tauira ako hōhonu...",
+  "Diagnosis Report": "Pūrongo Tautuhi",
+  "Sample CT Scan — Right Upper Lobe Mass": "Matapae CT Tauira — Puku Rau Runga Katau",
+  "Pre-loaded Demo Image": "Whakaahua Whakaatu Kua Utaina",
+  "AI-Assisted Radiological Analysis": "Tātaritanga Iraia AI-Āwhina",
+  "New Analysis": "Tātaritanga Hou",
 };
 
 export function getTeReo(key: string): string | undefined {
@@ -522,6 +719,208 @@ export const zhCN: Record<string, string> = {
   "Real-time bed occupancy across all wards": "所有病房的实时床位占用情况",
   "System activity and compliance logging": "系统活动和合规日志",
   "Multi-agent AI assistant for clinical, quality, and research support": "用于临床、质量和研究支持的多智能体AI助手",
+
+  // Patient detail page - tabs
+  "Notes": "病历笔记",
+  "Vitals": "生命体征",
+  "Meds": "药物",
+  "Encounters": "就诊记录",
+  "Labs": "检验结果",
+  "Appts": "预约",
+
+  // Patient detail page - notes
+  "New Clinical Note": "新建临床笔记",
+  "Save Note": "保存笔记",
+  "Saving...": "保存中...",
+  "SUBJECTIVE": "主观",
+  "OBJECTIVE": "客观",
+  "ASSESSMENT": "评估",
+  "PLAN": "计划",
+  "SUBJECTIVE / HISTORY": "主观/病史",
+  "OBJECTIVE / FINDINGS": "客观/检查结果",
+  "Patient's complaint and history...": "患者主诉和病史...",
+  "Examination findings, vitals, results...": "检查发现、生命体征、结果...",
+  "Diagnosis and clinical reasoning...": "诊断和临床推理...",
+  "Treatment plan, medications, follow-up...": "治疗计划、药物、随访...",
+
+  // Vital signs
+  "Record Vital Signs": "记录生命体征",
+  "Heart Rate (bpm)": "心率 (次/分)",
+  "Respiratory Rate": "呼吸频率",
+  "Respiratory Rate (breaths/min)": "呼吸频率 (次/分)",
+  "Oxygen Saturation (%)": "血氧饱和度 (%)",
+  "Supplemental O2": "辅助供氧",
+  "Systolic BP (mmHg)": "收缩压 (mmHg)",
+  "Diastolic BP (mmHg)": "舒张压 (mmHg)",
+  "Temperature (C)": "体温 (°C)",
+  "SpO2 (%)": "血氧 (%)",
+  "Pain Score (0-10)": "疼痛评分 (0-10)",
+  "Consciousness (AVPU)": "意识状态 (AVPU)",
+  "A - Alert": "A - 清醒",
+  "V - Voice": "V - 语音反应",
+  "P - Pain": "P - 疼痛反应",
+  "U - Unresponsive": "U - 无反应",
+  "Vitals Trend": "生命体征趋势",
+  "No vital signs recorded yet.": "尚未记录生命体征。",
+  "Current NEWS2:": "当前 NEWS2:",
+
+  // Demographics
+  "DOB": "出生日期",
+  "Phone": "电话",
+  "Email": "电子邮件",
+  "Address": "地址",
+  "Iwi:": "部落:",
+  "yrs": "岁",
+
+  // Medications - prescribe form
+  "Select medication": "选择药物",
+  "Select patient": "选择患者",
+  "Select frequency": "选择频次",
+  "Additional instructions...": "补充用药说明...",
+  "Oral": "口服",
+  "IV": "静脉注射",
+  "IM": "肌肉注射",
+  "SC": "皮下注射",
+  "Topical": "外用",
+  "Inhaled": "吸入",
+  "Prescribing...": "开具中...",
+  "No medications prescribed for this patient.": "该患者尚未开具任何处方。",
+
+  // Discharge workflow
+  "Discharge Workflow": "出院工作流程",
+  "Step 1: Confirm Diagnosis": "第1步：确认诊断",
+  "Discharge Diagnosis": "出院诊断",
+  "Final diagnosis": "最终诊断",
+  "Next: Medications": "下一步：药物",
+  "Step 2: Medications on Discharge": "第2步：出院药物",
+  "Select medications to continue after discharge:": "选择出院后继续使用的药物：",
+  "No active medications.": "无活跃药物。",
+  "Back": "返回",
+  "Next: Follow-up": "下一步：随访",
+  "Step 3: Follow-up Appointment": "第3步：随访预约",
+  "Follow-up Date": "随访日期",
+  "Next: ACC": "下一步：ACC",
+  "Step 4: ACC Claim Status": "第4步：ACC 理赔状态",
+  "Update Status": "更新状态",
+  "No change": "不变",
+  "Close claim": "关闭理赔",
+  "Mark for review": "标记待审",
+  "No ACC claim associated with this patient.": "该患者无关联的 ACC 理赔。",
+  "Next: Summary": "下一步：摘要",
+  "Step 5: Discharge Summary": "第5步：出院摘要",
+  "Patient:": "患者：",
+  "Diagnosis:": "诊断：",
+  "Not specified": "未指定",
+  "Continuing Medications:": "继续使用的药物：",
+  "None": "无",
+  "Discontinued:": "已停用的药物：",
+  "Follow-up:": "随访：",
+  "ACC Update:": "ACC 更新：",
+  "Additional Notes": "补充说明",
+  "Discharge notes...": "出院备注...",
+  "Confirm Discharge": "确认出院",
+  "Processing...": "处理中...",
+
+  // Patient detail misc
+  "Loading patient...": "加载患者信息...",
+  "AI Generated": "AI 生成",
+  "Admitted:": "入院：",
+  "Discharged:": "出院：",
+  "Provider:": "医生：",
+  "Referred:": "转诊：",
+  "Target:": "目标：",
+
+  // Table headers
+  "Type": "类型",
+  "Test": "检验项目",
+  "Value": "结果值",
+  "Code": "编码",
+  "Date": "日期",
+  "Time": "时间",
+  "HR": "心率",
+  "BP": "血压",
+  "RR": "呼吸",
+  "Temp": "体温",
+  "AVPU": "意识",
+  "By": "记录人",
+
+  // Falls risk
+  "Age": "年龄",
+  "Enter patient age": "输入患者年龄",
+  "Previous falls in last 12 months": "过去12个月内有跌倒史",
+  "Mobility impaired / unsteady gait": "行动障碍/步态不稳",
+  "Cognitive impairment / confusion": "认知障碍/意识模糊",
+  "Continence issues": "排泄问题",
+  "High-risk medications (sedatives, antihypertensives)": "高风险药物（镇静剂、降压药）",
+  "Visual impairment": "视力障碍",
+  "Risk": "风险",
+  "Falls Risk Score:": "跌倒风险评分：",
+
+  // CDSS alerts/pathways
+  "Timeframe:": "时间范围：",
+  "Active Alert": "活跃警报",
+  "Source:": "来源：",
+
+  // Hauora
+  "out of 100": "/ 100",
+
+  // Beds
+  "occupied": "已占用",
+  "Bed": "床位",
+
+  // ACC
+  "Injury Code": "伤害代码",
+  "Total Cost": "总费用",
+  "Describe the injury...": "描述伤情...",
+  "ACC injury code": "ACC 伤害代码",
+  "Select claim type": "选择理赔类型",
+  "Running:": "累计：",
+
+  // Sidebar
+  "Language": "语言",
+
+  // AI Agent
+  "Suggested prompts": "推荐提问",
+
+  // Commander panel
+  "Issue natural language commands across hospital systems": "使用自然语言向医院各系统发出指令",
+  "Multi-System Commander": "多系统指挥官",
+  "Describe what you need done in plain language. Commander Mode will generate a structured action plan spanning multiple hospital systems.": "用自然语言描述您的需求。指挥官模式将生成跨多个医院系统的结构化行动计划。",
+  "Example commands": "示例指令",
+  "Generating action plan...": "正在生成行动计划...",
+  "Action Plan": "行动计划",
+  "Low Risk": "低风险",
+  "Medium Risk": "中等风险",
+  "High Risk": "高风险",
+  "All actions completed successfully": "所有操作已成功完成",
+  "Executing...": "执行中...",
+  "Execute Plan": "执行计划",
+  "New Command": "新建指令",
+  "Describe what you need done across systems...": "描述您需要跨系统完成的操作...",
+
+  // Audit date ranges
+  "Last 24 Hours": "最近24小时",
+  "Last 7 Days": "最近7天",
+  "Last 30 Days": "最近30天",
+
+  // Patient list ethnicity items
+  "NZ European": "新西兰欧裔",
+  "Pacific Islander": "太平洋岛民",
+  "Asian": "亚裔",
+  "Māori": "毛利人",
+
+  // AI Diagnosis
+  "AI Diagnosis": "AI 影像诊断",
+  "AI Medical Image Diagnosis": "AI 医学影像诊断",
+  "Upload or select a medical image for AI-assisted diagnosis": "上传或选择医学影像进行 AI 辅助诊断",
+  "Submit for AI Analysis": "提交 AI 分析",
+  "AI Analyzing...": "AI 分析中...",
+  "Analyzing medical image with deep learning model...": "正在使用深度学习模型分析医学影像...",
+  "Diagnosis Report": "诊断报告",
+  "Sample CT Scan — Right Upper Lobe Mass": "示例 CT 扫描 — 右上叶肿块",
+  "Pre-loaded Demo Image": "预加载演示图像",
+  "AI-Assisted Radiological Analysis": "AI 辅助放射学分析",
+  "New Analysis": "新建分析",
 };
 
 export function getZhCN(key: string): string | undefined {

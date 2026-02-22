@@ -22,7 +22,7 @@ const BilingualContext = createContext<BilingualContextType>({
 });
 
 export function BilingualProvider({ children }: { children: React.ReactNode }) {
-  const [language, setLanguage] = useState<Language>("en");
+  const [language, setLanguage] = useState<Language>("cn");
 
   const teReoEnabled = language === "mi";
 

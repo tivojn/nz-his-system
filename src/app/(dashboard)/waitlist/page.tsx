@@ -72,7 +72,7 @@ export default function WaitlistPage() {
                     <p className="text-xs text-gray-400">{t("days waiting")}</p>
                     {entry.targetDate && (
                       <p className="text-xs text-gray-500 mt-1">
-                        Target: {new Date(entry.targetDate).toLocaleDateString("en-NZ")}
+                        {t("Target:")} {new Date(entry.targetDate).toLocaleDateString("en-NZ")}
                       </p>
                     )}
                   </div>

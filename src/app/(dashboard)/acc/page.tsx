@@ -161,7 +161,7 @@ export default function ACCPage() {
                 <Label>{t("Patient")}</Label>
                 <Select value={form.patientId} onValueChange={(v) => setForm({ ...form, patientId: v })}>
                   <SelectTrigger>
-                    <SelectValue placeholder="Select patient" />
+                    <SelectValue placeholder={t("Select patient")} />
                   </SelectTrigger>
                   <SelectContent>
                     {patients.map((p) => (
@@ -187,7 +187,7 @@ export default function ACCPage() {
                   value={form.injuryDescription}
                   onChange={(e) => setForm({ ...form, injuryDescription: e.target.value })}
                   required
-                  placeholder="Describe the injury..."
+                  placeholder={t("Describe the injury...")}
                 />
               </div>
               <div className="space-y-2">
@@ -195,19 +195,19 @@ export default function ACCPage() {
                 <Input
                   value={form.injuryCode}
                   onChange={(e) => setForm({ ...form, injuryCode: e.target.value })}
-                  placeholder="ACC injury code"
+                  placeholder={t("ACC injury code")}
                 />
               </div>
               <div className="space-y-2">
                 <Label>{t("Claim Type")}</Label>
                 <Select value={form.claimType} onValueChange={(v) => setForm({ ...form, claimType: v })}>
                   <SelectTrigger>
-                    <SelectValue placeholder="Select claim type" />
+                    <SelectValue placeholder={t("Select claim type")} />
                   </SelectTrigger>
                   <SelectContent>
-                    {ACC_CLAIM_TYPES.map((t) => (
-                      <SelectItem key={t.code} value={t.code}>
-                        {t.label}
+                    {ACC_CLAIM_TYPES.map((ct) => (
+                      <SelectItem key={ct.code} value={ct.code}>
+                        {ct.label}
                       </SelectItem>
                     ))}
                   </SelectContent>
@@ -325,7 +325,7 @@ export default function ACCPage() {
                             <p className="font-mono">{claim.patient.nhiNumber}</p>
                           </div>
                           <div>
-                            <p className="text-gray-400">Injury Code</p>
+                            <p className="text-gray-400">{t("Injury Code")}</p>
                             <p>{claim.injuryCode || "—"}</p>
                           </div>
                           <div>
@@ -333,7 +333,7 @@ export default function ACCPage() {
                             <p className="capitalize">{claim.claimType}</p>
                           </div>
                           <div>
-                            <p className="text-gray-400">Total Cost</p>
+                            <p className="text-gray-400">{t("Total Cost")}</p>
                             <p className="font-semibold">
                               ${claim.totalCost.toLocaleString("en-NZ", { minimumFractionDigits: 2 })}
                             </p>
@@ -374,7 +374,7 @@ export default function ACCPage() {
                                       </p>
                                     )}
                                     <p className="text-xs text-gray-400">
-                                      Running: ${runningCost.toLocaleString("en-NZ", { minimumFractionDigits: 2 })}
+                                      {t("Running:")} ${runningCost.toLocaleString("en-NZ", { minimumFractionDigits: 2 })}
                                     </p>
                                   </div>
                                 </div>

@@ -115,7 +115,7 @@ export default function BedsPage() {
               <CardTitle className="text-base flex items-center justify-between">
                 <span>{wardName}</span>
                 <span className="text-sm font-normal text-gray-500">
-                  {wardOccupied}/{beds.length} occupied
+                  {wardOccupied}/{beds.length} {t("occupied")}
                 </span>
               </CardTitle>
             </CardHeader>
@@ -145,7 +145,7 @@ export default function BedsPage() {
                             </p>
                             <p className="text-xs text-gray-500 font-mono">{bed.patient.nhiNumber}</p>
                             <p className="text-xs text-gray-400 mt-1">
-                              Bed {bed.bedNumber} - {wardName}
+                              {t("Bed")} {bed.bedNumber} - {wardName}
                             </p>
                           </div>
                         </HoverCardContent>

@@ -57,6 +57,7 @@ import {
   MEDICATION_STATUSES,
   NOTE_TEMPLATES,
 } from "@/lib/constants";
+import { useBilingual } from "@/components/bilingual-provider";
 
 interface PatientDetail {
   id: string;
@@ -152,6 +153,7 @@ const templateDefaults: Record<string, { subjective: string; objective: string; 
 };
 
 export default function PatientDetailPage() {
+  const { t } = useBilingual();
   const params = useParams();
   const [patient, setPatient] = useState<PatientDetail | null>(null);
   const [noteTemplate, setNoteTemplate] = useState("soap");
@@ -413,7 +415,7 @@ export default function PatientDetailPage() {
         : "bg-green-500"
       : "bg-gray-300";
 
-  if (!patient) return <div className="animate-pulse text-gray-400 p-8">Loading patient...</div>;
+  if (!patient) return <div className="animate-pulse text-gray-400 p-8">{t("Loading patient...")}</div>;
 
   const age = Math.floor((Date.now() - new Date(patient.dateOfBirth).getTime()) / (365.25 * 86400000));
   const activeMeds = medications.filter((m) => m.status !== "discontinued");
@@ -434,8 +436,8 @@ export default function PatientDetailPage() {
               <h1 className="text-2xl font-bold text-gray-900">{patient.firstName} {patient.lastName}</h1>
               <div className="flex items-center gap-2 mt-1">
                 <Badge variant="outline" className="font-mono">{patient.nhiNumber}</Badge>
-                <span className="text-sm text-gray-500">{age} yrs · {patient.gender} · {patient.ethnicity}</span>
-                {patient.iwi && <Badge className="bg-green-100 text-green-800 text-xs">Iwi: {patient.iwi}</Badge>}
+                <span className="text-sm text-gray-500">{age} {t("yrs")} · {patient.gender} · {patient.ethnicity}</span>
+                {patient.iwi && <Badge className="bg-green-100 text-green-800 text-xs">{t("Iwi:")} {patient.iwi}</Badge>}
               </div>
             </div>
           </div>
@@ -443,7 +445,7 @@ export default function PatientDetailPage() {
         {patient.accClaimNumber && (
           <Card className="border-0 shadow-sm">
             <CardContent className="p-3">
-              <p className="text-xs text-gray-500">ACC Claim</p>
+              <p className="text-xs text-gray-500">{t("ACC Claim")}</p>
               <p className="font-mono text-sm">{patient.accClaimNumber}</p>
               <Badge className={patient.accClaimStatus === "active" ? "bg-green-100 text-green-800" : "bg-gray-100 text-gray-600"}>
                 {patient.accClaimStatus}
@@ -456,23 +458,23 @@ export default function PatientDetailPage() {
       {/* Demographics Card */}
       <Card className="border-0 shadow-sm">
         <CardContent className="p-4 grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
-          <div><span className="text-gray-500">DOB</span><p className="font-medium">{new Date(patient.dateOfBirth).toLocaleDateString("en-NZ")}</p></div>
-          <div><span className="text-gray-500">Phone</span><p className="font-medium">{patient.phone || "\u2014"}</p></div>
-          <div><span className="text-gray-500">Email</span><p className="font-medium">{patient.email || "\u2014"}</p></div>
-          <div><span className="text-gray-500">Address</span><p className="font-medium">{patient.address ? `${patient.address}, ${patient.city}` : "\u2014"}</p></div>
+          <div><span className="text-gray-500">{t("DOB")}</span><p className="font-medium">{new Date(patient.dateOfBirth).toLocaleDateString("en-NZ")}</p></div>
+          <div><span className="text-gray-500">{t("Phone")}</span><p className="font-medium">{patient.phone || "\u2014"}</p></div>
+          <div><span className="text-gray-500">{t("Email")}</span><p className="font-medium">{patient.email || "\u2014"}</p></div>
+          <div><span className="text-gray-500">{t("Address")}</span><p className="font-medium">{patient.address ? `${patient.address}, ${patient.city}` : "\u2014"}</p></div>
         </CardContent>
       </Card>
 
       {/* Tabs */}
       <Tabs defaultValue="notes" className="space-y-4">
         <TabsList className="bg-white border shadow-sm flex-wrap h-auto gap-1 p-1">
-          <TabsTrigger value="notes" className="gap-1"><FileText className="h-4 w-4" /> Notes ({patient.notes.length})</TabsTrigger>
-          <TabsTrigger value="vitals" className="gap-1"><Heart className="h-4 w-4" /> Vitals ({vitals.length})</TabsTrigger>
-          <TabsTrigger value="medications" className="gap-1"><Pill className="h-4 w-4" /> Meds ({activeMeds.length})</TabsTrigger>
-          <TabsTrigger value="encounters" className="gap-1"><Activity className="h-4 w-4" /> Encounters ({patient.encounters.length})</TabsTrigger>
-          <TabsTrigger value="observations" className="gap-1"><FlaskConical className="h-4 w-4" /> Labs ({patient.observations.length})</TabsTrigger>
-          <TabsTrigger value="appointments" className="gap-1"><Calendar className="h-4 w-4" /> Appts ({patient.appointments.length})</TabsTrigger>
-          <TabsTrigger value="waitlist" className="gap-1"><Clock className="h-4 w-4" /> Waitlist ({patient.waitlistEntries.length})</TabsTrigger>
+          <TabsTrigger value="notes" className="gap-1"><FileText className="h-4 w-4" /> {t("Notes")} ({patient.notes.length})</TabsTrigger>
+          <TabsTrigger value="vitals" className="gap-1"><Heart className="h-4 w-4" /> {t("Vitals")} ({vitals.length})</TabsTrigger>
+          <TabsTrigger value="medications" className="gap-1"><Pill className="h-4 w-4" /> {t("Meds")} ({activeMeds.length})</TabsTrigger>
+          <TabsTrigger value="encounters" className="gap-1"><Activity className="h-4 w-4" /> {t("Encounters")} ({patient.encounters.length})</TabsTrigger>
+          <TabsTrigger value="observations" className="gap-1"><FlaskConical className="h-4 w-4" /> {t("Labs")} ({patient.observations.length})</TabsTrigger>
+          <TabsTrigger value="appointments" className="gap-1"><Calendar className="h-4 w-4" /> {t("Appts")} ({patient.appointments.length})</TabsTrigger>
+          <TabsTrigger value="waitlist" className="gap-1"><Clock className="h-4 w-4" /> {t("Waitlist")} ({patient.waitlistEntries.length})</TabsTrigger>
         </TabsList>
 
         {/* Notes Tab (enhanced with templates) */}
@@ -480,15 +482,15 @@ export default function PatientDetailPage() {
           <Card className="border-0 shadow-sm">
             <CardHeader>
               <div className="flex items-center justify-between">
-                <CardTitle className="text-lg">New Clinical Note</CardTitle>
+                <CardTitle className="text-lg">{t("New Clinical Note")}</CardTitle>
                 <Select value={noteTemplate} onValueChange={handleTemplateChange}>
                   <SelectTrigger className="w-[200px]">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    {NOTE_TEMPLATES.map((t) => (
-                      <SelectItem key={t.type} value={t.type}>
-                        {t.label}
+                    {NOTE_TEMPLATES.map((tmpl) => (
+                      <SelectItem key={tmpl.type} value={tmpl.type}>
+                        {tmpl.label}
                       </SelectItem>
                     ))}
                   </SelectContent>
@@ -498,10 +500,10 @@ export default function PatientDetailPage() {
             <CardContent className="space-y-3">
               <div>
                 <Label className="text-xs font-medium text-gray-500">
-                  {noteTemplate === "soap" ? "SUBJECTIVE" : "SUBJECTIVE / HISTORY"}
+                  {noteTemplate === "soap" ? t("SUBJECTIVE") : t("SUBJECTIVE / HISTORY")}
                 </Label>
                 <Textarea
-                  placeholder="Patient's complaint and history..."
+                  placeholder={t("Patient's complaint and history...")}
                   value={newNote.subjective}
                   onChange={(e) => setNewNote({ ...newNote, subjective: e.target.value })}
                   className="mt-1"
@@ -510,10 +512,10 @@ export default function PatientDetailPage() {
               </div>
               <div>
                 <Label className="text-xs font-medium text-gray-500">
-                  {noteTemplate === "soap" ? "OBJECTIVE" : "OBJECTIVE / FINDINGS"}
+                  {noteTemplate === "soap" ? t("OBJECTIVE") : t("OBJECTIVE / FINDINGS")}
                 </Label>
                 <Textarea
-                  placeholder="Examination findings, vitals, results..."
+                  placeholder={t("Examination findings, vitals, results...")}
                   value={newNote.objective}
                   onChange={(e) => setNewNote({ ...newNote, objective: e.target.value })}
                   className="mt-1"
@@ -521,9 +523,9 @@ export default function PatientDetailPage() {
                 />
               </div>
               <div>
-                <Label className="text-xs font-medium text-gray-500">ASSESSMENT</Label>
+                <Label className="text-xs font-medium text-gray-500">{t("ASSESSMENT")}</Label>
                 <Textarea
-                  placeholder="Diagnosis and clinical reasoning..."
+                  placeholder={t("Diagnosis and clinical reasoning...")}
                   value={newNote.assessment}
                   onChange={(e) => setNewNote({ ...newNote, assessment: e.target.value })}
                   className="mt-1"
@@ -531,9 +533,9 @@ export default function PatientDetailPage() {
                 />
               </div>
               <div>
-                <Label className="text-xs font-medium text-gray-500">PLAN</Label>
+                <Label className="text-xs font-medium text-gray-500">{t("PLAN")}</Label>
                 <Textarea
-                  placeholder="Treatment plan, medications, follow-up..."
+                  placeholder={t("Treatment plan, medications, follow-up...")}
                   value={newNote.plan}
                   onChange={(e) => setNewNote({ ...newNote, plan: e.target.value })}
                   className="mt-1"
@@ -541,7 +543,7 @@ export default function PatientDetailPage() {
                 />
               </div>
               <Button onClick={saveNote} disabled={saving} className="bg-teal-700 hover:bg-teal-800">
-                {saving ? "Saving..." : "Save Note"}
+                {saving ? t("Saving...") : t("Save Note")}
               </Button>
             </CardContent>
           </Card>
@@ -553,7 +555,7 @@ export default function PatientDetailPage() {
                   <div className="flex items-center gap-2">
                     <Badge className="bg-teal-100 text-teal-800 uppercase text-xs">{note.type}</Badge>
                     <span className="text-sm text-gray-500">{note.author?.name}</span>
-                    {note.aiGenerated && <Badge className="bg-purple-100 text-purple-800 text-xs">AI Generated</Badge>}
+                    {note.aiGenerated && <Badge className="bg-purple-100 text-purple-800 text-xs">{t("AI Generated")}</Badge>}
                   </div>
                   <span className="text-xs text-gray-400">{new Date(note.createdAt).toLocaleString("en-NZ")}</span>
                 </div>
@@ -572,7 +574,7 @@ export default function PatientDetailPage() {
             <div className="flex items-center gap-3">
               {latestVitals?.news2Score != null && (
                 <div className="flex items-center gap-2">
-                  <span className="text-sm font-medium text-gray-500">Current NEWS2:</span>
+                  <span className="text-sm font-medium text-gray-500">{t("Current NEWS2:")}</span>
                   <div className={`w-10 h-10 rounded-full flex items-center justify-center text-white font-bold ${news2Color}`}>
                     {latestVitals.news2Score}
                   </div>
@@ -582,64 +584,64 @@ export default function PatientDetailPage() {
             <Dialog open={vitalsDialogOpen} onOpenChange={setVitalsDialogOpen}>
               <DialogTrigger asChild>
                 <Button className="bg-teal-700 hover:bg-teal-800">
-                  <Plus className="h-4 w-4 mr-1" /> Record Vitals
+                  <Plus className="h-4 w-4 mr-1" /> {t("Record Vitals")}
                 </Button>
               </DialogTrigger>
               <DialogContent className="max-w-lg max-h-[80vh] overflow-y-auto">
                 <DialogHeader>
-                  <DialogTitle>Record Vital Signs</DialogTitle>
+                  <DialogTitle>{t("Record Vital Signs")}</DialogTitle>
                 </DialogHeader>
                 <div className="space-y-4">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                     <div>
-                      <Label>Heart Rate (bpm)</Label>
+                      <Label>{t("Heart Rate (bpm)")}</Label>
                       <Input type="number" value={vitalForm.heartRate} onChange={(e) => setVitalForm({ ...vitalForm, heartRate: e.target.value })} />
                     </div>
                     <div>
-                      <Label>Respiratory Rate</Label>
+                      <Label>{t("Respiratory Rate")}</Label>
                       <Input type="number" value={vitalForm.respiratoryRate} onChange={(e) => setVitalForm({ ...vitalForm, respiratoryRate: e.target.value })} />
                     </div>
                     <div>
-                      <Label>Systolic BP (mmHg)</Label>
+                      <Label>{t("Systolic BP (mmHg)")}</Label>
                       <Input type="number" value={vitalForm.systolicBP} onChange={(e) => setVitalForm({ ...vitalForm, systolicBP: e.target.value })} />
                     </div>
                     <div>
-                      <Label>Diastolic BP (mmHg)</Label>
+                      <Label>{t("Diastolic BP (mmHg)")}</Label>
                       <Input type="number" value={vitalForm.diastolicBP} onChange={(e) => setVitalForm({ ...vitalForm, diastolicBP: e.target.value })} />
                     </div>
                     <div>
-                      <Label>Temperature (C)</Label>
+                      <Label>{t("Temperature (C)")}</Label>
                       <Input type="number" step="0.1" value={vitalForm.temperature} onChange={(e) => setVitalForm({ ...vitalForm, temperature: e.target.value })} />
                     </div>
                     <div>
-                      <Label>SpO2 (%)</Label>
+                      <Label>{t("SpO2 (%)")}</Label>
                       <Input type="number" value={vitalForm.oxygenSat} onChange={(e) => setVitalForm({ ...vitalForm, oxygenSat: e.target.value })} />
                     </div>
                   </div>
                   <div className="flex items-center gap-3">
                     <Switch checked={vitalForm.onSupplementalO2} onCheckedChange={(v) => setVitalForm({ ...vitalForm, onSupplementalO2: v })} />
-                    <Label>Supplemental O2</Label>
+                    <Label>{t("Supplemental O2")}</Label>
                   </div>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                     <div>
-                      <Label>Consciousness (AVPU)</Label>
+                      <Label>{t("Consciousness (AVPU)")}</Label>
                       <Select value={vitalForm.consciousness} onValueChange={(v) => setVitalForm({ ...vitalForm, consciousness: v })}>
                         <SelectTrigger><SelectValue /></SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="A">A - Alert</SelectItem>
-                          <SelectItem value="V">V - Voice</SelectItem>
-                          <SelectItem value="P">P - Pain</SelectItem>
-                          <SelectItem value="U">U - Unresponsive</SelectItem>
+                          <SelectItem value="A">{t("A - Alert")}</SelectItem>
+                          <SelectItem value="V">{t("V - Voice")}</SelectItem>
+                          <SelectItem value="P">{t("P - Pain")}</SelectItem>
+                          <SelectItem value="U">{t("U - Unresponsive")}</SelectItem>
                         </SelectContent>
                       </Select>
                     </div>
                     <div>
-                      <Label>Pain Score (0-10)</Label>
+                      <Label>{t("Pain Score (0-10)")}</Label>
                       <Input type="number" min="0" max="10" value={vitalForm.painScore} onChange={(e) => setVitalForm({ ...vitalForm, painScore: e.target.value })} />
                     </div>
                   </div>
                   <Button onClick={saveVitals} disabled={savingVitals} className="w-full bg-teal-700 hover:bg-teal-800">
-                    {savingVitals ? "Saving..." : "Record Vitals"}
+                    {savingVitals ? t("Saving...") : t("Record Vitals")}
                   </Button>
                 </div>
               </DialogContent>
@@ -650,7 +652,7 @@ export default function PatientDetailPage() {
           {chartData.length > 1 && (
             <Card className="border-0 shadow-sm">
               <CardHeader>
-                <CardTitle className="text-base">Vitals Trend</CardTitle>
+                <CardTitle className="text-base">{t("Vitals Trend")}</CardTitle>
               </CardHeader>
               <CardContent>
                 <ResponsiveContainer width="100%" height={250}>
@@ -672,7 +674,7 @@ export default function PatientDetailPage() {
           {/* Vitals History Table */}
           {vitals.length === 0 ? (
             <Card className="border-0 shadow-sm">
-              <CardContent className="p-8 text-center text-gray-500">No vital signs recorded yet.</CardContent>
+              <CardContent className="p-8 text-center text-gray-500">{t("No vital signs recorded yet.")}</CardContent>
             </Card>
           ) : (
             <Card className="border-0 shadow-sm">
@@ -680,15 +682,15 @@ export default function PatientDetailPage() {
                 <table className="w-full text-sm">
                   <thead>
                     <tr className="border-b bg-gray-50">
-                      <th className="text-left p-3 text-xs font-medium text-gray-500">Time</th>
-                      <th className="text-left p-3 text-xs font-medium text-gray-500">HR</th>
-                      <th className="text-left p-3 text-xs font-medium text-gray-500">BP</th>
-                      <th className="text-left p-3 text-xs font-medium text-gray-500">RR</th>
-                      <th className="text-left p-3 text-xs font-medium text-gray-500">Temp</th>
+                      <th className="text-left p-3 text-xs font-medium text-gray-500">{t("Time")}</th>
+                      <th className="text-left p-3 text-xs font-medium text-gray-500">{t("HR")}</th>
+                      <th className="text-left p-3 text-xs font-medium text-gray-500">{t("BP")}</th>
+                      <th className="text-left p-3 text-xs font-medium text-gray-500">{t("RR")}</th>
+                      <th className="text-left p-3 text-xs font-medium text-gray-500">{t("Temp")}</th>
                       <th className="text-left p-3 text-xs font-medium text-gray-500">SpO2</th>
-                      <th className="text-left p-3 text-xs font-medium text-gray-500">AVPU</th>
+                      <th className="text-left p-3 text-xs font-medium text-gray-500">{t("AVPU")}</th>
                       <th className="text-left p-3 text-xs font-medium text-gray-500">NEWS2</th>
-                      <th className="text-left p-3 text-xs font-medium text-gray-500">By</th>
+                      <th className="text-left p-3 text-xs font-medium text-gray-500">{t("By")}</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -726,18 +728,18 @@ export default function PatientDetailPage() {
             <Dialog open={prescribeDialogOpen} onOpenChange={setPrescribeDialogOpen}>
               <DialogTrigger asChild>
                 <Button className="bg-teal-700 hover:bg-teal-800">
-                  <Plus className="h-4 w-4 mr-1" /> Prescribe
+                  <Plus className="h-4 w-4 mr-1" /> {t("Prescribe")}
                 </Button>
               </DialogTrigger>
               <DialogContent className="max-w-lg max-h-[80vh] overflow-y-auto">
                 <DialogHeader>
-                  <DialogTitle>Prescribe Medication</DialogTitle>
+                  <DialogTitle>{t("Prescribe Medication")}</DialogTitle>
                 </DialogHeader>
                 <div className="space-y-4">
                   <div>
-                    <Label>Medication</Label>
+                    <Label>{t("Medication")}</Label>
                     <Select value={medForm.medicationIdx} onValueChange={handleMedSelect}>
-                      <SelectTrigger><SelectValue placeholder="Select medication" /></SelectTrigger>
+                      <SelectTrigger><SelectValue placeholder={t("Select medication")} /></SelectTrigger>
                       <SelectContent>
                         {NZ_MEDICATIONS.map((med, idx) => (
                           <SelectItem key={idx} value={String(idx)}>{med.name}</SelectItem>
@@ -748,7 +750,7 @@ export default function PatientDetailPage() {
                   {interactions.length > 0 && (
                     <Alert variant="destructive">
                       <AlertTriangle className="h-4 w-4" />
-                      <AlertTitle>Drug Interaction Warning</AlertTitle>
+                      <AlertTitle>{t("Drug Interaction Warning")}</AlertTitle>
                       <AlertDescription>
                         {interactions.map((i: any, idx: number) => (
                           <div key={idx} className="mt-1">
@@ -761,28 +763,28 @@ export default function PatientDetailPage() {
                   )}
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                     <div>
-                      <Label>Dose</Label>
+                      <Label>{t("Dose")}</Label>
                       <Input value={medForm.dose} onChange={(e) => setMedForm({ ...medForm, dose: e.target.value })} />
                     </div>
                     <div>
-                      <Label>Route</Label>
+                      <Label>{t("Route")}</Label>
                       <Select value={medForm.route} onValueChange={(v) => setMedForm({ ...medForm, route: v })}>
                         <SelectTrigger><SelectValue /></SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="oral">Oral</SelectItem>
-                          <SelectItem value="iv">IV</SelectItem>
-                          <SelectItem value="im">IM</SelectItem>
-                          <SelectItem value="sc">SC</SelectItem>
-                          <SelectItem value="topical">Topical</SelectItem>
-                          <SelectItem value="inhaled">Inhaled</SelectItem>
+                          <SelectItem value="oral">{t("Oral")}</SelectItem>
+                          <SelectItem value="iv">{t("IV")}</SelectItem>
+                          <SelectItem value="im">{t("IM")}</SelectItem>
+                          <SelectItem value="sc">{t("SC")}</SelectItem>
+                          <SelectItem value="topical">{t("Topical")}</SelectItem>
+                          <SelectItem value="inhaled">{t("Inhaled")}</SelectItem>
                         </SelectContent>
                       </Select>
                     </div>
                   </div>
                   <div>
-                    <Label>Frequency</Label>
+                    <Label>{t("Frequency")}</Label>
                     <Select value={medForm.frequency} onValueChange={(v) => setMedForm({ ...medForm, frequency: v })}>
-                      <SelectTrigger><SelectValue placeholder="Select frequency" /></SelectTrigger>
+                      <SelectTrigger><SelectValue placeholder={t("Select frequency")} /></SelectTrigger>
                       <SelectContent>
                         {FREQUENCIES.map((f) => (
                           <SelectItem key={f.code} value={f.code}>{f.label}</SelectItem>
@@ -791,11 +793,11 @@ export default function PatientDetailPage() {
                     </Select>
                   </div>
                   <div>
-                    <Label>Instructions</Label>
-                    <Textarea placeholder="Additional instructions..." value={medForm.instructions} onChange={(e) => setMedForm({ ...medForm, instructions: e.target.value })} />
+                    <Label>{t("Instructions")}</Label>
+                    <Textarea placeholder={t("Additional instructions...")} value={medForm.instructions} onChange={(e) => setMedForm({ ...medForm, instructions: e.target.value })} />
                   </div>
                   <Button onClick={prescribe} disabled={!medForm.medicationIdx || !medForm.frequency || prescribing} className="w-full bg-teal-700 hover:bg-teal-800">
-                    {prescribing ? "Prescribing..." : "Prescribe"}
+                    {prescribing ? t("Prescribing...") : t("Prescribe")}
                   </Button>
                 </div>
               </DialogContent>
@@ -804,7 +806,7 @@ export default function PatientDetailPage() {
 
           {medications.length === 0 ? (
             <Card className="border-0 shadow-sm">
-              <CardContent className="p-8 text-center text-gray-500">No medications prescribed for this patient.</CardContent>
+              <CardContent className="p-8 text-center text-gray-500">{t("No medications prescribed for this patient.")}</CardContent>
             </Card>
           ) : (
             <div className="space-y-3">
@@ -830,16 +832,16 @@ export default function PatientDetailPage() {
                         </div>
                       )}
                       <div className="flex items-center justify-between">
-                        <span className="text-xs text-gray-400">Prescribed by {med.prescriber.name} on {new Date(med.startDate).toLocaleDateString("en-NZ")}</span>
+                        <span className="text-xs text-gray-400">{t("Prescribed by")} {med.prescriber.name} {t("on")} {new Date(med.startDate).toLocaleDateString("en-NZ")}</span>
                         {med.status !== "discontinued" && med.status !== "administered" && (
                           <div className="flex gap-1">
                             {currentStepIdx < statusSteps.length - 1 && (
                               <Button size="sm" variant="outline" className="text-xs h-7" onClick={() => updateMedStatus(med.id, statusSteps[currentStepIdx + 1])}>
-                                Advance to {statusSteps[currentStepIdx + 1]}
+                                {t("Advance to")} {statusSteps[currentStepIdx + 1]}
                               </Button>
                             )}
                             <Button size="sm" variant="outline" className="text-xs h-7 text-red-600 border-red-200 hover:bg-red-50" onClick={() => updateMedStatus(med.id, "discontinued")}>
-                              Discontinue
+                              {t("Discontinue")}
                             </Button>
                           </div>
                         )}
@@ -859,30 +861,30 @@ export default function PatientDetailPage() {
               <Dialog open={dischargeDialogOpen} onOpenChange={(open) => { setDischargeDialogOpen(open); if (!open) setDischargeStep(0); }}>
                 <DialogTrigger asChild>
                   <Button variant="outline" className="text-orange-700 border-orange-300 hover:bg-orange-50">
-                    Discharge Patient
+                    {t("Discharge Patient")}
                   </Button>
                 </DialogTrigger>
                 <DialogContent className="max-w-lg max-h-[80vh] overflow-y-auto">
                   <DialogHeader>
                     <DialogTitle>
-                      Discharge Workflow {dischargeStep > 0 && `(Step ${dischargeStep + 1}/5)`}
+                      {t("Discharge Workflow")} {dischargeStep > 0 && `(${dischargeStep + 1}/5)`}
                     </DialogTitle>
                   </DialogHeader>
 
                   {/* Step 0: Confirm Diagnosis */}
                   {dischargeStep === 0 && (
                     <div className="space-y-4">
-                      <h4 className="font-medium">Step 1: Confirm Diagnosis</h4>
+                      <h4 className="font-medium">{t("Step 1: Confirm Diagnosis")}</h4>
                       <div>
-                        <Label>Discharge Diagnosis</Label>
+                        <Label>{t("Discharge Diagnosis")}</Label>
                         <Input
                           value={dischargeData.diagnosis || activeEncounter.diagnosis || ""}
                           onChange={(e) => setDischargeData({ ...dischargeData, diagnosis: e.target.value })}
-                          placeholder="Final diagnosis"
+                          placeholder={t("Final diagnosis")}
                         />
                       </div>
                       <Button onClick={() => setDischargeStep(1)} className="w-full bg-teal-700 hover:bg-teal-800">
-                        Next: Medications <ChevronRight className="h-4 w-4 ml-1" />
+                        {t("Next: Medications")} <ChevronRight className="h-4 w-4 ml-1" />
                       </Button>
                     </div>
                   )}
@@ -890,10 +892,10 @@ export default function PatientDetailPage() {
                   {/* Step 1: Medications on discharge */}
                   {dischargeStep === 1 && (
                     <div className="space-y-4">
-                      <h4 className="font-medium">Step 2: Medications on Discharge</h4>
-                      <p className="text-sm text-gray-500">Select medications to continue after discharge:</p>
+                      <h4 className="font-medium">{t("Step 2: Medications on Discharge")}</h4>
+                      <p className="text-sm text-gray-500">{t("Select medications to continue after discharge:")}</p>
                       {activeMeds.length === 0 ? (
-                        <p className="text-sm text-gray-400">No active medications.</p>
+                        <p className="text-sm text-gray-400">{t("No active medications.")}</p>
                       ) : (
                         <div className="space-y-2">
                           {activeMeds.map((med) => (
@@ -918,9 +920,9 @@ export default function PatientDetailPage() {
                         </div>
                       )}
                       <div className="flex gap-2">
-                        <Button variant="outline" onClick={() => setDischargeStep(0)}>Back</Button>
+                        <Button variant="outline" onClick={() => setDischargeStep(0)}>{t("Back")}</Button>
                         <Button onClick={() => setDischargeStep(2)} className="flex-1 bg-teal-700 hover:bg-teal-800">
-                          Next: Follow-up <ChevronRight className="h-4 w-4 ml-1" />
+                          {t("Next: Follow-up")} <ChevronRight className="h-4 w-4 ml-1" />
                         </Button>
                       </div>
                     </div>
@@ -929,19 +931,19 @@ export default function PatientDetailPage() {
                   {/* Step 2: Follow-up */}
                   {dischargeStep === 2 && (
                     <div className="space-y-4">
-                      <h4 className="font-medium">Step 3: Follow-up Appointment</h4>
+                      <h4 className="font-medium">{t("Step 3: Follow-up Appointment")}</h4>
                       <div>
-                        <Label>Follow-up Date</Label>
+                        <Label>{t("Follow-up Date")}</Label>
                         <Input type="date" value={dischargeData.followUpDate} onChange={(e) => setDischargeData({ ...dischargeData, followUpDate: e.target.value })} />
                       </div>
                       <div>
-                        <Label>Department</Label>
+                        <Label>{t("Department")}</Label>
                         <Input value={dischargeData.followUpDept} onChange={(e) => setDischargeData({ ...dischargeData, followUpDept: e.target.value })} placeholder="e.g., General Medicine" />
                       </div>
                       <div className="flex gap-2">
-                        <Button variant="outline" onClick={() => setDischargeStep(1)}>Back</Button>
+                        <Button variant="outline" onClick={() => setDischargeStep(1)}>{t("Back")}</Button>
                         <Button onClick={() => setDischargeStep(3)} className="flex-1 bg-teal-700 hover:bg-teal-800">
-                          Next: ACC <ChevronRight className="h-4 w-4 ml-1" />
+                          {t("Next: ACC")} <ChevronRight className="h-4 w-4 ml-1" />
                         </Button>
                       </div>
                     </div>
@@ -950,27 +952,27 @@ export default function PatientDetailPage() {
                   {/* Step 3: ACC claim */}
                   {dischargeStep === 3 && (
                     <div className="space-y-4">
-                      <h4 className="font-medium">Step 4: ACC Claim Status</h4>
+                      <h4 className="font-medium">{t("Step 4: ACC Claim Status")}</h4>
                       {patient.accClaimNumber ? (
                         <div>
                           <p className="text-sm text-gray-500 mb-2">ACC Claim: {patient.accClaimNumber} ({patient.accClaimStatus})</p>
-                          <Label>Update Status</Label>
+                          <Label>{t("Update Status")}</Label>
                           <Select value={dischargeData.accUpdate} onValueChange={(v) => setDischargeData({ ...dischargeData, accUpdate: v })}>
-                            <SelectTrigger><SelectValue placeholder="No change" /></SelectTrigger>
+                            <SelectTrigger><SelectValue placeholder={t("No change")} /></SelectTrigger>
                             <SelectContent>
-                              <SelectItem value="">No change</SelectItem>
-                              <SelectItem value="closed">Close claim</SelectItem>
-                              <SelectItem value="review">Mark for review</SelectItem>
+                              <SelectItem value="">{t("No change")}</SelectItem>
+                              <SelectItem value="closed">{t("Close claim")}</SelectItem>
+                              <SelectItem value="review">{t("Mark for review")}</SelectItem>
                             </SelectContent>
                           </Select>
                         </div>
                       ) : (
-                        <p className="text-sm text-gray-400">No ACC claim associated with this patient.</p>
+                        <p className="text-sm text-gray-400">{t("No ACC claim associated with this patient.")}</p>
                       )}
                       <div className="flex gap-2">
-                        <Button variant="outline" onClick={() => setDischargeStep(2)}>Back</Button>
+                        <Button variant="outline" onClick={() => setDischargeStep(2)}>{t("Back")}</Button>
                         <Button onClick={() => setDischargeStep(4)} className="flex-1 bg-teal-700 hover:bg-teal-800">
-                          Next: Summary <ChevronRight className="h-4 w-4 ml-1" />
+                          {t("Next: Summary")} <ChevronRight className="h-4 w-4 ml-1" />
                         </Button>
                       </div>
                     </div>
@@ -979,25 +981,25 @@ export default function PatientDetailPage() {
                   {/* Step 4: Summary */}
                   {dischargeStep === 4 && (
                     <div className="space-y-4">
-                      <h4 className="font-medium">Step 5: Discharge Summary</h4>
+                      <h4 className="font-medium">{t("Step 5: Discharge Summary")}</h4>
                       <Card className="bg-gray-50 border">
                         <CardContent className="p-4 space-y-2 text-sm">
-                          <div><span className="font-medium">Patient:</span> {patient.firstName} {patient.lastName}</div>
-                          <div><span className="font-medium">Diagnosis:</span> {dischargeData.diagnosis || activeEncounter.diagnosis || "Not specified"}</div>
-                          <div><span className="font-medium">Continuing Medications:</span> {dischargeData.continueMeds.length > 0 ? activeMeds.filter((m) => dischargeData.continueMeds.includes(m.id)).map((m) => m.name).join(", ") : "None"}</div>
-                          <div><span className="font-medium">Discontinued:</span> {activeMeds.filter((m) => !dischargeData.continueMeds.includes(m.id)).map((m) => m.name).join(", ") || "None"}</div>
-                          {dischargeData.followUpDate && <div><span className="font-medium">Follow-up:</span> {dischargeData.followUpDate} {dischargeData.followUpDept && `- ${dischargeData.followUpDept}`}</div>}
-                          {dischargeData.accUpdate && <div><span className="font-medium">ACC Update:</span> {dischargeData.accUpdate}</div>}
+                          <div><span className="font-medium">{t("Patient:")}</span> {patient.firstName} {patient.lastName}</div>
+                          <div><span className="font-medium">{t("Diagnosis:")}</span> {dischargeData.diagnosis || activeEncounter.diagnosis || t("Not specified")}</div>
+                          <div><span className="font-medium">{t("Continuing Medications:")}</span> {dischargeData.continueMeds.length > 0 ? activeMeds.filter((m) => dischargeData.continueMeds.includes(m.id)).map((m) => m.name).join(", ") : t("None")}</div>
+                          <div><span className="font-medium">{t("Discontinued:")}</span> {activeMeds.filter((m) => !dischargeData.continueMeds.includes(m.id)).map((m) => m.name).join(", ") || t("None")}</div>
+                          {dischargeData.followUpDate && <div><span className="font-medium">{t("Follow-up:")}</span> {dischargeData.followUpDate} {dischargeData.followUpDept && `- ${dischargeData.followUpDept}`}</div>}
+                          {dischargeData.accUpdate && <div><span className="font-medium">{t("ACC Update:")}</span> {dischargeData.accUpdate}</div>}
                         </CardContent>
                       </Card>
                       <div>
-                        <Label>Additional Notes</Label>
-                        <Textarea value={dischargeData.notes} onChange={(e) => setDischargeData({ ...dischargeData, notes: e.target.value })} placeholder="Discharge notes..." />
+                        <Label>{t("Additional Notes")}</Label>
+                        <Textarea value={dischargeData.notes} onChange={(e) => setDischargeData({ ...dischargeData, notes: e.target.value })} placeholder={t("Discharge notes...")} />
                       </div>
                       <div className="flex gap-2">
-                        <Button variant="outline" onClick={() => setDischargeStep(3)}>Back</Button>
+                        <Button variant="outline" onClick={() => setDischargeStep(3)}>{t("Back")}</Button>
                         <Button onClick={processDischarge} disabled={discharging} className="flex-1 bg-orange-600 hover:bg-orange-700 text-white">
-                          {discharging ? "Processing..." : "Confirm Discharge"}
+                          {discharging ? t("Processing...") : t("Confirm Discharge")}
                         </Button>
                       </div>
                     </div>
@@ -1023,8 +1025,8 @@ export default function PatientDetailPage() {
                     {enc.diagnosisCode && <span className="text-xs text-gray-400">SNOMED: {enc.diagnosisCode}</span>}
                   </div>
                   <div className="text-right text-xs text-gray-400">
-                    <div>Admitted: {new Date(enc.admitDate).toLocaleDateString("en-NZ")}</div>
-                    {enc.dischargeDate && <div>Discharged: {new Date(enc.dischargeDate).toLocaleDateString("en-NZ")}</div>}
+                    <div>{t("Admitted:")} {new Date(enc.admitDate).toLocaleDateString("en-NZ")}</div>
+                    {enc.dischargeDate && <div>{t("Discharged:")} {new Date(enc.dischargeDate).toLocaleDateString("en-NZ")}</div>}
                   </div>
                 </div>
               </CardContent>
@@ -1039,11 +1041,11 @@ export default function PatientDetailPage() {
               <table className="w-full min-w-[600px]">
                 <thead>
                   <tr className="border-b bg-gray-50">
-                    <th className="text-left p-3 text-xs font-medium text-gray-500">Type</th>
-                    <th className="text-left p-3 text-xs font-medium text-gray-500">Test</th>
-                    <th className="text-left p-3 text-xs font-medium text-gray-500">Value</th>
-                    <th className="text-left p-3 text-xs font-medium text-gray-500">Code</th>
-                    <th className="text-left p-3 text-xs font-medium text-gray-500">Date</th>
+                    <th className="text-left p-3 text-xs font-medium text-gray-500">{t("Type")}</th>
+                    <th className="text-left p-3 text-xs font-medium text-gray-500">{t("Test")}</th>
+                    <th className="text-left p-3 text-xs font-medium text-gray-500">{t("Value")}</th>
+                    <th className="text-left p-3 text-xs font-medium text-gray-500">{t("Code")}</th>
+                    <th className="text-left p-3 text-xs font-medium text-gray-500">{t("Date")}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -1078,7 +1080,7 @@ export default function PatientDetailPage() {
                       <span className="font-medium capitalize">{appt.type}</span>
                       <span className="text-sm text-gray-500">· {appt.department}</span>
                     </div>
-                    {appt.provider && <p className="text-sm text-gray-500 mt-1">Provider: {appt.provider.name}</p>}
+                    {appt.provider && <p className="text-sm text-gray-500 mt-1">{t("Provider:")} {appt.provider.name}</p>}
                   </div>
                   <div className="text-right text-sm">
                     <div>{new Date(appt.dateTime).toLocaleDateString("en-NZ")}</div>
@@ -1110,8 +1112,8 @@ export default function PatientDetailPage() {
                     </div>
                   </div>
                   <div className="text-right text-xs text-gray-400">
-                    <div>Referred: {new Date(entry.referralDate).toLocaleDateString("en-NZ")}</div>
-                    {entry.targetDate && <div>Target: {new Date(entry.targetDate).toLocaleDateString("en-NZ")}</div>}
+                    <div>{t("Referred:")} {new Date(entry.referralDate).toLocaleDateString("en-NZ")}</div>
+                    {entry.targetDate && <div>{t("Target:")} {new Date(entry.targetDate).toLocaleDateString("en-NZ")}</div>}
                   </div>
                 </div>
               </CardContent>

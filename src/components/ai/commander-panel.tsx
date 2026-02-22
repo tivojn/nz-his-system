@@ -16,6 +16,7 @@ import {
   Sparkles,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useBilingual } from "@/components/bilingual-provider";
 
 interface PlanStep {
   id: number;
@@ -43,6 +44,7 @@ const exampleCommands = [
 ];
 
 export function CommanderPanel() {
+  const { t } = useBilingual();
   const [input, setInput] = useState("");
   const [plan, setPlan] = useState<ActionPlan | null>(null);
   const [loading, setLoading] = useState(false);
@@ -123,9 +125,9 @@ export function CommanderPanel() {
           <Command className="h-5 w-5 text-blue-700" />
         </div>
         <div>
-          <h3 className="text-sm font-semibold text-gray-900">Commander Mode</h3>
+          <h3 className="text-sm font-semibold text-gray-900">{t("Commander Mode")}</h3>
           <p className="text-xs text-gray-500">
-            Issue natural language commands across hospital systems
+            {t("Issue natural language commands across hospital systems")}
           </p>
         </div>
       </div>
@@ -140,17 +142,16 @@ export function CommanderPanel() {
                   <Zap className="h-8 w-8 text-blue-600" />
                 </div>
                 <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                  Multi-System Commander
+                  {t("Multi-System Commander")}
                 </h3>
                 <p className="text-sm text-gray-500 max-w-md mx-auto">
-                  Describe what you need done in plain language. Commander Mode will
-                  generate a structured action plan spanning multiple hospital systems.
+                  {t("Describe what you need done in plain language. Commander Mode will generate a structured action plan spanning multiple hospital systems.")}
                 </p>
               </div>
 
               <div className="space-y-2">
                 <div className="flex items-center gap-1 text-xs text-gray-400">
-                  <Sparkles className="h-3 w-3" /> Example commands
+                  <Sparkles className="h-3 w-3" /> {t("Example commands")}
                 </div>
                 {exampleCommands.map((cmd) => (
                   <button
@@ -169,7 +170,7 @@ export function CommanderPanel() {
           {loading && (
             <div className="text-center py-12">
               <Loader2 className="h-8 w-8 text-blue-600 animate-spin mx-auto mb-3" />
-              <p className="text-sm text-gray-500">Generating action plan...</p>
+              <p className="text-sm text-gray-500">{t("Generating action plan...")}</p>
             </div>
           )}
 
@@ -177,11 +178,11 @@ export function CommanderPanel() {
             <Card className="border-blue-200 shadow-sm">
               <CardHeader className="pb-3">
                 <div className="flex items-center justify-between">
-                  <CardTitle className="text-base">Action Plan</CardTitle>
+                  <CardTitle className="text-base">{t("Action Plan")}</CardTitle>
                   <Badge variant="outline" className={riskColors[plan.risk]}>
-                    {plan.risk === "low" && "Low Risk"}
-                    {plan.risk === "medium" && "Medium Risk"}
-                    {plan.risk === "high" && "High Risk"}
+                    {plan.risk === "low" && t("Low Risk")}
+                    {plan.risk === "medium" && t("Medium Risk")}
+                    {plan.risk === "high" && t("High Risk")}
                     {plan.risk === "high" && (
                       <AlertTriangle className="h-3 w-3 ml-1" />
                     )}
@@ -243,7 +244,7 @@ export function CommanderPanel() {
                   <div className="mt-4 p-3 rounded-lg bg-emerald-50 border border-emerald-200 text-center">
                     <CheckCircle className="h-5 w-5 text-emerald-600 mx-auto mb-1" />
                     <p className="text-sm font-medium text-emerald-800">
-                      All actions completed successfully
+                      {t("All actions completed successfully")}
                     </p>
                   </div>
                 )}
@@ -258,12 +259,12 @@ export function CommanderPanel() {
                       {executing ? (
                         <>
                           <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                          Executing...
+                          {t("Executing...")}
                         </>
                       ) : (
                         <>
                           <Zap className="h-4 w-4 mr-2" />
-                          Execute Plan
+                          {t("Execute Plan")}
                         </>
                       )}
                     </Button>
@@ -272,7 +273,7 @@ export function CommanderPanel() {
                       onClick={cancelPlan}
                       disabled={executing}
                     >
-                      Cancel
+                      {t("Cancel")}
                     </Button>
                   </div>
                 )}
@@ -284,7 +285,7 @@ export function CommanderPanel() {
                       onClick={cancelPlan}
                       className="flex-1"
                     >
-                      New Command
+                      {t("New Command")}
                     </Button>
                   </div>
                 )}
@@ -301,7 +302,7 @@ export function CommanderPanel() {
           className="flex gap-2 max-w-3xl mx-auto"
         >
           <Input
-            placeholder="Describe what you need done across systems..."
+            placeholder={t("Describe what you need done across systems...")}
             value={input}
             onChange={(e) => setInput(e.target.value)}
             disabled={loading || executing}

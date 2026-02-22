@@ -143,11 +143,11 @@ export default function PatientsPage() {
                   <Select value={newPatient.ethnicity} onValueChange={(v) => setNewPatient({ ...newPatient, ethnicity: v })}>
                     <SelectTrigger><SelectValue /></SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="NZ European">NZ European</SelectItem>
-                      <SelectItem value="Māori">Māori</SelectItem>
-                      <SelectItem value="Pacific Islander">Pacific Islander</SelectItem>
-                      <SelectItem value="Asian">Asian</SelectItem>
-                      <SelectItem value="Other">Other</SelectItem>
+                      <SelectItem value="NZ European">{t("NZ European")}</SelectItem>
+                      <SelectItem value="Māori">{t("Māori")}</SelectItem>
+                      <SelectItem value="Pacific Islander">{t("Pacific Islander")}</SelectItem>
+                      <SelectItem value="Asian">{t("Asian")}</SelectItem>
+                      <SelectItem value="Other">{t("Other")}</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
@@ -174,11 +174,11 @@ export default function PatientsPage() {
             <SelectValue placeholder={t("All Ethnicities")} />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="all">All Ethnicities</SelectItem>
-            <SelectItem value="Māori">Māori</SelectItem>
-            <SelectItem value="NZ European">NZ European</SelectItem>
-            <SelectItem value="Pacific Islander">Pacific Islander</SelectItem>
-            <SelectItem value="Asian">Asian</SelectItem>
+            <SelectItem value="all">{t("All Ethnicities")}</SelectItem>
+            <SelectItem value="Māori">{t("Māori")}</SelectItem>
+            <SelectItem value="NZ European">{t("NZ European")}</SelectItem>
+            <SelectItem value="Pacific Islander">{t("Pacific Islander")}</SelectItem>
+            <SelectItem value="Asian">{t("Asian")}</SelectItem>
           </SelectContent>
         </Select>
       </div>
