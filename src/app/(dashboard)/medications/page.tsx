@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -22,7 +22,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { Pill, Plus, AlertTriangle } from "lucide-react";
+import { Pill, Plus, AlertTriangle, Search } from "lucide-react";
 import { NZ_MEDICATIONS, FREQUENCIES, MEDICATION_STATUSES } from "@/lib/constants";
 import { useBilingual } from "@/components/bilingual-provider";
 
@@ -73,6 +73,10 @@ export default function MedicationsPage() {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [interactions, setInteractions] = useState<InteractionWarning[]>([]);
   const [prescribing, setPrescribing] = useState(false);
+
+  const [searchQuery, setSearchQuery] = useState("");
+  const [statusFilter, setStatusFilter] = useState("all");
+  const [prescriberFilter, setPrescriberFilter] = useState("all");
 
   const [form, setForm] = useState({
     patientId: "",
@@ -190,8 +194,52 @@ export default function MedicationsPage() {
     fetchMedications();
   };
 
-  // Group medications by patient
-  const grouped = medications.reduce<Record<string, MedicationData[]>>((acc, med) => {
+  // Unique prescribers for filter dropdown
+  const uniquePrescribers = useMemo(() => {
+    const names = new Set(medications.map(m => m.prescriber.name));
+    return Array.from(names).sort();
+  }, [medications]);
+
+  // Stats computed from FULL medications array
+  const totalPrescriptions = medications.length;
+  const activePrescriptions = medications.filter(m => m.status !== "discontinued").length;
+  const uniquePrescriberCount = uniquePrescribers.length;
+  const statusCounts = useMemo(() => {
+    const counts: Record<string, number> = {};
+    for (const s of MEDICATION_STATUSES) {
+      counts[s] = medications.filter(m => m.status === s).length;
+    }
+    return counts;
+  }, [medications]);
+
+  // Client-side filtering
+  const filteredMedications = useMemo(() => {
+    let result = medications;
+
+    if (statusFilter !== "all") {
+      result = result.filter(m => m.status === statusFilter);
+    }
+
+    if (prescriberFilter !== "all") {
+      result = result.filter(m => m.prescriber.name === prescriberFilter);
+    }
+
+    if (searchQuery) {
+      const q = searchQuery.toLowerCase();
+      result = result.filter(m =>
+        m.patient.firstName.toLowerCase().includes(q) ||
+        m.patient.lastName.toLowerCase().includes(q) ||
+        m.patient.nhiNumber.toLowerCase().includes(q) ||
+        m.name.toLowerCase().includes(q) ||
+        (m.genericName && m.genericName.toLowerCase().includes(q))
+      );
+    }
+
+    return result;
+  }, [medications, statusFilter, prescriberFilter, searchQuery]);
+
+  // Group filtered medications by patient
+  const grouped = filteredMedications.reduce<Record<string, MedicationData[]>>((acc, med) => {
     const key = med.patient.id;
     if (!acc[key]) acc[key] = [];
     acc[key].push(med);
@@ -329,6 +377,79 @@ export default function MedicationsPage() {
             </div>
           </DialogContent>
         </Dialog>
+      </div>
+
+      {/* Stats Row */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <Card className="border-0 shadow-sm">
+          <CardContent className="p-4">
+            <p className="text-sm text-gray-500">{t("Total Prescriptions")}</p>
+            <p className="text-2xl font-bold text-gray-900">{totalPrescriptions}</p>
+          </CardContent>
+        </Card>
+        <Card className="border-0 shadow-sm">
+          <CardContent className="p-4">
+            <p className="text-sm text-gray-500">{t("Active")}</p>
+            <p className="text-2xl font-bold text-gray-900">{activePrescriptions}</p>
+          </CardContent>
+        </Card>
+        <Card className="border-0 shadow-sm">
+          <CardContent className="p-4">
+            <p className="text-sm text-gray-500">{t("By Status")}</p>
+            <div className="flex flex-wrap gap-1 mt-1">
+              {MEDICATION_STATUSES.map((s) => (
+                <Badge key={s} className={`${statusColors[s]} text-xs`}>
+                  {s} {statusCounts[s]}
+                </Badge>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+        <Card className="border-0 shadow-sm">
+          <CardContent className="p-4">
+            <p className="text-sm text-gray-500">{t("Prescribers")}</p>
+            <p className="text-2xl font-bold text-gray-900">{uniquePrescriberCount}</p>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Filter Bar */}
+      <div className="flex flex-wrap gap-3">
+        <div className="relative flex-1 min-w-[200px]">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+          <Input
+            placeholder={t("Search medications...")}
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="pl-9"
+          />
+        </div>
+        <Select value={statusFilter} onValueChange={setStatusFilter}>
+          <SelectTrigger className="w-[180px]">
+            <SelectValue placeholder={t("All Statuses")} />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">{t("All Statuses")}</SelectItem>
+            {MEDICATION_STATUSES.map((s) => (
+              <SelectItem key={s} value={s}>
+                {s.charAt(0).toUpperCase() + s.slice(1)}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+        <Select value={prescriberFilter} onValueChange={setPrescriberFilter}>
+          <SelectTrigger className="w-[200px]">
+            <SelectValue placeholder={t("All Prescribers")} />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">{t("All Prescribers")}</SelectItem>
+            {uniquePrescribers.map((name) => (
+              <SelectItem key={name} value={name}>
+                {name}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
       </div>
 
       {loading ? (

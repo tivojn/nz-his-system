@@ -125,6 +125,36 @@ export const NEWS2_THRESHOLDS = {
   high: { min: 8, max: 20, label: "High Risk", color: "bg-red-500" },
 } as const;
 
+export const APPOINTMENT_TYPES = [
+  "consultation",
+  "follow-up",
+  "procedure",
+  "surgery",
+] as const;
+
+export const APPOINTMENT_STATUSES = [
+  "scheduled",
+  "checked-in",
+  "completed",
+  "cancelled",
+  "no-show",
+] as const;
+
+export const APPOINTMENT_DURATIONS = [15, 30, 45, 60, 90, 120] as const;
+
+export const WAITLIST_STATUSES = [
+  "waiting",
+  "scheduled",
+  "completed",
+  "cancelled",
+] as const;
+
+export const WAITLIST_PRIORITIES = [
+  { code: "urgent", label: "Urgent", color: "bg-red-500", textColor: "text-red-700", bgLight: "bg-red-50" },
+  { code: "semi-urgent", label: "Semi-urgent", color: "bg-yellow-500", textColor: "text-yellow-700", bgLight: "bg-yellow-50" },
+  { code: "routine", label: "Routine", color: "bg-green-500", textColor: "text-green-700", bgLight: "bg-green-50" },
+] as const;
+
 export const NZ_HEALTH_TARGETS = [
   { name: "Shorter stays in ED", target: 95, description: "% patients admitted/discharged/transferred within 6 hours" },
   { name: "Improved access to elective surgery", target: 100, description: "Patients receiving elective surgery vs. target" },
