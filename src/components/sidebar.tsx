@@ -65,18 +65,6 @@ interface NavGroup {
 
 const navGroups: NavGroup[] = [
   {
-    label: "Clinical",
-    teReo: "Hauora Haumanu",
-    items: [
-      { name: "Patients", href: "/patients", icon: Users, roles: ["Admin", "Doctor", "Nurse", "Receptionist"] },
-      { name: "Clinical EMR", href: "/clinical", icon: FileText, roles: ["Admin", "Doctor", "Nurse"] },
-      { name: "Medications", href: "/medications", icon: Pill, roles: ["Admin", "Doctor", "Nurse"] },
-      { name: "Allergies", href: "/allergies", icon: ShieldAlert, roles: ["Admin", "Doctor", "Nurse"] },
-      { name: "Lab Orders", href: "/lab-orders", icon: FlaskConical, roles: ["Admin", "Doctor", "Nurse", "lab-tech"] },
-      { name: "CDSS", href: "/cdss", icon: BrainCircuit, roles: ["Admin", "Doctor", "Nurse"], badge: 3 },
-    ],
-  },
-  {
     label: "Operations",
     teReo: "Whakahaere",
     items: [
@@ -86,6 +74,18 @@ const navGroups: NavGroup[] = [
       { name: "Referrals", href: "/referrals", icon: Send, roles: ["Admin", "Doctor", "Nurse"] },
       { name: "ACC Claims", href: "/acc", icon: Shield, roles: ["Admin", "Doctor"] },
       { name: "Incident Reports", href: "/incidents", icon: AlertTriangle, roles: ["Admin", "Doctor", "Nurse"] },
+    ],
+  },
+  {
+    label: "Clinical",
+    teReo: "Hauora Haumanu",
+    items: [
+      { name: "Patients", href: "/patients", icon: Users, roles: ["Admin", "Doctor", "Nurse", "Receptionist"] },
+      { name: "Lab Orders", href: "/lab-orders", icon: FlaskConical, roles: ["Admin", "Doctor", "Nurse", "lab-tech"] },
+      { name: "Clinical EMR", href: "/clinical", icon: FileText, roles: ["Admin", "Doctor", "Nurse"] },
+      { name: "Medications", href: "/medications", icon: Pill, roles: ["Admin", "Doctor", "Nurse"] },
+      { name: "Allergies", href: "/allergies", icon: ShieldAlert, roles: ["Admin", "Doctor", "Nurse"] },
+      { name: "CDSS", href: "/cdss", icon: BrainCircuit, roles: ["Admin", "Doctor", "Nurse"], badge: 3 },
     ],
   },
   {
@@ -121,8 +121,8 @@ export function Sidebar() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [session, setSession] = useState<any>(null);
   const [expandedGroups, setExpandedGroups] = useState<Record<string, boolean>>({
-    Clinical: true,
     Operations: true,
+    Clinical: true,
     Analytics: true,
     "AI Tools": true,
   });

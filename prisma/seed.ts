@@ -10,6 +10,10 @@ async function main() {
   await prisma.clinicalAlert.deleteMany();
   await prisma.clinicalPathway.deleteMany();
   await prisma.drugInteraction.deleteMany();
+  await prisma.labOrder.deleteMany();
+  await prisma.allergy.deleteMany();
+  await prisma.referral.deleteMany();
+  await prisma.incidentReport.deleteMany();
   await prisma.medication.deleteMany();
   await prisma.auditLog.deleteMany();
   await prisma.bed.deleteMany();
@@ -709,6 +713,279 @@ async function main() {
     prisma.auditLog.create({ data: { userId: null, action: "CREATE", entity: "ClinicalAlert", severity: "warning", details: JSON.stringify({ alertType: "fall-risk", patientNhi: "EEE7890" }), createdAt: new Date(now.getTime() - 9 * 60 * 60 * 1000) } }),
   ]);
 
+  // ==================== LAB ORDERS ====================
+  const labNow = new Date();
+  await Promise.all([
+    // Completed orders with results
+    prisma.labOrder.create({
+      data: {
+        patientId: patients[0].id,
+        orderedById: users[1].id,
+        orderNumber: "LAB-2026-001",
+        testName: "Full Blood Count (FBC)",
+        testCode: "58410-2",
+        priority: "stat",
+        specimen: "Blood",
+        clinicalNotes: "Pre-op for ORIF right tibia. Check Hb and platelets.",
+        status: "completed",
+        resultValue: "Hb 135, WBC 8.2, Plt 245",
+        resultUnit: "g/L, ×10⁹/L, ×10⁹/L",
+        referenceRange: "Hb 130-175, WBC 4.0-11.0, Plt 150-400",
+        interpretation: "normal",
+        resultNotes: "All parameters within normal range. Fit for surgery.",
+        orderedAt: new Date(labNow.getTime() - 48 * 60 * 60 * 1000),
+        collectedAt: new Date(labNow.getTime() - 47 * 60 * 60 * 1000),
+        completedAt: new Date(labNow.getTime() - 45 * 60 * 60 * 1000),
+      },
+    }),
+    prisma.labOrder.create({
+      data: {
+        patientId: patients[4].id,
+        orderedById: users[1].id,
+        orderNumber: "LAB-2026-002",
+        testName: "HbA1c",
+        testCode: "4548-4",
+        priority: "routine",
+        specimen: "Blood",
+        clinicalNotes: "Diabetes management review. Previous HbA1c 8.2%.",
+        status: "completed",
+        resultValue: "8.2",
+        resultUnit: "%",
+        referenceRange: "20-42 mmol/mol (<7%)",
+        interpretation: "critical",
+        resultNotes: "HbA1c significantly above target. Indicates poor glycaemic control. Recommend medication adjustment and dietitian review.",
+        orderedAt: new Date(labNow.getTime() - 72 * 60 * 60 * 1000),
+        collectedAt: new Date(labNow.getTime() - 71 * 60 * 60 * 1000),
+        completedAt: new Date(labNow.getTime() - 68 * 60 * 60 * 1000),
+      },
+    }),
+    prisma.labOrder.create({
+      data: {
+        patientId: patients[1].id,
+        orderedById: users[1].id,
+        orderNumber: "LAB-2026-003",
+        testName: "Lipid Panel",
+        testCode: "57698-3",
+        priority: "routine",
+        specimen: "Blood",
+        clinicalNotes: "Hypertension review. Currently on atorvastatin 20mg.",
+        status: "completed",
+        resultValue: "TC 6.2, LDL 4.1, HDL 1.3, TG 1.8",
+        resultUnit: "mmol/L",
+        referenceRange: "TC <5.0, LDL <2.0, HDL >1.0, TG <1.7",
+        interpretation: "abnormal",
+        resultNotes: "LDL above target despite statin therapy. Consider uptitrating atorvastatin to 40mg or adding ezetimibe.",
+        orderedAt: new Date(labNow.getTime() - 120 * 60 * 60 * 1000),
+        collectedAt: new Date(labNow.getTime() - 119 * 60 * 60 * 1000),
+        completedAt: new Date(labNow.getTime() - 116 * 60 * 60 * 1000),
+      },
+    }),
+    prisma.labOrder.create({
+      data: {
+        patientId: patients[6].id,
+        orderedById: users[1].id,
+        orderNumber: "LAB-2026-004",
+        testName: "Arterial Blood Gas",
+        testCode: "24336-0",
+        priority: "stat",
+        specimen: "Blood",
+        clinicalNotes: "COPD exacerbation. SpO2 dropping to 94%.",
+        status: "completed",
+        resultValue: "pH 7.38, pO2 68, pCO2 48, HCO3 26",
+        resultUnit: "mmHg",
+        referenceRange: "pH 7.35-7.45, pO2 80-100, pCO2 35-45",
+        interpretation: "abnormal",
+        resultNotes: "Type 2 respiratory failure. Elevated pCO2 with compensated pH. Consider NIV if worsening.",
+        orderedAt: new Date(labNow.getTime() - 168 * 60 * 60 * 1000),
+        collectedAt: new Date(labNow.getTime() - 168 * 60 * 60 * 1000),
+        completedAt: new Date(labNow.getTime() - 167 * 60 * 60 * 1000),
+      },
+    }),
+    // In-progress orders
+    prisma.labOrder.create({
+      data: {
+        patientId: patients[2].id,
+        orderedById: users[1].id,
+        orderNumber: "LAB-2026-005",
+        testName: "Coagulation (INR/PT)",
+        testCode: "5902-2",
+        priority: "urgent",
+        specimen: "Blood",
+        clinicalNotes: "Pre-op for ACL reconstruction. Confirm coagulation status.",
+        status: "in-progress",
+        orderedAt: new Date(labNow.getTime() - 6 * 60 * 60 * 1000),
+        collectedAt: new Date(labNow.getTime() - 5 * 60 * 60 * 1000),
+      },
+    }),
+    prisma.labOrder.create({
+      data: {
+        patientId: patients[4].id,
+        orderedById: users[1].id,
+        orderNumber: "LAB-2026-006",
+        testName: "Urea & Electrolytes (U&Es)",
+        testCode: "24326-1",
+        priority: "routine",
+        specimen: "Blood",
+        clinicalNotes: "Renal function check. Patient on metformin.",
+        status: "in-progress",
+        orderedAt: new Date(labNow.getTime() - 8 * 60 * 60 * 1000),
+        collectedAt: new Date(labNow.getTime() - 7 * 60 * 60 * 1000),
+      },
+    }),
+    // Collected, awaiting processing
+    prisma.labOrder.create({
+      data: {
+        patientId: patients[0].id,
+        orderedById: users[1].id,
+        orderNumber: "LAB-2026-007",
+        testName: "C-Reactive Protein (CRP)",
+        testCode: "1988-5",
+        priority: "urgent",
+        specimen: "Blood",
+        clinicalNotes: "Post-surgical monitoring. Watch for infection.",
+        status: "collected",
+        orderedAt: new Date(labNow.getTime() - 3 * 60 * 60 * 1000),
+        collectedAt: new Date(labNow.getTime() - 2 * 60 * 60 * 1000),
+      },
+    }),
+    // Pending collection (ordered)
+    prisma.labOrder.create({
+      data: {
+        patientId: patients[3].id,
+        orderedById: users[1].id,
+        orderNumber: "LAB-2026-008",
+        testName: "Thyroid Function (TFTs)",
+        testCode: "3016-3",
+        priority: "routine",
+        specimen: "Blood",
+        clinicalNotes: "Fatigue and weight gain. Screen for hypothyroidism.",
+        status: "ordered",
+        orderedAt: new Date(labNow.getTime() - 1 * 60 * 60 * 1000),
+      },
+    }),
+    prisma.labOrder.create({
+      data: {
+        patientId: patients[5].id,
+        orderedById: users[1].id,
+        orderNumber: "LAB-2026-009",
+        testName: "Full Blood Count (FBC)",
+        testCode: "58410-2",
+        priority: "routine",
+        specimen: "Blood",
+        clinicalNotes: "Routine wellness check.",
+        status: "ordered",
+        orderedAt: new Date(labNow.getTime() - 30 * 60 * 1000),
+      },
+    }),
+    prisma.labOrder.create({
+      data: {
+        patientId: patients[7].id,
+        orderedById: users[1].id,
+        orderNumber: "LAB-2026-010",
+        testName: "Urinalysis",
+        testCode: "24356-8",
+        priority: "routine",
+        specimen: "Urine",
+        clinicalNotes: "Lower abdominal pain. Rule out UTI.",
+        status: "ordered",
+        orderedAt: new Date(labNow.getTime() - 45 * 60 * 1000),
+      },
+    }),
+    prisma.labOrder.create({
+      data: {
+        patientId: patients[2].id,
+        orderedById: users[1].id,
+        orderNumber: "LAB-2026-011",
+        testName: "Blood Group & Crossmatch",
+        testCode: "882-1",
+        priority: "stat",
+        specimen: "Blood",
+        clinicalNotes: "Pre-op ACL reconstruction. Type and crossmatch 2 units.",
+        status: "ordered",
+        orderedAt: new Date(labNow.getTime() - 15 * 60 * 1000),
+      },
+    }),
+    // Completed with critical result
+    prisma.labOrder.create({
+      data: {
+        patientId: patients[4].id,
+        orderedById: users[1].id,
+        orderNumber: "LAB-2026-012",
+        testName: "Liver Function Tests (LFTs)",
+        testCode: "24325-3",
+        priority: "routine",
+        specimen: "Blood",
+        clinicalNotes: "Baseline liver function — starting new statin.",
+        status: "completed",
+        resultValue: "ALT 18, AST 22, ALP 65, GGT 30, Bili 12",
+        resultUnit: "U/L",
+        referenceRange: "ALT <40, AST <35, ALP 30-120, GGT <50, Bili <20",
+        interpretation: "normal",
+        resultNotes: "Normal liver function. Safe to commence statin therapy.",
+        orderedAt: new Date(labNow.getTime() - 96 * 60 * 60 * 1000),
+        collectedAt: new Date(labNow.getTime() - 95 * 60 * 60 * 1000),
+        completedAt: new Date(labNow.getTime() - 92 * 60 * 60 * 1000),
+      },
+    }),
+    prisma.labOrder.create({
+      data: {
+        patientId: patients[0].id,
+        orderedById: users[1].id,
+        orderNumber: "LAB-2026-013",
+        testName: "D-Dimer",
+        testCode: "48065-7",
+        priority: "stat",
+        specimen: "Blood",
+        clinicalNotes: "Post-fracture immobilisation. DVT screening.",
+        status: "completed",
+        resultValue: "0.8",
+        resultUnit: "mg/L FEU",
+        referenceRange: "<0.5 mg/L FEU",
+        interpretation: "abnormal",
+        resultNotes: "Elevated D-dimer. Correlation with clinical signs and USS Doppler recommended. Continue enoxaparin prophylaxis.",
+        orderedAt: new Date(labNow.getTime() - 36 * 60 * 60 * 1000),
+        collectedAt: new Date(labNow.getTime() - 35 * 60 * 60 * 1000),
+        completedAt: new Date(labNow.getTime() - 33 * 60 * 60 * 1000),
+      },
+    }),
+    prisma.labOrder.create({
+      data: {
+        patientId: patients[1].id,
+        orderedById: users[1].id,
+        orderNumber: "LAB-2026-014",
+        testName: "Troponin T",
+        testCode: "6598-7",
+        priority: "stat",
+        specimen: "Blood",
+        clinicalNotes: "Chest discomfort reported during BP check. Rule out ACS.",
+        status: "completed",
+        resultValue: "8",
+        resultUnit: "ng/L",
+        referenceRange: "<14 ng/L",
+        interpretation: "normal",
+        resultNotes: "Troponin within normal limits. Low risk for acute coronary event. Continue BP management.",
+        orderedAt: new Date(labNow.getTime() - 24 * 60 * 60 * 1000),
+        collectedAt: new Date(labNow.getTime() - 24 * 60 * 60 * 1000),
+        completedAt: new Date(labNow.getTime() - 23 * 60 * 60 * 1000),
+      },
+    }),
+    // Cancelled order
+    prisma.labOrder.create({
+      data: {
+        patientId: patients[3].id,
+        orderedById: users[1].id,
+        orderNumber: "LAB-2026-015",
+        testName: "Blood Cultures",
+        testCode: "600-7",
+        priority: "urgent",
+        specimen: "Blood",
+        clinicalNotes: "Fever — subsequently resolved. Cancelled by clinician.",
+        status: "cancelled",
+        orderedAt: new Date(labNow.getTime() - 60 * 60 * 60 * 1000),
+      },
+    }),
+  ]);
+
   console.log("Database seeded successfully with comprehensive NZ hospital demo data");
   console.log(`  Users: 4`);
   console.log(`  Patients: 8`);
@@ -726,6 +1003,7 @@ async function main() {
   console.log(`  ACC Claim Events: 12`);
   console.log(`  Beds: ${allBeds.length}`);
   console.log(`  Audit Logs: 22`);
+  console.log(`  Lab Orders: 15`);
 }
 
 main()
