@@ -1,6 +1,5 @@
 "use client";
 
-import { signIn } from "next-auth/react";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
@@ -28,25 +27,33 @@ export default function LoginPage() {
     setLoading(true);
     setError("");
 
-    const result = await signIn("credentials", {
-      email: loginEmail || email,
-      password: loginEmail ? "demo123" : password,
-      redirect: false,
-    });
+    try {
+      const res = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email: loginEmail || email,
+          password: loginEmail ? "demo123" : password,
+        }),
+      });
 
-    if (result?.error) {
-      setError("Invalid credentials. Use demo123 as password.");
+      if (res.ok) {
+        router.push("/");
+        router.refresh();
+      } else {
+        const data = await res.json();
+        setError(data.error || "Invalid credentials. Use demo123 as password.");
+        setLoading(false);
+      }
+    } catch {
+      setError("Login failed. Please try again.");
       setLoading(false);
-    } else {
-      router.push("/");
-      router.refresh();
     }
   };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-teal-50 via-white to-blue-50 flex items-center justify-center p-4">
       <div className="w-full max-w-md space-y-6">
-        {/* Logo */}
         <div className="text-center">
           <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-teal-600 to-teal-700 rounded-2xl mb-4 shadow-lg">
             <Activity className="h-8 w-8 text-white" />
@@ -56,7 +63,6 @@ export default function LoginPage() {
           <p className="text-xs text-teal-600 mt-1">Te Whatu Ora · Health New Zealand</p>
         </div>
 
-        {/* Login Form */}
         <Card className="shadow-xl border-0">
           <CardHeader className="pb-4">
             <CardTitle className="text-xl">Sign In</CardTitle>
@@ -92,7 +98,6 @@ export default function LoginPage() {
           </CardContent>
         </Card>
 
-        {/* Demo Accounts */}
         <Card className="shadow-lg border-0">
           <CardHeader className="pb-2">
             <CardTitle className="text-sm font-medium text-gray-500">Quick Demo Access</CardTitle>

@@ -1,21 +1,36 @@
 "use client";
 
-import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Sidebar } from "@/components/sidebar";
 
+function getSession() {
+  // Read cookie client-side
+  const match = document.cookie.match(/nzhis-session=([^;]+)/);
+  if (!match) return null;
+  try {
+    return JSON.parse(atob(match[1]));
+  } catch {
+    return null;
+  }
+}
+
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
-  const { data: session, status } = useSession();
   const router = useRouter();
+  const [session, setSession] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (status === "unauthenticated") {
+    const s = getSession();
+    if (!s) {
       router.push("/login");
+    } else {
+      setSession(s);
     }
-  }, [status, router]);
+    setLoading(false);
+  }, [router]);
 
-  if (status === "loading") {
+  if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
         <div className="animate-pulse text-teal-700 text-lg">Loading NZ-HIS...</div>

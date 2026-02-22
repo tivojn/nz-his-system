@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
 import {
   LayoutDashboard,
@@ -15,38 +15,56 @@ import {
   Menu,
   X,
 } from "lucide-react";
-import { signOut, useSession } from "next-auth/react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 
+function getSession() {
+  const match = document.cookie.match(/nzhis-session=([^;]+)/);
+  if (!match) return null;
+  try {
+    return JSON.parse(atob(decodeURIComponent(match[1])));
+  } catch {
+    return null;
+  }
+}
+
 const navigation = [
-  { name: "Dashboard", href: "/", icon: LayoutDashboard, roles: ["admin", "doctor", "nurse", "receptionist"] },
-  { name: "Patients", href: "/patients", icon: Users, roles: ["admin", "doctor", "nurse", "receptionist"] },
-  { name: "Clinical EMR", href: "/clinical", icon: FileText, roles: ["admin", "doctor", "nurse"] },
-  { name: "Appointments", href: "/appointments", icon: Calendar, roles: ["admin", "doctor", "nurse", "receptionist"] },
-  { name: "Waitlist", href: "/waitlist", icon: Clock, roles: ["admin", "doctor", "nurse"] },
-  { name: "AI Assistant", href: "/ai-agent", icon: Bot, roles: ["admin", "doctor", "nurse"] },
+  { name: "Dashboard", href: "/", icon: LayoutDashboard, roles: ["Admin", "Doctor", "Nurse", "Receptionist"] },
+  { name: "Patients", href: "/patients", icon: Users, roles: ["Admin", "Doctor", "Nurse", "Receptionist"] },
+  { name: "Clinical EMR", href: "/clinical", icon: FileText, roles: ["Admin", "Doctor", "Nurse"] },
+  { name: "Appointments", href: "/appointments", icon: Calendar, roles: ["Admin", "Doctor", "Nurse", "Receptionist"] },
+  { name: "Waitlist", href: "/waitlist", icon: Clock, roles: ["Admin", "Doctor", "Nurse"] },
+  { name: "AI Assistant", href: "/ai-agent", icon: Bot, roles: ["Admin", "Doctor", "Nurse"] },
 ];
 
 const roleColors: Record<string, string> = {
-  admin: "bg-purple-100 text-purple-800",
-  doctor: "bg-blue-100 text-blue-800",
-  nurse: "bg-green-100 text-green-800",
-  receptionist: "bg-orange-100 text-orange-800",
+  Admin: "bg-purple-100 text-purple-800",
+  Doctor: "bg-blue-100 text-blue-800",
+  Nurse: "bg-green-100 text-green-800",
+  Receptionist: "bg-orange-100 text-orange-800",
 };
 
 export function Sidebar() {
   const pathname = usePathname();
-  const { data: session } = useSession();
+  const router = useRouter();
   const [mobileOpen, setMobileOpen] = useState(false);
-  const role = (session?.user as any)?.role || "doctor";
+  const [session, setSession] = useState<any>(null);
 
+  useEffect(() => {
+    setSession(getSession());
+  }, []);
+
+  const role = session?.role || "Doctor";
   const filteredNav = navigation.filter((item) => item.roles.includes(role));
+
+  const handleSignOut = () => {
+    document.cookie = "nzhis-session=; path=/; max-age=0";
+    router.push("/login");
+  };
 
   const sidebarContent = (
     <div className="flex h-full flex-col">
-      {/* Logo */}
       <div className="flex items-center gap-3 px-6 py-5 border-b border-teal-700/30">
         <div className="flex items-center justify-center w-10 h-10 bg-white/10 rounded-xl">
           <Activity className="h-6 w-6 text-white" />
@@ -57,18 +75,16 @@ export function Sidebar() {
         </div>
       </div>
 
-      {/* User Info */}
-      {session?.user && (
+      {session && (
         <div className="px-4 py-4 border-b border-teal-700/30">
-          <p className="text-sm font-medium text-white truncate">{session.user.name}</p>
-          <p className="text-xs text-teal-200/60 truncate">{session.user.email}</p>
-          <Badge className={cn("mt-2 text-xs capitalize", roleColors[role])}>
+          <p className="text-sm font-medium text-white truncate">{session.name}</p>
+          <p className="text-xs text-teal-200/60 truncate">{session.email}</p>
+          <Badge className={cn("mt-2 text-xs", roleColors[role])}>
             {role}
           </Badge>
         </div>
       )}
 
-      {/* Navigation */}
       <nav className="flex-1 px-3 py-4 space-y-1">
         {filteredNav.map((item) => {
           const isActive = pathname === item.href || (item.href !== "/" && pathname.startsWith(item.href));
@@ -91,10 +107,9 @@ export function Sidebar() {
         })}
       </nav>
 
-      {/* Footer */}
       <div className="px-3 py-4 border-t border-teal-700/30">
         <button
-          onClick={() => signOut({ callbackUrl: "/login" })}
+          onClick={handleSignOut}
           className="flex items-center gap-3 px-3 py-2.5 w-full rounded-lg text-sm font-medium text-teal-100/70 hover:bg-white/10 hover:text-white transition-all"
         >
           <LogOut className="h-5 w-5" />
@@ -109,7 +124,6 @@ export function Sidebar() {
 
   return (
     <>
-      {/* Mobile toggle */}
       <Button
         variant="ghost"
         size="icon"
@@ -119,12 +133,10 @@ export function Sidebar() {
         {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
       </Button>
 
-      {/* Mobile overlay */}
       {mobileOpen && (
         <div className="fixed inset-0 bg-black/50 z-40 lg:hidden" onClick={() => setMobileOpen(false)} />
       )}
 
-      {/* Sidebar */}
       <aside
         className={cn(
           "fixed inset-y-0 left-0 z-40 w-64 bg-gradient-to-b from-teal-800 to-teal-900 transition-transform lg:translate-x-0",
